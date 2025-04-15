@@ -8,7 +8,7 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Rannyzita!</Text>
+      <Text>Laura!</Text>
       <FontAwesomeIcon icon={faCircleUser} size={32} color="black" />
       <StatusBar style="auto" />
     </View>

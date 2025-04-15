@@ -3,8 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
-
-
 export default function App() {
   return (
     <View style={styles.container}>

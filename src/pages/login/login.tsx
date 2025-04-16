@@ -13,39 +13,45 @@ import styles from './styles'
 import Logo from '../../assets/logo.svg';
 import {themes} from '../../global/themes'
 import { Input } from '../../components/Input';
+import { Button } from '../../components/Button';
 
 export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
 
     return (
         <View style={styles.container}>
-            <Logo/>
 
-            <Text style={styles.title}>Faça seu login</Text>
+            <View style={styles.boxTop}>
+                <Logo/>
+                <Text style={styles.title}>Faça seu login</Text>
+            </View>
 
-            <Text style={styles.label}>E-mail</Text>
-            <Input
-                placeholder="Insira seu e-mail"
-                placeholderTextColor={themes.colors.textPlaceHolder}
-                width={310}
-            />
-
-            <Text style={styles.label}>Senha</Text>
-            <Input
-                placeholder="Insira sua senha"
-                placeholderTextColor={themes.colors.textPlaceHolder}
-                width={310}
-            />
-            {/* <Text style={styles.label}>Senha</Text>
-            <View style={styles.passwordContainer}>
-                <TextInput
-                    placeholder="Insira sua senha"
-                    style={[styles.input, { flex: 1 }]}
-                    secureTextEntry
+            <View>
+                <Text style={styles.label}>E-mail</Text>
+                <Input
+                    placeholder="Insira seu e-mail"
                     placeholderTextColor={themes.colors.textPlaceHolder}
+                    width={320}
+                    height={45}
                 />
-                <AntDesign name="eyeo" size={20} color="#888" style={{ marginRight: 10 }} />
-            </View> */}
+
+                <Text style={styles.label}>Senha</Text>
+                <Input
+                    placeholder="Insira sua senha"
+                    placeholderTextColor={themes.colors.textPlaceHolder}
+                    width={320}
+                    height={45}
+                    secureTextEntry
+                />
+            </View>
+
+            <View style={styles.boxBottom}>
+                <Button 
+                    text='Entrar'
+                    width={320}
+                    height={45}
+                />
+            </View>
 
             {/*<Pressable
                 style={({ pressed }) => [

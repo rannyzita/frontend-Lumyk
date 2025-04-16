@@ -8,7 +8,6 @@ import {
     Pressable,
     StyleSheet,
 } from 'react-native';
-import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import styles from './styles'
 import Logo from '../../assets/logo.svg';
 import {themes} from '../../global/themes'
@@ -18,6 +17,27 @@ import { Button } from '../../components/Button';
 export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
 
+    // async function getLogin() {
+    //     try {
+    //         setLaoding(true);
+    //         // Simula um delay para demonstrar carregamento
+    //         if (!email || !password) {
+    //             return Alert.alert('Atenção','Preencha todos os campos.');
+    //         }
+
+    //         if(email == 'fs.vitoria.soares@gmail.com' && password == '123'){
+    //             Alert.alert('Logado com sucesso!');
+    //             return Navigation.reset({routes:[{name:'BottomRoutes'}]});
+    //         }else{
+    //             Alert.alert('Atenção', 'Campos Inválidos')
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     } finally {
+    //         setLaoding(false);
+    //     }
+    // }
+
     return (
         <View style={styles.container}>
 
@@ -26,32 +46,49 @@ export default function LoginScreen() {
                 <Text style={styles.title}>Faça seu login</Text>
             </View>
 
-            <View>
-                <Text style={styles.label}>E-mail</Text>
-                <Input
-                    placeholder="Insira seu e-mail"
-                    placeholderTextColor={themes.colors.textPlaceHolder}
-                    width={320}
-                    height={45}
-                />
+            <View style={{gap:10}}>
+                <View>
+                    <Text style={styles.label}>E-mail</Text>
+                    <Input
+                        placeholder="Insira seu e-mail"
+                        placeholderTextColor={themes.colors.textPlaceHolder}
+                        width={320}
+                        height={45}
+                    />
 
-                <Text style={styles.label}>Senha</Text>
-                <Input
-                    placeholder="Insira sua senha"
-                    placeholderTextColor={themes.colors.textPlaceHolder}
-                    width={320}
-                    height={45}
-                    secureTextEntry
-                />
+                    <Text style={styles.label}>Senha</Text>
+                    <Input
+                        placeholder="Insira sua senha"
+                        placeholderTextColor={themes.colors.textPlaceHolder}
+                        width={320}
+                        height={45}
+                        secureTextEntry
+                    />
+                </View>
+
+                <View>
+                    <Button 
+                        text='Entrar'
+                        width={320}
+                        height={45}
+                    />
+                </View>
+
+                <View style={{flexDirection:'row', justifyContent:'center', }}>
+                    <Text style={styles.textBottom}>Esqueceu sua senha?</Text>
+
+                    <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
+                        <Text style={styles.textBottomClickHere}> Clique aqui</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.separatorContainer}>
+                    <View style={styles.line} />
+                    <Text style={styles.separatorText}>     Ou     </Text>
+                    <View style={styles.line} />
+                </View>
             </View>
 
-            <View style={styles.boxBottom}>
-                <Button 
-                    text='Entrar'
-                    width={320}
-                    height={45}
-                />
-            </View>
 
             {/*<Pressable
                 style={({ pressed }) => [

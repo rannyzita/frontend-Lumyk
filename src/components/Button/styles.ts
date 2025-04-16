@@ -8,15 +8,13 @@ export const styles = StyleSheet.create({
         backgroundColor: themes.colors.primary,
         borderRadius: 10,
         alignSelf: 'center', 
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 11,
-        },
-        shadowOpacity: 0.55,
-        shadowRadius: 14.78,
 
-        elevation: 22,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+
+        elevation: 10, 
     },
     textButton: {
         color: '#fff',

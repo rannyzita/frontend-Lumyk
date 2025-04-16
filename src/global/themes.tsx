@@ -6,6 +6,8 @@ export const themes = {
         greenLight: '#0DED14',
         red: '#D32F2F',
         textFrete: '#F19000',
-        textPlaceHolder: '#5B5B5B'
+        textPlaceHolder: '#5B5B5B',
+        link: '#0035A6',
+        purpleDark: '#672BB6'
     }
 }

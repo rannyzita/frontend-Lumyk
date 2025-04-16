@@ -22,8 +22,26 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         fontSize:14
     },
-    boxBottom: {
+    textBottom: {
 
+    },
+    textBottomClickHere: {
+        color: themes.colors.link,
+        fontWeight: 'regular',
+        textDecorationLine: 'underline'
+    },
+    separatorContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical:20
+    },
+    line: {
+        flex:1,
+        height: 2   ,
+        backgroundColor: themes.colors.purpleDark
+    },
+    separatorText: {
+        color:themes.colors.purpleDark,    
     }
 });
 

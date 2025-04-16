@@ -23,7 +23,7 @@ export default function Loading() {
     return (
         <View style={styles.components}>
             <View style={styles.logoContainer}>
-                <Logo width={200} height={200} />
+                <Logo/>
             </View>
 
             <View style={styles.loadingContainer}>

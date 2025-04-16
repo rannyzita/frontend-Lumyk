@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import {themes} from '../../global/themes'
 
 const styles = StyleSheet.create({
     container: {
@@ -24,13 +25,16 @@ const styles = StyleSheet.create({
     label: {
         fontFamily: 'Poppins-Regular',
         marginBottom: 4,
+        fontSize:14
     },
     input: {
-        backgroundColor: '#e2e2e2',
+        backgroundColor: themes.colors.backgroundBoxes,
         borderRadius: 10,
         padding: 12,
         marginBottom: 16,
         fontFamily: 'Poppins-Regular',
+        width:314,
+        height: 40
     },
     passwordContainer: {
         flexDirection: 'row',

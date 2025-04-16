@@ -11,8 +11,10 @@ import {
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import styles from './styles'
 import Logo from '../../assets/logo.svg';
+import {themes} from '../../global/themes'
+import { Input } from '../../components/Input';
 
-export default function LoginScreen() {
+export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
 
     return (
@@ -21,26 +23,31 @@ export default function LoginScreen() {
 
             <Text style={styles.title}>Faça seu login</Text>
 
-            { /*<Text style={styles.label}>Email</Text>
-
-            <TextInput
-                placeholder="Insira seu email"
-                style={styles.input}
-                placeholderTextColor="#999"
+            <Text style={styles.label}>E-mail</Text>
+            <Input
+                placeholder="Insira seu e-mail"
+                placeholderTextColor={themes.colors.textPlaceHolder}
+                width={310}
             />
 
             <Text style={styles.label}>Senha</Text>
+            <Input
+                placeholder="Insira sua senha"
+                placeholderTextColor={themes.colors.textPlaceHolder}
+                width={310}
+            />
+            {/* <Text style={styles.label}>Senha</Text>
             <View style={styles.passwordContainer}>
                 <TextInput
                     placeholder="Insira sua senha"
                     style={[styles.input, { flex: 1 }]}
                     secureTextEntry
-                    placeholderTextColor="#999"
+                    placeholderTextColor={themes.colors.textPlaceHolder}
                 />
                 <AntDesign name="eyeo" size={20} color="#888" style={{ marginRight: 10 }} />
-            </View>
+            </View> */}
 
-            <Pressable
+            {/*<Pressable
                 style={({ pressed }) => [
                     styles.button,
                     { backgroundColor: pressed ? '#7b2cbf' : '#a259ff' },

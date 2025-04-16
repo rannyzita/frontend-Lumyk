@@ -5,6 +5,7 @@ export const themes = {
         greenDark: '#13A018',
         greenLight: '#0DED14',
         red: '#D32F2F',
-        textFrete: '#F19000'
+        textFrete: '#F19000',
+        textPlaceHolder: '#5B5B5B'
     }
 }

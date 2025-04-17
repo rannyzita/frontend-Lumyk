@@ -8,6 +8,7 @@ import {
     Pressable,
     StyleSheet,
 } from 'react-native';
+
 import styles from './styles'
 import Logo from '../../assets/logo.svg';
 import Google from '../../assets/google-37 1.svg'
@@ -16,8 +17,14 @@ import {themes} from '../../global/themes'
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = StackNavigationProp<RootStackParamList, 'Login'>;
 export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
+    const navigation = useNavigation<NavigationProps>();
 
     // async function getLogin() {
     //     try {
@@ -43,76 +50,94 @@ export default function LoginScreen() {
     return (
         <View style={styles.container}>
 
-            <View style={styles.boxTop}>
-                <Logo/>
-                <Text style={styles.title}>Faça seu login</Text>
-            </View>
-
-            <View style={{gap:10}}>
-                <View>
-                    <Text style={styles.label}>E-mail</Text>
-                    <Input
-                        placeholder="Insira seu e-mail"
-                        placeholderTextColor={themes.colors.textPlaceHolder}
-                        width={320}
-                        height={45}
-                    />
-
-                    <Text style={styles.label}>Senha</Text>
-                    <Input
-                        placeholder="Insira sua senha"
-                        placeholderTextColor={themes.colors.textPlaceHolder}
-                        width={320}
-                        height={45}
-                        secureTextEntry
-                    />
+            <View style={styles.content}>
+                <View style={[styles.boxTop, {margin:1}]}>
+                    <Logo/>
+                    <Text style={styles.title}>Faça seu login</Text>
                 </View>
 
                 <View>
-                    <Button 
-                        text='Entrar'
-                        width={320}
-                        height={45}
-                    />
-                </View>
+                    <View style={{marginBottom:10}}>
+                        <View style={{gap:1}}>
+                            <Text style={[styles.label]}>E-mail</Text>
+                            <Input
+                                placeholder="Insira seu e-mail"
+                                placeholderTextColor={themes.colors.textPlaceHolder}
+                                width={320}
+                                height={40}
+                            />
+                        </View>
 
-                <View style={{flexDirection:'row', justifyContent:'center', }}>
-                    <Text style={styles.textBottom}>Esqueceu sua senha?</Text>
+                        <View style={{gap:1}}>
+                            <Text style={styles.label}>Senha</Text>
+                            <Input
+                                placeholder="Insira sua senha"
+                                placeholderTextColor={themes.colors.textPlaceHolder}
+                                width={320}
+                                height={40}
+                                secureTextEntry
+                            />
+                        </View>
+                    </View>
 
-                    <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
-                        <Text style={styles.textBottomClickHere}> Clique aqui</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View>
+                        <Button 
+                            text='Entrar'
+                            width={320}
+                            height={40}
+                        />
+                    </View>
 
-                <View style={styles.separatorContainer}>
-                    <View style={styles.line} />
-                    <Text style={styles.separatorText}>     Ou     </Text>
-                    <View style={styles.line} />
-                </View>
+                    <View style={{flexDirection:'row', justifyContent:'center', marginTop:10 }}>
+                        <Text style={styles.textBottom}>Esqueceu sua senha?</Text>
 
-                <View style={styles.buttonLogin}>
-                    {/* Botão Google */}
-                    <TouchableOpacity style={styles.socialButtonGoogle}>
-                        <Google/>
-                        <Text style={[styles.socialText, {color:'#000'}]}>Entrar com o Google</Text>
-                    </TouchableOpacity>
-
-                    {/* Botão Facebook */}
-                    <TouchableOpacity style={styles.socialButtonFacebook}>
-                        <Facebook/>
-                        <Text style={styles.socialText}>Entrar com o Facebook</Text>
-                    </TouchableOpacity>
-
-                    {/* Texto final de cadastro */}
-                    {/* <View style={styles.registerContainer}>
-                        <Text style={styles.registerText}>Não tem uma conta? </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-                            <Text style={styles.registerLink}>Cadastre-se</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
+                            <Text style={styles.textBottomClickHere}> Clique aqui</Text>
                         </TouchableOpacity>
-                    </View> */}
+                    </View>
+
+                    <View style={styles.separatorContainer}>
+                        <View style={styles.line} />
+                        <Text style={styles.separatorText}>     Ou     </Text>
+                        <View style={styles.line} />
+                    </View>
+
+                    <View style={styles.buttonLogin}>
+                        <TouchableOpacity style={styles.socialButtonGoogle}>
+                            <View style={styles.iconWrapper}>
+                                <Google/>
+                            </View>
+
+                            <View style={styles.textWrapper}>
+                                <Text style={[styles.socialText, { color: '#000' }]}>
+                                Entrar com o Google
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.socialButtonFacebook}>
+                            <View style={styles.iconWrapper}>
+                                <Facebook />
+                            </View>
+
+                            <View style={styles.textWrapper}>
+                                <Text style={[styles.socialText, { color: '#fff' }]}>
+                                Entrar com o Facebook
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
                 </View>
             </View>
 
+            <View style={styles.footer}>
+                <Text style={styles.textBottom}>Não tem uma conta </Text>
+
+                <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
+                    <Text style={styles.textBottomClickHere}> Clique aqui</Text>
+                </TouchableOpacity>
+            </View>
 
             {/*<Pressable
                 style={({ pressed }) => [

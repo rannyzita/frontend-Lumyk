@@ -9,6 +9,8 @@ import { RootStackParamList } from '../../routes/types/navigation';
 
 export default function Subscription() {
     return (
-        <Text>Tela de Assinatura</Text>
+        <View style={styles.container}>
+            <Text>Tela de Subscription</Text>
+        </View>
     )
 }

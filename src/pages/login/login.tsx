@@ -21,7 +21,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Login', 'Home'>;
+type NavigationProps = StackNavigationProp<RootStackParamList, 'Login', 'Main'>;
 export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
     const navigation = useNavigation<NavigationProps>();
@@ -85,7 +85,7 @@ export default function LoginScreen() {
                             text='Entrar'
                             width={320}
                             height={40}
-                            onPress={() => navigation.navigate('Home')}
+                            onPress={() => navigation.navigate('Main')}
                         />
                     </View>
 

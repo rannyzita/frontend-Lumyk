@@ -9,6 +9,8 @@ import { RootStackParamList } from '../../routes/types/navigation';
 
 export default function Cart() {
     return (
-        <Text>Tela de Carrinho</Text>
+        <View style={styles.container}>
+            <Text>Tela de Carrinho</Text>
+        </View>
     )
 }

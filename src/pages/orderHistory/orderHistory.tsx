@@ -9,6 +9,8 @@ import { RootStackParamList } from '../../routes/types/navigation';
 
 export default function OrderHistory() {
     return (
-        <Text>Tela de Histórico de Pedidos</Text>
+        <View style={styles.container}>
+            <Text>Tela de Histórico de Pedidos</Text>
+        </View>
     )
 }

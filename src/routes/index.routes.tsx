@@ -8,7 +8,7 @@ import OrderHistory from '../pages/orderHistory/orderHistory'
 import Subscription from '../pages/subscription/subscription'
 import Cart from '../pages/cart/cart'
 import About from '../pages/about/about'
-
+import Profile from '../pages/profile/profile'
 export default function Routes() {
     const Stack = createStackNavigator();
 
@@ -56,6 +56,11 @@ export default function Routes() {
             <Stack.Screen
                 name="About"
                 component={About} 
+            />
+
+            <Stack.Screen
+                name="Profile"
+                component={Profile} 
             />
         </Stack.Navigator>
     );

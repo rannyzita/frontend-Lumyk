@@ -7,10 +7,10 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-export default function Home() {
+export default function Profile() {
     return (
         <View style={styles.container}>
-            <Text>Tela de Home</Text>
+            <Text>Tela de Profile</Text>
         </View>
     )
 }

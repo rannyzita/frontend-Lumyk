@@ -1,8 +1,14 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import Loading from '../pages/loading/loading'; 
 import Login from "../pages/login/login";
-import Home from '../pages/home/'
+import Home from '../pages/home/home'
+import OrderHistory from '../pages/orderHistory/orderHistory'
+import Subscription from '../pages/subscription/subscription'
+import Cart from '../pages/cart/cart'
+import About from '../pages/about/about'
+
 export default function Routes() {
     const Stack = createStackNavigator();
 
@@ -28,28 +34,28 @@ export default function Routes() {
             />
 
             <Stack.Screen
-                name="Login"
-                component={Login} 
+                name="Home"
+                component={Home} 
             />
 
             <Stack.Screen
-                name="Login"
-                component={Login} 
+                name="OrderHistory"
+                component={OrderHistory} 
             />
 
             <Stack.Screen
-                name="Login"
-                component={Login} 
+                name="Subscription"
+                component={Subscription} 
             />
 
             <Stack.Screen
-                name="Login"
-                component={Login} 
+                name="Cart"
+                component={Cart} 
             />
 
             <Stack.Screen
-                name="Login"
-                component={Login} 
+                name="About"
+                component={About} 
             />
         </Stack.Navigator>
     );

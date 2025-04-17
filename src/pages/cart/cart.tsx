@@ -7,6 +7,8 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-export default function Loading() {
-    
+export default function Cart() {
+    return (
+        <Text>Tela de Carrinho</Text>
+    )
 }

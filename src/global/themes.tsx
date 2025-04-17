@@ -9,6 +9,7 @@ export const themes = {
         textPlaceHolder: '#5B5B5B',
         link: '#0035A6',
         purpleDark: '#672BB6',
-        facebook: '#1877F2'
+        facebook: '#1877F2',
+        textInput: '#969696'
     }
 }

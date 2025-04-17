@@ -9,6 +9,8 @@ import { RootStackParamList } from '../../routes/types/navigation';
 
 export default function About() {
     return (
-        <Text>Tela Sobre Nós</Text>
+        <View style={styles.container}>
+            <Text>Tela de Sobre Nós</Text>
+        </View>
     )
 }

@@ -11,11 +11,10 @@ export const styles = StyleSheet.create({
         marginBottom: 16,
 
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
         shadowRadius: 4,
-
-        elevation: 10, 
+        elevation: 5,
     },
     input: {
         flex: 1,

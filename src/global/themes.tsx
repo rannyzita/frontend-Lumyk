@@ -8,6 +8,7 @@ export const themes = {
         textFrete: '#F19000',
         textPlaceHolder: '#5B5B5B',
         link: '#0035A6',
-        purpleDark: '#672BB6'
+        purpleDark: '#672BB6',
+        facebook: '#1877F2'
     }
 }

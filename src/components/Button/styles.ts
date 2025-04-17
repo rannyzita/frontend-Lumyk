@@ -10,11 +10,10 @@ export const styles = StyleSheet.create({
         alignSelf: 'center', 
 
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
         shadowRadius: 4,
-
-        elevation: 10, 
+        elevation: 5,
     },
     textButton: {
         color: '#fff',

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     label: {
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Roboto',
         fontSize:14
     },
     textBottomClickHere: {

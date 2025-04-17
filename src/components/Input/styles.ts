@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Roboto',
         fontSize: 14,
         color: themes.colors.textPlaceHolder,
         paddingVertical: 12,

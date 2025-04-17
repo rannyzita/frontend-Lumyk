@@ -29,6 +29,28 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
       },
+      filters: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 12,
+      },
+      authors: {
+        backgroundColor: '#fff',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 5,
+        elevation: 2,
+      },
+      dropdownButtonText: {
+        color: '#fff'
+      },
+      dropdownButton: {
+        backgroundColor: themes.colors.primary,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        elevation: 2,
+      }
 });
 
 export default styles;

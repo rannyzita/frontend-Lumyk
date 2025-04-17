@@ -16,12 +16,12 @@ const books = [
 ];
 
 
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile'>;
+type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile', 'Authors'>;
 export default function Home() {
     const navigation = useNavigation<NavigationProps>();
 
     return (
-        <>
+        <View style={{backgroundColor:themes.colors.backgroundLumyk, flex:1}}>
             <View style={styles.topBar}>
                 <View style={styles.topBarContent}>
                     <View>
@@ -45,13 +45,20 @@ export default function Home() {
             </View>
 
             <View style={styles.filters}>
+                <TouchableOpacity style={styles.authors} onPress={()=> navigation.navigate('Authors')}>
+                    <Text>Ver Autores</Text>
+                </TouchableOpacity>
 
+                <TouchableOpacity style={styles.dropdownButton}>
+                    <Text style={styles.dropdownButtonText}>Gênero</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.dropdownButton}>
+                    <Text style={styles.dropdownButtonText}>Calcular Frete</Text>
+                </TouchableOpacity>
             </View>
 
-            <View style={styles.container}>
-                <Text>Tela de Home</Text>
-            </View>
-        </>
+        </View>
     )
 }
 

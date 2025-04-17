@@ -18,6 +18,7 @@ import Subscription from '../pages/subscription/subscription';
 import Cart from '../pages/cart/cart';
 import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
+import Authors from '../pages/authors/authors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -103,8 +104,9 @@ export default function Routes() {
             {/* Aqui, o TabNavigator vai ser exibido entre Home e About */}
             <Stack.Screen name="Main" component={TabNavigator} />
 
-            {/* O restante continua no StackNavigator */}
             <Stack.Screen name="Profile" component={Profile} />
+
+            <Stack.Screen name="Authors" component={Authors} />
         </Stack.Navigator>
     );
 }

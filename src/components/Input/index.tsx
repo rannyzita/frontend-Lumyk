@@ -57,7 +57,7 @@ export const Input = forwardRef((props: Props, ref) => {
             <View style={[styles.boxInput, { height, width }]}>
                 <TextInput
                     style={[styles.input, { flex: 1 }]}
-                    secureTextEntry={secureTextEntry && !isPasswordVisible}
+                    secureTextEntry={secureTextEntry && isPasswordVisible}
                     {...rest}
                 />
 

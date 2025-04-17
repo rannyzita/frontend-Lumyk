@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import styles from './styles'
 import Logo from '../../assets/logo.svg';
+import Google from '../../assets/google-37 1.svg'
+import Facebook from '../../assets/facebook.svg'
 import {themes} from '../../global/themes'
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
@@ -86,6 +88,28 @@ export default function LoginScreen() {
                     <View style={styles.line} />
                     <Text style={styles.separatorText}>     Ou     </Text>
                     <View style={styles.line} />
+                </View>
+
+                <View style={styles.buttonLogin}>
+                    {/* Botão Google */}
+                    <TouchableOpacity style={styles.socialButtonGoogle}>
+                        <Google/>
+                        <Text style={[styles.socialText, {color:'#000'}]}>Entrar com o Google</Text>
+                    </TouchableOpacity>
+
+                    {/* Botão Facebook */}
+                    <TouchableOpacity style={styles.socialButtonFacebook}>
+                        <Facebook/>
+                        <Text style={styles.socialText}>Entrar com o Facebook</Text>
+                    </TouchableOpacity>
+
+                    {/* Texto final de cadastro */}
+                    {/* <View style={styles.registerContainer}>
+                        <Text style={styles.registerText}>Não tem uma conta? </Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+                            <Text style={styles.registerLink}>Cadastre-se</Text>
+                        </TouchableOpacity>
+                    </View> */}
                 </View>
             </View>
 

@@ -7,6 +7,8 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-export default function Loading() {
-    
+export default function About() {
+    return (
+        <Text>Tela Sobre Nós</Text>
+    )
 }

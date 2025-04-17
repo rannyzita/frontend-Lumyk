@@ -7,6 +7,8 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-export default function Loading() {
-    
+export default function OrderHistory() {
+    return (
+        <Text>Tela de Histórico de Pedidos</Text>
+    )
 }

@@ -10,6 +10,7 @@ export const themes = {
         link: '#0035A6',
         purpleDark: '#672BB6',
         facebook: '#1877F2',
-        textInput: '#969696'
+        textInput: '#969696',
+        backgroundLumyk: '#D4BFFF'
     }
 }

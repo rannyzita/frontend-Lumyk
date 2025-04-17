@@ -5,15 +5,16 @@ import {
     ActivityIndicator,
     Text,
     ViewStyle,
-    StyleProp
+    StyleProp,
+    DimensionValue
 } from 'react-native';
 import { styles } from "./styles";
 
 type Props = TouchableOpacityProps & {
     text: string;
     loading?: boolean;
-    height?: number;
-    width?: number | string;
+    height?: DimensionValue;
+    width?: DimensionValue;
     style?: StyleProp<ViewStyle>;
 };
 

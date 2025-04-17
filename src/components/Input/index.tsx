@@ -8,7 +8,8 @@ import {
     TextInputProps,
     TouchableOpacity,
     StyleProp,
-    TextStyle
+    TextStyle,
+    DimensionValue
 } from 'react-native';
 
 import { themes } from "../../global/themes";
@@ -24,8 +25,8 @@ type Props = TextInputProps & {
     title?: string;
     onIconLeftPress?: () => void;
     onIconRightPress?: () => void;
-    height?: number;
-    width?: number | string;
+    height?: DimensionValue;
+    width?: DimensionValue;
     labelStyle?: StyleProp<TextStyle>;
 };
 

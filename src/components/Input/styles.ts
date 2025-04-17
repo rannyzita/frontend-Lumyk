@@ -9,12 +9,8 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 12,
         marginBottom: 16,
-
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 5,
+        
+        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
     },
     input: {
         flex: 1,

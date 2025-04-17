@@ -9,15 +9,10 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         alignSelf: 'center', 
 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 5,
+        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
     },
     textButton: {
         color: '#fff',
         fontSize: 14,
-        fontWeight: 'bold',
     },
 });

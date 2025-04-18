@@ -10,9 +10,11 @@ import { RootStackParamList } from '../../routes/types/navigation';
 import LumykWhiteIcon from '../../assets/logoWhite.svg';
 import ProfileIcon from '../../assets/iconsNavigation/Profile.svg';
 import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
-import ArrowDownIcon from '../../assets/iconFilter.svg'; // sua setinha
+import ArrowDownIcon from '../../assets/iconFilter.svg'; 
 
 import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
+import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
+import DropdownFilter from "../../components/Dropdown/dropdown";
 
 type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile', 'Authors'>;
 
@@ -73,7 +75,7 @@ export default function Home() {
                             <TextInput
                                 style={styles.searchInput}
                                 placeholder="Digite o título do livro aqui..."
-                                placeholderTextColor='#969696'
+                                placeholderTextColor={themes.colors.textInput}
                             />
                         </View>
 
@@ -87,6 +89,15 @@ export default function Home() {
                 <View style={[stylesModal.filters]}>
                     {/* Botão "Ver Autores" isolado */}
                     <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
+                        <ButtonFilter
+                                title="Ver Autores"
+                                onPress={() => navigation.navigate('Authors')}
+                                style={{ backgroundColor: '#fff', width: 115 }}
+                                textStyle={{ color: '#000', marginLeft: 1 }}
+                        />
+                    </View>
+
+                    {/* <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
                         <TouchableOpacity
                             style={[stylesModal.dropdownButton, {backgroundColor:'#fff', width:115}]}
                             onPress={() => navigation.navigate('Authors')}
@@ -95,7 +106,7 @@ export default function Home() {
                                 <Text style={[stylesModal.dropdownButtonText, {color:'#000', marginLeft:1}]}>Ver Autores</Text>
                             </View>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
 
                     {/* Botão Gênero */}
                     <View style={{ alignItems: 'center' }}>
@@ -164,7 +175,6 @@ export default function Home() {
                                 />
                             </View>
                         </TouchableOpacity>
-
 
                         {isStateDropdownVisible && (
                             <View style={[stylesModal.dropdownContent, { width: stateButtonWidth }]}>

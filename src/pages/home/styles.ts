@@ -41,16 +41,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         elevation: 2,
       },
-      dropdownButtonText: {
-        color: '#fff'
-      },
-      dropdownButton: {
-        backgroundColor: themes.colors.primary,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        elevation: 2,
-      }
 });
 
 export default styles;

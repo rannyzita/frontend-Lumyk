@@ -1,13 +1,7 @@
 import { StyleSheet } from "react-native";
-import { themes } from '../../global/themes'
+import { themes } from "../../global/themes";
 
-const stylesModal = StyleSheet.create({
-    filters: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginRight:240,
-        marginVertical: 14,
-    },
+export const styles = StyleSheet.create({
     dropdownButton: {
         backgroundColor: themes.colors.primary,
         flexDirection: 'row',
@@ -17,6 +11,12 @@ const stylesModal = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 10,
         width:'95%',
+    },
+    buttonContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
     },
     dropdownButtonText: {
         color: '#fff',
@@ -47,12 +47,4 @@ const stylesModal = StyleSheet.create({
         color: '#fff',
         fontSize: 12,
     },
-    buttonContent: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-    },
 });
-
-export default stylesModal;

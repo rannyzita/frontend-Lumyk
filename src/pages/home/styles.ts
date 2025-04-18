@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
         backgroundColor: themes.colors.primary, 
         padding: 10,
         paddingTop: 55,
-        paddingHorizontal: 5, 
       },
       topBarContent: {
         flexDirection: 'row',
@@ -28,11 +27,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingHorizontal: 10,
         height: 40,
-      },
-      filters: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginVertical: 12,
       },
       authors: {
         backgroundColor: '#fff',

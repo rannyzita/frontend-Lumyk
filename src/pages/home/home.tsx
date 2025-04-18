@@ -21,10 +21,11 @@ export default function Home() {
 
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isStateDropdownVisible, setStateDropdownVisible] = useState(false);
+    const [genreButtonWidth, setGenreButtonWidth] = useState(0);
+    const [stateButtonWidth, setStateButtonWidth] = useState(0);
 
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [selectedStates, setSelectedStates] = useState<string[]>([]);
-
 
     const genres = ['Romance', 'Ficção', 'Fantasia', 'Biografia'];
     const states = ['São Paulo', 'Amazonas', 'Rio Grande do Sul', 'Ceará'];
@@ -83,85 +84,105 @@ export default function Home() {
                 </View>
 
                 {/* Filtros */}
-                <View style={styles.filters}>
-                    <TouchableOpacity style={styles.authors} onPress={() => navigation.navigate('Authors')}>
-                        <Text>Ver Autores</Text>
-                    </TouchableOpacity>
+                <View style={[stylesModal.filters]}>
+                    {/* Botão "Ver Autores" isolado */}
+                    <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
+                        <TouchableOpacity
+                            style={[stylesModal.dropdownButton, {backgroundColor:'#fff', width:115}]}
+                            onPress={() => navigation.navigate('Authors')}
+                        >
+                            <View style={stylesModal.buttonContent}>
+                                <Text style={[stylesModal.dropdownButtonText, {color:'#000', marginLeft:1}]}>Ver Autores</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
                     {/* Botão Gênero */}
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
                             style={stylesModal.dropdownButton}
+                            onLayout={(event) => setGenreButtonWidth(event.nativeEvent.layout.width)}
                             onPress={() => {
                                 setGenreDropdownVisible(!isGenreDropdownVisible);
                                 setStateDropdownVisible(false);
                             }}
                         >
-                            <Text style={stylesModal.dropdownButtonText}>Gênero</Text>
-                            <ArrowDownIcon
-                                style={{ transform: [{ rotate: isGenreDropdownVisible ? '180deg' : '0deg' }] }}
-                                width={16}
-                                height={16}
-                            />
+                            <View style={[stylesModal.buttonContent, {width:45}]}>
+                                <Text style={[stylesModal.dropdownButtonText, {marginLeft:-6}]}>Gênero</Text>
+                                <ArrowDownIcon
+                                    style={{
+                                        marginLeft: 8, // espaço entre o texto e o ícone
+                                        transform: [{ rotate: isGenreDropdownVisible ? '180deg' : '0deg' }],
+                                    }}
+                                    width={14}
+                                    height={14}
+                                />
+                            </View>
                         </TouchableOpacity>
 
                         {isGenreDropdownVisible && (
-                        <View style={stylesModal.dropdownContent}>
-                            <FlatList
-                            data={genres}
-                            keyExtractor={(item) => item}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                style={stylesModal.dropdownItem}
-                                onPress={() => toggleGenreSelection(item)}
-                                >
-                                <Text style={stylesModal.dropdownItemText}>{item}</Text>
-                                <CustomCheckbox
-                                    checked={selectedGenres.includes(item)}
-                                    onPress={() => toggleGenreSelection(item)}
+                            <View style={[stylesModal.dropdownContent, { width: genreButtonWidth }]}>
+                                <FlatList
+                                    data={genres}
+                                    keyExtractor={(item) => item}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            style={stylesModal.dropdownItem}
+                                            onPress={() => toggleGenreSelection(item)}
+                                        >
+                                            <Text style={stylesModal.dropdownItemText}>{item}</Text>
+                                            <CustomCheckbox
+                                                checked={selectedGenres.includes(item)}
+                                                onPress={() => toggleGenreSelection(item)}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
                                 />
-                                </TouchableOpacity>
-                            )}
-                            />
-                        </View>
-)}
-
+                            </View>
+                        )}
                     </View>
 
                     {/* Botão Calcular Frete */}
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
                             style={stylesModal.dropdownButton}
+                            onLayout={(event) => setStateButtonWidth(event.nativeEvent.layout.width)}
                             onPress={() => {
                                 setStateDropdownVisible(!isStateDropdownVisible);
                                 setGenreDropdownVisible(false);
                             }}
                         >
-                            <Text style={stylesModal.dropdownButtonText}>Calcular Frete</Text>
-                            <ArrowDownIcon
-                                style={{ transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }] }}
-                                width={16}
-                                height={16}
-                            />
+                            <View style={stylesModal.buttonContent}>
+                                <Text style={stylesModal.dropdownButtonText}>Calcular Frete</Text>
+                                <ArrowDownIcon
+                                    style={{
+                                        marginLeft: 8, // espaço entre o texto e o ícone
+                                        transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }],
+                                    }}
+                                    width={14}
+                                    height={14}
+                                />
+                            </View>
                         </TouchableOpacity>
 
+
                         {isStateDropdownVisible && (
-                            <View style={stylesModal.dropdownContent}>
+                            <View style={[stylesModal.dropdownContent, { width: stateButtonWidth }]}>
                                 <FlatList
-                                data={states}
-                                keyExtractor={(item) => item}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                    style={stylesModal.dropdownItem}
-                                    onPress={() => toggleStateSelection(item)}
-                                    >
-                                    <Text style={stylesModal.dropdownItemText}>{item}</Text>
-                                    <CustomCheckbox
-                                        checked={selectedStates.includes(item)}
-                                        onPress={() => toggleStateSelection(item)}
-                                    />
-                                    </TouchableOpacity>
-                                )}
+                                    data={states}
+                                    keyExtractor={(item) => item}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            style={stylesModal.dropdownItem}
+                                            onPress={() => toggleStateSelection(item)}
+                                        >
+                                            <Text style={stylesModal.dropdownItemText}>{item}</Text>
+                                            <CustomCheckbox
+                                                checked={selectedStates.includes(item)}
+                                                onPress={() => toggleStateSelection(item)}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
                                 />
                             </View>
                         )}

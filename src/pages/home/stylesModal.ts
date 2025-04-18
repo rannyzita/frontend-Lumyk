@@ -2,23 +2,29 @@ import { StyleSheet } from "react-native";
 import { themes } from '../../global/themes'
 
 const stylesModal = StyleSheet.create({
+    filters: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginRight:240,
+        marginVertical: 14,
+    },
     dropdownButton: {
         backgroundColor: themes.colors.primary,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal:20,
         paddingVertical: 10,
         borderRadius: 10,
+        width:'95%',
     },
     dropdownButtonText: {
         color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 12,
         marginRight: 8,
     },
     dropdownContent: {
-        marginTop: 2,
+        marginTop:3,
         backgroundColor: themes.colors.primary,
         borderRadius: 10,
         width: 150,
@@ -26,7 +32,7 @@ const stylesModal = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5, // pra Android
+        elevation: 5, 
     },
     dropdownItem: {
         flexDirection: 'row',
@@ -35,11 +41,11 @@ const stylesModal = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 12,
         borderBottomWidth: 1,
-        borderBottomColor: '#ffffff33', // um branco semi-transparente
+        borderBottomColor: '#ffffff33'
     },
     dropdownItemText: {
         color: '#fff',
-        fontSize: 14,
+        fontSize: 12,
     },
     checkbox: {
         width: 20,
@@ -55,6 +61,12 @@ const stylesModal = StyleSheet.create({
         height: 12,
         backgroundColor: '#fff',
         borderRadius: 2,
+    },
+    buttonContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
     },
 });
 

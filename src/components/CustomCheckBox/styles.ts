@@ -3,8 +3,8 @@ import { themes } from "../../global/themes";
 
 export const styles = StyleSheet.create({
     checkbox: {
-        width: 20,
-        height: 20,
+        width: 15,
+        height: 15,
         borderWidth: 2,
         borderColor: 'white',
         backgroundColor: themes.colors.primary,

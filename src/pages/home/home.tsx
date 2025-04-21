@@ -23,7 +23,7 @@ import {
     closeDropdowns
 } from './functions/index';
 
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile', 'Authors'>;
+type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function Home() {
     const navigation = useNavigation<NavigationProps>();
@@ -60,7 +60,7 @@ export default function Home() {
         <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
             <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                 {/* Top Bar */}
-                <TopBar navigation={navigation} />
+                <TopBar navigation={navigation} title="Digite o titulo do livro aqui..." />
 
                 {/* Filtros */}
                 <View style={[styles.filters]}>

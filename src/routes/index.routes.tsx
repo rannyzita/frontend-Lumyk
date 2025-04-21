@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View } from 'react-native';
+import { Text } from 'react-native';
 
 import HomeIcon from '../assets/iconsNavigation/Home.svg';
 import OrderHistoryIcon from '../assets/iconsNavigation/Order.svg';
@@ -37,7 +37,7 @@ function TabNavigator() {
                     borderTopWidth: 0,
                     height: 60,
                     paddingTop: 10, 
-                    paddingBottom: 10 
+                    paddingBottom: 10,
                 },
             }}
         >

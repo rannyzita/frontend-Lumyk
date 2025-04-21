@@ -18,6 +18,13 @@ import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
 import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
 import DropdownFilter from "../../components/Dropdown/dropdown";
 
+import {
+    toggleGenreSelection,
+    toggleStateSelection,
+    closeDropdowns
+} from './functions/index';
+
+
 type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile', 'Authors'>;
 
 export default function Home() {
@@ -37,31 +44,22 @@ export default function Home() {
     const books = [
         { id: '1', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
         { id: '2', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
-    ];
+    ];  
 
-    function toggleGenreSelection(genre: string) {
-        if (selectedGenres.includes(genre)) {
-            setSelectedGenres(selectedGenres.filter(item => item !== genre));
-        } else {
-            setSelectedGenres([...selectedGenres, genre]);
-        }
+    function handleToggleGenreSelection(genre: string) {
+        toggleGenreSelection(genre, selectedGenres, setSelectedGenres);
     }
     
-    function toggleStateSelection(state: string) {
-        if (selectedStates.includes(state)) {
-            setSelectedStates(selectedStates.filter(item => item !== state));
-        } else {
-            setSelectedStates([...selectedStates, state]);
-        }
-    }    
-
-    function closeDropdowns() {
-        setGenreDropdownVisible(false);
-        setStateDropdownVisible(false);
+    function handleToggleStateSelection(state: string) {
+        toggleStateSelection(state, selectedStates, setSelectedStates);
     }
-
+    
+    function handleCloseDropdowns() {
+        closeDropdowns(setGenreDropdownVisible, setStateDropdownVisible);
+    }
+    
     return (
-        <TouchableWithoutFeedback onPress={closeDropdowns}>
+        <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
             <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                 {/* Top Bar */}
                 <View style={styles.topBar}>
@@ -129,7 +127,7 @@ export default function Home() {
                             buttonWidth={genreButtonWidth}
                             items={genres}
                             selectedItems={selectedGenres}
-                            onToggleItem={toggleGenreSelection}
+                            onToggleItem={handleToggleGenreSelection}
                             />
                         )}
                     </View>
@@ -189,11 +187,11 @@ export default function Home() {
                             keyExtractor={(item) => item}
                             style={stylesDropDown.scrollableList}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => toggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
+                                <TouchableOpacity onPress={() => handleToggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
                                     <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
                                     <CustomCheckbox 
                                         checked={selectedStates.includes(item)} 
-                                        onPress={() => toggleStateSelection(item)}    
+                                        onPress={() => handleToggleStateSelection(item)}    
                                     />
                                 </TouchableOpacity>
                         )}

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
-import styles from './styles';
 
 import { useNavigation } from "@react-navigation/native";
 import { themes } from '../../global/themes';
 import stylesModal from './stylesModal'
+import styles from './styles';
+import {stylesDropDown} from '../../components/Dropdown/styles'
+
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
@@ -31,7 +33,7 @@ export default function Home() {
     const [selectedStates, setSelectedStates] = useState<string[]>([]);
 
     const genres = ['Romance', 'Ficção', 'Fantasia', 'Biografia'];
-    const states = ['São Paulo', 'Amazonas', 'Rio Grande do Sul', 'Ceará'];
+    const states = ['São Paulo', 'Amazonas', 'Rio Grande do Sul', 'Ceará', 'alagoas', 'pokemon'];
 
     const books = [
         { id: '1', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
@@ -135,36 +137,58 @@ export default function Home() {
 
                     {/* Botão Calcular Frete */}
                     <View style={{ alignItems: 'center' }}>
-                        
                         <ButtonFilter
                             title="Calcular Frete"
                             onPress={() => {
-                                setStateDropdownVisible(!isStateDropdownVisible);
-                                setGenreDropdownVisible(false);
+                            setStateDropdownVisible(!isStateDropdownVisible);
+                            setGenreDropdownVisible(false);
                             }}
                             onLayout={(event) => setStateButtonWidth(event.nativeEvent.layout.width)}
+                            style={{}}
+                            textStyle={{ marginLeft: -6 }}
                             icon={
-                                <ArrowDownIcon
-                                    style={{
-                                        marginLeft: 0,
-                                        transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }],
-                                    }}
-                                    width={14}
-                                    height={14}
-                                />
+                            <ArrowDownIcon
+                                style={{
+                                transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }],
+                                }}
+                                width={14}
+                                height={14}
+                            />
                             }
                         />
-                        
-                        {isStateDropdownVisible && (
-                            <DropdownFilter
-                                isVisible={isStateDropdownVisible}
-                                buttonWidth={stateButtonWidth}
-                                items={states}
-                                selectedItems={selectedStates}
-                                onToggleItem={toggleStateSelection}
-                            />
-                        )}
 
+                        {isStateDropdownVisible && (
+                            <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}>
+                            {/* Input de busca no topo */}
+                            <View style={styles.searchContainer}>
+                                <TouchableOpacity>
+                                <SearchIcon width={20} height={20} />
+                                </TouchableOpacity>
+                                <TextInput
+                                style={styles.searchInput}
+                                placeholder="Estado destinado..."
+                                placeholderTextColor={themes.colors.textInput}
+                                />
+                            </View>
+
+                            {/* Lista de estados com scroll */}
+                            <FlatList
+                                data={states}
+                                keyExtractor={(item) => item}
+                                style={stylesDropDown.scrollableList}
+                                renderItem={({ item }) => (
+                                <TouchableOpacity onPress={() => toggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
+                                    <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
+                                    <CustomCheckbox 
+                                        checked={selectedStates.includes(item)} 
+                                        onPress={() => toggleStateSelection(item)}    
+                                    />
+                                </TouchableOpacity>
+                                )}
+                                showsVerticalScrollIndicator={true}
+                            />
+                            </View>
+                        )}
                     </View>
                 </View>
             </View>

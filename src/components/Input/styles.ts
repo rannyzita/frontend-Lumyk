@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 12,
         marginBottom: 16,
         
-        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
+        boxShadow: themes.colors.shadow
     },
     input: {
         flex: 1,

@@ -15,7 +15,7 @@ import ArrowDownIcon from '../../assets/iconFilter.svg';
 import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
 import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
 import DropdownFilter from "../../components/Dropdown/dropdown";
-import TopBar from '../../components/TopBar';
+import TopBar from '../../components/TopBar/topBar';
 
 import {
     toggleGenreSelection,

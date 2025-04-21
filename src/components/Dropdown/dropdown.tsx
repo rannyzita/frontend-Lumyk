@@ -5,10 +5,10 @@ import {
     TouchableOpacity,
     Text,
     ViewStyle,
-    TextStyle
+    TextStyle,
 } from 'react-native';
 import CustomCheckbox from '../CustomCheckBox/checkBox';
-import { styles as stylesModal } from './styles';
+import { stylesDropDown } from './styles'; // importa normalmente agora
 
 interface DropdownFilterProps {
     isVisible: boolean;
@@ -16,8 +16,10 @@ interface DropdownFilterProps {
     items: string[];
     selectedItems: string[];
     onToggleItem: (item: string) => void;
+    placeholder?: string;
     style?: ViewStyle;
     textStyle?: TextStyle;
+    scrollable?: boolean;
 }
 
 export default function DropdownFilter({
@@ -26,28 +28,36 @@ export default function DropdownFilter({
     items,
     selectedItems,
     onToggleItem,
+    placeholder,
     style,
-    textStyle
+    textStyle,
+    scrollable = false,
 }: DropdownFilterProps) {
     if (!isVisible) return null;
 
     return (
-        <View style={[stylesModal.dropdownContent, { width: buttonWidth }, style]}>
+        <View style={[stylesDropDown.dropdownContent, { width: buttonWidth }, style]}>
+            {selectedItems.length === 0 && placeholder && (
+                <Text style={[stylesDropDown.placeholderText, textStyle]}>{placeholder}</Text>
+            )}
+
             <FlatList
                 data={items}
                 keyExtractor={(item) => item}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        style={stylesModal.dropdownItem}
+                        style={stylesDropDown.dropdownItem}
                         onPress={() => onToggleItem(item)}
                     >
-                        <Text style={[stylesModal.dropdownItemText, textStyle]}>{item}</Text>
+                        <Text style={[stylesDropDown.dropdownItemText, textStyle]}>{item}</Text>
                         <CustomCheckbox
                             checked={selectedItems.includes(item)}
                             onPress={() => onToggleItem(item)}
                         />
                     </TouchableOpacity>
                 )}
+                scrollEnabled={scrollable}
+                style={scrollable ? stylesDropDown.scrollableList : undefined}
             />
         </View>
     );

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { themes } from "../../global/themes";
 
-export const styles = StyleSheet.create({
+export const stylesDropDown = StyleSheet.create({
     dropdownButton: {
         backgroundColor: themes.colors.primary,
         flexDirection: 'row',
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
         backgroundColor: themes.colors.primary,
         borderRadius: 10,
         width: 150,
-        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
+        boxShadow: themes.colors.shadow
     },
     dropdownItem: {
         flexDirection: 'row',
@@ -42,5 +42,13 @@ export const styles = StyleSheet.create({
     dropdownItemText: {
         color: '#fff',
         fontSize: 12,
+    },
+    scrollableList: {
+        maxHeight: 200, 
+    },
+    placeholderText: {
+        fontStyle: 'italic',
+        padding: 8,
+        color: '#888', 
     },
 });

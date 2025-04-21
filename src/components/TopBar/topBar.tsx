@@ -8,10 +8,11 @@ import { themes } from '../../global/themes';
 import { styles } from './styles'; 
 
 interface TopBarProps {
-    navigation: any; 
+    navigation?: any; 
+    title?: string;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ navigation }) => {
+const TopBar: React.FC<TopBarProps> = ({ navigation, title }) => {
     return (
         <View style={styles.topBar}>
             <View style={styles.topBarContent}>
@@ -25,14 +26,17 @@ const TopBar: React.FC<TopBarProps> = ({ navigation }) => {
                     </TouchableOpacity>
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Digite o título do livro aqui..."
+                        placeholder={title}
                         placeholderTextColor={themes.colors.textInput}
                     />
                 </View>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                { navigation && 
+                    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                     <ProfileIcon style={{ marginRight: 5 }} />
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                }
+                
             </View>
         </View>
     );

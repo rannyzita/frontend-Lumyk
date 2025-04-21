@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Image, ActivityIndicator, Text} from 'react-native';
 import styles from './styles'
 import Logo from '../../assets/logo.svg';
@@ -7,10 +7,12 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
+import TopBar from '../../components/TopBar/topBar'
+import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
 export default function Authors() {
     return (
         <View style={styles.container}>
-            <Text>Tela de Autores</Text>
+            <NavigationHeader/>
         </View>
     )
 }

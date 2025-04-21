@@ -9,8 +9,12 @@ const styles = StyleSheet.create({
     navigationHeader: {
         backgroundColor: themes.colors.primary,
         width: '100%',
-        height: 100
-    }
+        height: 100,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 22,
+        paddingTop:35
+    },
 });
 
 export default styles;

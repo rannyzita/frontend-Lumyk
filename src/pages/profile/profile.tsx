@@ -10,7 +10,9 @@ import { RootStackParamList } from '../../routes/types/navigation';
 export default function Profile() {
     return (
         <View style={styles.container}>
-            <Text>Tela de Profile</Text>
+            <View style={styles.navigationHeader}>
+                
+            </View>
         </View>
     )
 }

@@ -11,7 +11,7 @@ import Google from '../../assets/google-37 1.svg'
 import Facebook from '../../assets/facebook.svg'
 import {themes} from '../../global/themes'
 import { Input } from '../../components/Input';
-import { Button } from '../../components/Button';
+import { Button } from '../../components/Button/button';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';

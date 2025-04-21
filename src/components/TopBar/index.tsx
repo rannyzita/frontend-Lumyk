@@ -8,7 +8,7 @@ import { themes } from '../../global/themes';
 import { styles } from './styles'; 
 
 interface TopBarProps {
-    navigation: any; // Ajuste o tipo do 'navigation' conforme necessário
+    navigation: any; 
 }
 
 const TopBar: React.FC<TopBarProps> = ({ navigation }) => {

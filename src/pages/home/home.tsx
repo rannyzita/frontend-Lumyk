@@ -9,14 +9,13 @@ import {stylesDropDown} from '../../components/Dropdown/styles'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-import LumykWhiteIcon from '../../assets/logoWhite.svg';
-import ProfileIcon from '../../assets/iconsNavigation/Profile.svg';
 import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
 import ArrowDownIcon from '../../assets/iconFilter.svg'; 
 
 import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
 import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
 import DropdownFilter from "../../components/Dropdown/dropdown";
+import TopBar from '../../components/TopBar';
 
 import {
     toggleGenreSelection,
@@ -61,38 +60,17 @@ export default function Home() {
         <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
             <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                 {/* Top Bar */}
-                <View style={styles.topBar}>
-                    <View style={styles.topBarContent}>
-                        <View>
-                            <LumykWhiteIcon style={{ marginLeft: -5 }} />
-                        </View>
-
-                        <View style={styles.searchContainer}>
-                            <TouchableOpacity>
-                                <SearchIcon width={20} height={20} />
-                            </TouchableOpacity>
-                            <TextInput
-                                style={styles.searchInput}
-                                placeholder="Digite o título do livro aqui..."
-                                placeholderTextColor={themes.colors.textInput}
-                            />
-                        </View>
-
-                        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                            <ProfileIcon style={{ marginRight: 5 }} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <TopBar navigation={navigation} />
 
                 {/* Filtros */}
                 <View style={[styles.filters]}>
                     {/* Botão "Ver Autores" isolado */}
                     <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
                         <ButtonFilter
-                                title="Ver Autores"
-                                onPress={() => navigation.navigate('Authors')}
-                                style={{ backgroundColor: '#fff', width: 115 }}
-                                textStyle={{ color: '#000', marginRight: 5 }}
+                            title="Ver Autores"
+                            onPress={() => navigation.navigate('Authors')}
+                            style={{ backgroundColor: '#fff', width: 115 }}
+                            textStyle={{ color: '#000', marginRight: 5 }}
                         />
                     </View>
 

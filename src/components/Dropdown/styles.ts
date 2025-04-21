@@ -51,4 +51,10 @@ export const stylesDropDown = StyleSheet.create({
         padding: 8,
         color: '#888', 
     },
+    searchWrapper: {
+        backgroundColor: themes.colors.primary,
+        padding: 8,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
 });

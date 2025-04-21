@@ -3,7 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeed
 
 import { useNavigation } from "@react-navigation/native";
 import { themes } from '../../global/themes';
-import stylesModal from './stylesModal'
 import styles from './styles';
 import {stylesDropDown} from '../../components/Dropdown/styles'
 
@@ -89,7 +88,7 @@ export default function Home() {
                 </View>
 
                 {/* Filtros */}
-                <View style={[stylesModal.filters]}>
+                <View style={[styles.filters]}>
                     {/* Botão "Ver Autores" isolado */}
                     <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
                         <ButtonFilter
@@ -157,26 +156,39 @@ export default function Home() {
                             }
                         />
 
-                        {isStateDropdownVisible && (
-                            <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}>
-                            {/* Input de busca no topo */}
-                            <View style={styles.searchContainer}>
-                                <TouchableOpacity>
-                                <SearchIcon width={20} height={20} />
-                                </TouchableOpacity>
-                                <TextInput
-                                style={styles.searchInput}
-                                placeholder="Estado destinado..."
+                    {isStateDropdownVisible && (
+                    <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            borderRadius: 10,
+                            paddingHorizontal: 8,
+                            height: 30,
+                            marginHorizontal: 8,
+                            marginTop: 10,
+                            gap: 1,
+                            }}
+                        >
+                            <SearchIcon width={15} height={15} />
+                            <TextInput
+                                style={{
+                                flex: 1,
+                                fontSize: 12,
+                                color: themes.colors.textInput,
+                                paddingVertical: 0,
+                                }}
+                                placeholder="UF de envio..."
                                 placeholderTextColor={themes.colors.textInput}
-                                />
-                            </View>
+                            />
+                        </View>
 
-                            {/* Lista de estados com scroll */}
-                            <FlatList
-                                data={states}
-                                keyExtractor={(item) => item}
-                                style={stylesDropDown.scrollableList}
-                                renderItem={({ item }) => (
+
+                        <FlatList
+                            data={states}
+                            keyExtractor={(item) => item}
+                            style={stylesDropDown.scrollableList}
+                            renderItem={({ item }) => (
                                 <TouchableOpacity onPress={() => toggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
                                     <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
                                     <CustomCheckbox 
@@ -184,11 +196,11 @@ export default function Home() {
                                         onPress={() => toggleStateSelection(item)}    
                                     />
                                 </TouchableOpacity>
-                                )}
-                                showsVerticalScrollIndicator={true}
-                            />
-                            </View>
                         )}
+                            showsVerticalScrollIndicator={true}
+                        />
+                    </View>
+                    )}
                     </View>
                 </View>
             </View>

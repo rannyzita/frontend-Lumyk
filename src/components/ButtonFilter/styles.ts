@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 5,
         width:'95%',
+        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.20)"
     },
     buttonContent: {
         flexDirection: 'row',

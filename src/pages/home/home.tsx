@@ -24,7 +24,6 @@ import {
     closeDropdowns
 } from './functions/index';
 
-
 type NavigationProps = StackNavigationProp<RootStackParamList, 'Profile', 'Authors'>;
 
 export default function Home() {

@@ -1,5 +1,3 @@
-// src/functions/homeFunctions.ts
-
 export function toggleGenreSelection(
     genre: string,
     selectedGenres: string[],

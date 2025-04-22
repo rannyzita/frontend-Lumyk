@@ -72,8 +72,7 @@ const styles = StyleSheet.create({
     formatContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 5,
+        gap: 8,
     },
     circle: {
         width: 20,

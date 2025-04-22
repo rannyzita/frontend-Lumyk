@@ -1,0 +1,212 @@
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
+
+import { useNavigation } from "@react-navigation/native";
+import { themes } from '../../global/themes';
+import styles from './styles';
+import {stylesDropDown} from '../../components/Dropdown/styles'
+
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+
+import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
+import ArrowDownIcon from '../../assets/iconFilter.svg'; 
+
+import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
+import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
+import DropdownFilter from "../../components/Dropdown/dropdown";
+import TopBar from '../../components/TopBar/topBar';
+import BookCard from "../../components/BookCard/bookCard";
+
+import {
+    toggleGenreSelection,
+    toggleStateSelection,
+    closeDropdowns
+} from './functions/index';
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
+export default function Home() {
+    const navigation = useNavigation<NavigationProps>();
+
+    const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
+    const [isStateDropdownVisible, setStateDropdownVisible] = useState(false);
+    const [genreButtonWidth, setGenreButtonWidth] = useState(0);
+    const [stateButtonWidth, setStateButtonWidth] = useState(0);
+
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [selectedStates, setSelectedStates] = useState<string[]>([]);
+
+    const genres = ['Romance', 'Ficção', 'Fantasia', 'Biografia'];
+    const states = ['São Paulo', 'Amazonas', 'Rio Grande do Sul', 'Ceará', 'alagoas', 'pokemon'];
+
+    const books = [
+        { id: '1', title: 'Orgulha', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '2', title: 'Pato', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '3', title: 'Pascoa', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '4', title: 'Butijão', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '5', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '6', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+    ];  
+
+    function handleToggleGenreSelection(genre: string) {
+        toggleGenreSelection(genre, selectedGenres, setSelectedGenres);
+    }
+    
+    function handleToggleStateSelection(state: string) {
+        toggleStateSelection(state, selectedStates, setSelectedStates);
+    }
+    
+    function handleCloseDropdowns() {
+        closeDropdowns(setGenreDropdownVisible, setStateDropdownVisible);
+    }
+    
+    return (
+        <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
+            <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
+                {/* Top Bar */}
+                <TopBar navigation={navigation} title="Digite o titulo do livro aqui..." />
+
+                {/* Filtros */}
+                <View style={[styles.filters]}>
+                    {/* Botão "Ver Autores" isolado */}
+                    <View style={{ alignItems: 'center', marginRight:4, marginLeft:10 }}>
+                        <ButtonFilter
+                            title="Ver Autores"
+                            onPress={() => navigation.navigate('Authors')}
+                            style={{ backgroundColor: '#fff', width: 115 }}
+                            textStyle={{ color: '#000', marginRight: 5 }}
+                        />
+                    </View>
+
+                    {/* Botão Gênero */}
+                    <View style={{ alignItems: 'center' }}>
+
+                        <ButtonFilter
+                            title="Gênero"
+                            onPress={() => {
+                                setGenreDropdownVisible(!isGenreDropdownVisible);
+                                setStateDropdownVisible(false);
+                            }}
+                            onLayout={(event) => setGenreButtonWidth(event.nativeEvent.layout.width)}
+                            style={{}} 
+                            contentStyle={{ width: 45 }}
+                            textStyle={{ marginLeft: -6 }}
+                            icon={
+                                <ArrowDownIcon
+                                    style={{
+                                        transform: [{ rotate: isGenreDropdownVisible ? '180deg' : '0deg' }],
+                                    }}
+                                    width={14}
+                                    height={14}
+                                />
+                            }
+                        />
+
+                        {isGenreDropdownVisible && (
+                            <DropdownFilter
+                            isVisible={isGenreDropdownVisible}
+                            buttonWidth={genreButtonWidth}
+                            items={genres}
+                            selectedItems={selectedGenres}
+                            onToggleItem={handleToggleGenreSelection}
+                            />
+                        )}
+                    </View>
+
+                    {/* Botão Calcular Frete */}
+                    <View style={{ alignItems: 'center' }}>
+                        <ButtonFilter
+                            title="Calcular Frete"
+                            onPress={() => {
+                            setStateDropdownVisible(!isStateDropdownVisible);
+                            setGenreDropdownVisible(false);
+                            }}
+                            onLayout={(event) => setStateButtonWidth(event.nativeEvent.layout.width)}
+                            style={{}}
+                            textStyle={{ marginLeft: -6 }}
+                            icon={
+                            <ArrowDownIcon
+                                style={{
+                                transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }],
+                                }}
+                                width={14}
+                                height={14}
+                            />
+                            }
+                        />
+
+                    {isStateDropdownVisible && (
+                    <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            borderRadius: 10,
+                            paddingHorizontal: 8,
+                            height: 30,
+                            marginHorizontal: 8,
+                            marginTop: 10,
+                            gap: 1,
+                            }}
+                        >
+                            <SearchIcon width={15} height={15} />
+                            <TextInput
+                                style={{
+                                flex: 1,
+                                fontSize: 12,
+                                color: themes.colors.textInput,
+                                paddingVertical: 0,
+                                }}
+                                placeholder="UF de envio..."
+                                placeholderTextColor={themes.colors.textInput}
+                            />
+                        </View>
+
+
+                        <FlatList
+                            data={states}
+                            keyExtractor={(item) => item}
+                            style={stylesDropDown.scrollableList}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity onPress={() => handleToggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
+                                    <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
+                                    <CustomCheckbox 
+                                        checked={selectedStates.includes(item)} 
+                                        onPress={() => handleToggleStateSelection(item)}    
+                                    />
+                                </TouchableOpacity>
+                        )}
+                            showsVerticalScrollIndicator={true}
+                        />
+                    </View>
+                    )}
+                    </View>
+                </View>
+                
+                <View style={styles.separator}></View>
+
+                <View style={{ flex: 1, paddingHorizontal: 15 }}>
+                    <FlatList
+                        data={books}
+                        keyExtractor={(item) => item.id}
+                        numColumns={2}
+                        renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+                            <BookCard
+                                title={item.title}
+                                author={item.author}
+                                price={item.price}
+                                freight={item.freight}
+                                image={item.image}
+                            />
+                        </TouchableOpacity>
+                        )}
+                        contentContainerStyle={{ paddingBottom: 20 }}
+                        showsVerticalScrollIndicator={true}
+                    />
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    );
+}

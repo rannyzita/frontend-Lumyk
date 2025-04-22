@@ -24,6 +24,9 @@ export const stylesDropDown = StyleSheet.create({
         marginRight: 8,
     },
     dropdownContent: {
+        position:'absolute', // faz com q n fique quebrado sobre os livros
+        top: 35, // ajusta a altura 
+        zIndex: 10, // garante que fique sobreposto
         marginTop:3,
         backgroundColor: themes.colors.primary,
         borderRadius: 10,

@@ -186,7 +186,7 @@ export default function Home() {
                 
                 <View style={styles.separator}></View>
 
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
                         data={books}
                         keyExtractor={(item) => item.id}

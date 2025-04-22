@@ -16,6 +16,7 @@ import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
 import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
 import DropdownFilter from "../../components/Dropdown/dropdown";
 import TopBar from '../../components/TopBar/topBar';
+import BookCard from "../../components/BookCard/bookCard";
 
 import {
     toggleGenreSelection,
@@ -177,6 +178,25 @@ export default function Home() {
                     </View>
                     )}
                     </View>
+                </View>
+
+                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                    <FlatList
+                        data={books}
+                        keyExtractor={(item) => item.id}
+                        numColumns={2}
+                        renderItem={({ item }) => (
+                        <BookCard
+                            title={item.title}
+                            author={item.author}
+                            price={item.price}
+                            freight={item.freight}
+                            image={item.image}
+                        />
+                        )}
+                        contentContainerStyle={{ paddingBottom: 20 }}
+                        showsVerticalScrollIndicator={false}
+                    />
                 </View>
             </View>
         </TouchableWithoutFeedback>

@@ -42,6 +42,14 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       elevation: 2,
     },
+    separator: {
+      height: 3,
+      backgroundColor: themes.colors.purpleDark,
+      marginVertical: 1,
+      alignSelf: 'center',
+      width:'95%',
+      marginTop: -2
+    }
 });
 
 export default styles;

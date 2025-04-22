@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
 
 import HomeIcon from '../assets/iconsNavigation/Home.svg';
 import OrderHistoryIcon from '../assets/iconsNavigation/Order.svg';

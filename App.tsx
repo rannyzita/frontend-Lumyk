@@ -4,16 +4,6 @@ import { useFonts, Roboto_400Regular, Roboto_600SemiBold, Roboto_700Bold } from 
 import AppLoading from 'expo-app-loading';
 
 export default function App() {
-
-  // const [fontsLoaded] = useFonts({
-  //   Roboto_400Regular,
-  //   Roboto_600SemiBold,
-  //   Roboto_700Bold,
-  // });
-
-  // if (!fontsLoaded) {
-  //   return <AppLoading />;
-  // }
   
   return (
     <NavigationContainer>

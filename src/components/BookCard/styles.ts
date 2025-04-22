@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
         padding: 10,
         margin: 10,
         flexGrow: 1,
-        boxShadow: themes.colors.shadow
+        boxShadow: themes.colors.shadow,
+        marginTop:25
     },
     image: {
         width: 110,

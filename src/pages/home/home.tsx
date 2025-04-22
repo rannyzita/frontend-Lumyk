@@ -41,8 +41,12 @@ export default function Home() {
     const states = ['São Paulo', 'Amazonas', 'Rio Grande do Sul', 'Ceará', 'alagoas', 'pokemon'];
 
     const books = [
-        { id: '1', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
-        { id: '2', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '1', title: 'Orgulha', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '2', title: 'Pato', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '3', title: 'Pascoa', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '4', title: 'Butijão', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '5', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
+        { id: '6', title: 'Orgulho e Preconceito', author: 'Jane Austen', price: 'R$ 32,50', freight: 'R$ 33,00', image: require('../../assets/book.jpg') },
     ];  
 
     function handleToggleGenreSelection(genre: string) {
@@ -179,6 +183,8 @@ export default function Home() {
                     )}
                     </View>
                 </View>
+                
+                <View style={styles.separator}></View>
 
                 <View style={{ flex: 1, paddingHorizontal: 10 }}>
                     <FlatList
@@ -186,16 +192,18 @@ export default function Home() {
                         keyExtractor={(item) => item.id}
                         numColumns={2}
                         renderItem={({ item }) => (
-                        <BookCard
-                            title={item.title}
-                            author={item.author}
-                            price={item.price}
-                            freight={item.freight}
-                            image={item.image}
-                        />
+                        <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+                            <BookCard
+                                title={item.title}
+                                author={item.author}
+                                price={item.price}
+                                freight={item.freight}
+                                image={item.image}
+                            />
+                        </TouchableOpacity>
                         )}
                         contentContainerStyle={{ paddingBottom: 20 }}
-                        showsVerticalScrollIndicator={false}
+                        showsVerticalScrollIndicator={true}
                     />
                 </View>
             </View>

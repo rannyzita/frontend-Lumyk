@@ -8,7 +8,6 @@ import SubscriptionIcon from '../assets/iconsNavigation/Subscription.svg';
 import CartIcon from '../assets/iconsNavigation/Cart.svg';
 import AboutIcon from '../assets/iconsNavigation/About.svg';
 
-
 import Loading from '../pages/loading/loading';
 import Login from '../pages/login/login';
 import Home from '../pages/home/home';
@@ -18,6 +17,7 @@ import Cart from '../pages/cart/cart';
 import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
 import Authors from '../pages/authors/authors';
+import Book from '../pages/book/book'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,6 +106,8 @@ export default function Routes() {
             <Stack.Screen name="Profile" component={Profile} />
 
             <Stack.Screen name="Authors" component={Authors} />
+
+            <Stack.Screen name="Book" component={Book} />
         </Stack.Navigator>
     );
 }

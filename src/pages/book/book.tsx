@@ -34,7 +34,7 @@ export default function Book() {
 
     const handleSelectCover = (option: string) => {
         setSelectedCover(option);
-        // Não fecha o modal automaticamente aqui
+        setIsModalVisible(false);
     };
 
     const openModal = () => {
@@ -68,11 +68,16 @@ export default function Book() {
                     >
                         <Text style={styles.formatTitle}>Formato Digital</Text>
                         <View style={styles.separator} />
+                        
                         <View style={styles.formatContent}>
                             <View style={styles.circle}>
-                                {selectedFormat === 'digital' && <View style={styles.filledCircle} />}
+                                {selectedFormat === 'fisico' && <View style={styles.filledCircle} />}
                             </View>
-                            <Text style={styles.priceText}>{book.priceDigital}</Text>
+                            <Text style={styles.priceText}>
+                                {selectedCover 
+                                    ? `${selectedCover} - ${book.physicalOptions.find(opt => opt.type === selectedCover)?.price}`
+                                    : ''}
+                            </Text>
                         </View>
                     </TouchableOpacity>
 

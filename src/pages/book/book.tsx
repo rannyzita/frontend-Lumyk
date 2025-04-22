@@ -62,13 +62,31 @@ export default function Book() {
                 <View style={styles.formatContainer}>
                     {/* Formato Digital */}
                     <TouchableOpacity
-                        style={[styles.formatButton, selectedFormat === 'digital' && styles.selectedButton]}
+                        style={[styles.formatButton, selectedFormat === 'digital' && styles.selectedButton, selectedFormat === 'digital' && { paddingVertical: 15 },]}
                         onPress={() => handleSelectFormat('digital')}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.formatTitle}>Formato Digital</Text>
                         <View style={styles.separator} />
-                        
+
+                        <View style={styles.formatContent}>
+                            <View style={styles.circle}>
+                                {selectedFormat === 'digital' && <View style={styles.filledCircle} />}
+                            </View>
+                            <Text style={styles.priceText}>{book.priceDigital}</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    {/* Formato Físico */}
+                    <TouchableOpacity
+                        ref={buttonRef}
+                        style={[styles.formatButton, selectedFormat === 'fisico' && styles.selectedButton, { paddingVertical: selectedFormat === 'fisico' ? 15 : 10 }]}
+                        onPress={() => handleSelectFormat('fisico')}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.formatTitle}>Formato Físico</Text>
+                        <View style={styles.separator} />
+
                         <View style={styles.formatContent}>
                             <View style={styles.circle}>
                                 {selectedFormat === 'fisico' && <View style={styles.filledCircle} />}
@@ -76,27 +94,13 @@ export default function Book() {
                             <Text style={styles.priceText}>
                                 {selectedCover 
                                     ? `${selectedCover} - ${book.physicalOptions.find(opt => opt.type === selectedCover)?.price}`
-                                    : ''}
+                                    : 'Selecione a capa'}
                             </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Formato Físico */}
-                    <TouchableOpacity
-                        ref={buttonRef}
-                        style={[styles.formatButton, selectedFormat === 'fisico' && styles.selectedButton]}
-                        onPress={() => handleSelectFormat('fisico')}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={styles.formatTitle}>Formato Físico</Text>
-                        <View style={styles.separator} />
-                        <View style={styles.circle}>
-                            {selectedFormat === 'fisico' && <View style={styles.filledCircle} />}
                         </View>
                     </TouchableOpacity>
                 </View>
 
-                <View style={{marginTop:15}}>
+                <View style={{ marginTop: 15 }}>
                     <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.addToCartText}>Adicionar ao Carrinho</Text>
                     </TouchableOpacity>

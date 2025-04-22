@@ -44,9 +44,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 10,
         paddingVertical: 15,
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
         width: '47%',
         alignItems: 'center',
+        marginVertical: 5,
         elevation: 4,
         shadowColor: '#000',
         shadowOpacity: 0.1,
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     dropdownItemText: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#333',
     },
     dropdownCircle: {

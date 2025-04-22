@@ -7,7 +7,10 @@ import {themes} from '../../global/themes'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-import TopBar from '../../components/TopBar/topBar'
+import  api  from '../../../API/index';
+
+const livros = await api.get('/livros')
+
 import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
 export default function Authors() {
     return (

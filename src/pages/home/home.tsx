@@ -108,15 +108,15 @@ export default function Home() {
 
     const [estadoSearchText, setEstadoSearchText] = useState('');
     const [generoSearchText, setGeneroSearchText] = useState('');
+    const [selectedFreight, setSelectedFreight] = useState(0);
     const [generosAPI, setGenerosAPI] = useState<{ id: string; nome: string }[]>([]);
 
     function embaralhar<T>(array: T[]): T[] {
         return array
-            .map(item => ({ item, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ item }) => item);
+            .map(item => ({ item, sort: Math.random() })) 
+            .sort((a, b) => a.sort - b.sort) 
+            .map(({ item }) => item);  // Retorna o item, sem o valor de sorteio
     }
-
     // padrao sem nada selecionado
     useEffect(() => {
         async function fetchData() {
@@ -144,7 +144,7 @@ export default function Home() {
                 }));
                 
                 setGenerosAPI(generosRes.data)
-                setBooks(livrosComDados);
+                setBooks(embaralhar(livrosComDados));
             } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
             }
@@ -164,7 +164,7 @@ export default function Home() {
                 const frete = fretePorEstado[estadoSelecionado] ?? 0;
     
                 let livrosFiltrados = livros;
-    
+
                 if (selectedGenres.length > 0) {
                     livrosFiltrados = livrosFiltrados.filter(book =>
                         book.genero?.nome === selectedGenres[0]
@@ -179,8 +179,8 @@ export default function Home() {
                     freight: `R$ ${frete.toFixed(2)}`,
                     image: { uri: api.defaults.baseURL + book.foto }
                 }));
-    
-                setBooks(livrosComDados);
+                
+                setBooks(embaralhar(livrosComDados)); 
             } catch (error) {
                 console.error('Erro ao filtrar livros:', error);
             }
@@ -191,24 +191,24 @@ export default function Home() {
 
     useEffect(() => {
         const estadoSelecionado = selectedStates[0];
-    
+
         setBooks(prevBooks =>
             prevBooks.map(book => {
                 if (!estadoSelecionado) {
                     return {
                         ...book,
-                        freight: "Selecione um estado"
+                        freight: `R$ 8.00`// ou undefined
                     };
                 }
-    
-                const novoFrete = fretePorEstado[estadoSelecionado];
-                return {
-                    ...book,
-                    freight: `R$ ${novoFrete.toFixed(2)}`
+
+            const valorFrete = fretePorEstado[estadoSelecionado];
+            return {
+                ...book,
+                freight: `R$ ${valorFrete.toFixed(2)}`
                 };
             })
-        );
-    }, [selectedStates]);    
+            );
+        }, [selectedStates]);
 
     useEffect(() => {
         const livrosFiltrados = books.filter(book =>
@@ -222,8 +222,23 @@ export default function Home() {
     }
 
     function handleToggleStateSelection(state: string) {
-        setSelectedStates(prev => prev[0] === state ? [] : [state]);
-    }
+        const isSelected = selectedStates[0] === state;
+        
+        
+        if (isSelected) {
+            setSelectedStates([]);
+            setSelectedFreight(8); 
+        } else {
+            setSelectedStates([state]);
+    
+            const freightValue = fretePorEstado[state];
+            if (freightValue) {
+                setSelectedFreight(freightValue); 
+            } else {
+                setSelectedFreight(8); 
+            }
+        }
+    }    
 
     function handleCloseDropdowns() {
         closeDropdowns(setGenreDropdownVisible, setStateDropdownVisible);

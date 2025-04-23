@@ -20,7 +20,7 @@ interface DropdownFilterProps {
     style?: ViewStyle;
     textStyle?: TextStyle;
     scrollable?: boolean;
-}
+};
 
 export default function DropdownFilter({
     isVisible,
@@ -61,4 +61,4 @@ export default function DropdownFilter({
             />
         </View>
     );
-}
+};

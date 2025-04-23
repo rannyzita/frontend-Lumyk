@@ -1,7 +1,7 @@
 // components/ButtonFilter.tsx
 import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, ViewStyle, TextStyle, LayoutChangeEvent } from 'react-native';
-import {styles} from './styles'
+import {styles} from './styles';
 
 interface ButtonFilterProps {
     title: string;
@@ -11,7 +11,7 @@ interface ButtonFilterProps {
     contentStyle?: ViewStyle;
     textStyle?: TextStyle;
     icon?: React.ReactNode;
-}
+};
 
 export default function ButtonFilter({ title, onPress, onLayout, style, textStyle, contentStyle, icon}: ButtonFilterProps) {
     return (
@@ -26,6 +26,6 @@ export default function ButtonFilter({ title, onPress, onLayout, style, textStyl
             </View>
         </TouchableOpacity>
     );
-}
+};
 
 

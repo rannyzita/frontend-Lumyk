@@ -8,7 +8,7 @@ export function toggleGenreSelection(
     } else {
         setSelectedGenres([...selectedGenres, genre]);
     }
-}
+};
 
 export function toggleStateSelection(
     state: string,
@@ -20,7 +20,7 @@ export function toggleStateSelection(
     } else {
         setSelectedStates([...selectedStates, state]);
     }
-}
+};
 
 export function closeDropdowns(
     setGenreDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -28,4 +28,4 @@ export function closeDropdowns(
 ) {
     setGenreDropdownVisible(false);
     setStateDropdownVisible(false);
-}
+};

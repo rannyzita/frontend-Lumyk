@@ -191,16 +191,24 @@ export default function Home() {
 
     useEffect(() => {
         const estadoSelecionado = selectedStates[0];
-        const novoFrete = fretePorEstado[estadoSelecionado];
     
         setBooks(prevBooks =>
-            prevBooks.map(book => ({
-                ...book,
-                freight: novoFrete !== undefined ? `R$ ${novoFrete.toFixed(2)}` : "Selecione um estado"
-            }))
+            prevBooks.map(book => {
+                if (!estadoSelecionado) {
+                    return {
+                        ...book,
+                        freight: "Selecione um estado"
+                    };
+                }
+    
+                const novoFrete = fretePorEstado[estadoSelecionado];
+                return {
+                    ...book,
+                    freight: `R$ ${novoFrete.toFixed(2)}`
+                };
+            })
         );
-    }, [selectedStates]);
-
+    }, [selectedStates]);    
 
     useEffect(() => {
         const livrosFiltrados = books.filter(book =>

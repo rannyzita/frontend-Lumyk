@@ -14,4 +14,4 @@ export const themes = {
         backgroundLumyk: '#D4BFFF',
         shadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
     }
-}
+};

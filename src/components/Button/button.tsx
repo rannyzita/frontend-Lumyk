@@ -32,4 +32,4 @@ export function Button({ text, loading, height = 45, width = '100%', style, ...r
             )}
         </TouchableOpacity>
     );
-}
+};

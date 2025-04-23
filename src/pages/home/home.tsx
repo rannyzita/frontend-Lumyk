@@ -1,3 +1,4 @@
+// ignore esse moi de codigo, eu vou modularizar dps ainda :3
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
 
@@ -115,7 +116,7 @@ export default function Home() {
         return array
             .map(item => ({ item, sort: Math.random() })) 
             .sort((a, b) => a.sort - b.sort) 
-            .map(({ item }) => item);  // Retorna o item, sem o valor de sorteio
+            .map(({ item }) => item);  
     }
     // padrao sem nada selecionado
     useEffect(() => {
@@ -197,7 +198,7 @@ export default function Home() {
                 if (!estadoSelecionado) {
                     return {
                         ...book,
-                        freight: `R$ 8.00`// ou undefined
+                        freight: `R$ 8.00`
                     };
                 }
 
@@ -249,7 +250,7 @@ export default function Home() {
             <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                 <TopBar 
                     navigation={navigation} 
-                    title="Digite o titulo do livro aqui..." 
+                    title='Digite o titulo do livro aqui...'
                     onSearchTextChange={setSearchText}
                 />
 

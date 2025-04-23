@@ -5,8 +5,6 @@ app = create_app()
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-
 '''
     Para rodar o código e visualizar a documentação da API:
         python run.py

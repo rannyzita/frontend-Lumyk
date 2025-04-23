@@ -21,8 +21,6 @@ import BookCard from "../../components/BookCard/bookCard";
 import api from '../../../API/index';
 
 import {
-    toggleGenreSelection,
-    toggleStateSelection,
     closeDropdowns
 } from './functions/index';
 
@@ -59,12 +57,36 @@ type AutorAPI = {
     foto: string;
 };
 
+// como na table de estados foi esquecido de incluir o atributo, criei
+// aqui um objeto com eles 
 const fretePorEstado: Record<string, number> = {
-    "Ceará": 5,
-    "Amazonas": 15,
-    "Rio Grande do Sul": 12,
-    "São Paulo": 8,
-    "Alagoas": 10,
+    "Ceará": 8,
+    "Piauí": 12,
+    "Rio Grande do Norte": 12,
+    "Paraíba": 12,
+    "Pernambuco": 12,
+    "Alagoas": 12,
+    "Sergipe": 12,
+    "Bahia": 15,
+    "Maranhão": 18,
+    "Amazonas": 25,
+    "Roraima": 25,
+    "Acre": 25,
+    "Rondônia": 25,
+    "Pará": 20,
+    "Amapá": 20,
+    "Tocantins": 18,
+    "Goiás": 18,
+    "Mato Grosso": 18,
+    "Mato Grosso do Sul": 18,
+    "Distrito Federal": 18,
+    "São Paulo": 20,
+    "Rio de Janeiro": 20,
+    "Minas Gerais": 20,
+    "Espírito Santo": 20,
+    "Paraná": 22,
+    "Santa Catarina": 22,
+    "Rio Grande do Sul": 22,
 };
 
 export default function Home() {
@@ -84,7 +106,9 @@ export default function Home() {
     const [searchText, setSearchText] = useState('');
     const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
 
-    const genres = ['Romance', 'Ficção', 'Fantasia', 'Biografia'];
+    const [estadoSearchText, setEstadoSearchText] = useState('');
+    const [generoSearchText, setGeneroSearchText] = useState('');
+    const [generosAPI, setGenerosAPI] = useState<{ id: string; nome: string }[]>([]);
 
     function embaralhar<T>(array: T[]): T[] {
         return array
@@ -93,12 +117,14 @@ export default function Home() {
             .map(({ item }) => item);
     }
 
+    // padrao sem nada selecionado
     useEffect(() => {
         async function fetchData() {
             try {
-                const [livrosRes, estadosRes] = await Promise.all([
+                const [livrosRes, estadosRes, generosRes] = await Promise.all([
                     api.get('/livros'),
-                    api.get('/estados')
+                    api.get('/estados'),
+                    api.get('/generos')
                 ]);
     
                 const livros: BookFromAPI[] = embaralhar(livrosRes.data);
@@ -116,7 +142,8 @@ export default function Home() {
                     freight: `R$ ${frete.toFixed(2)}`,
                     image: { uri: api.defaults.baseURL + book.foto }
                 }));
-    
+                
+                setGenerosAPI(generosRes.data)
                 setBooks(livrosComDados);
             } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
@@ -126,18 +153,54 @@ export default function Home() {
         fetchData();
     }, []);
     
+    // usado qnd o genre ou state for modificado
+    useEffect(() => {
+        async function fetchAndFilterBooks() {
+            try {
+                const response = await api.get('/livros');
+                const livros: BookFromAPI[] = response.data;
+    
+                const estadoSelecionado = selectedStates[0];
+                const frete = fretePorEstado[estadoSelecionado] ?? 0;
+    
+                let livrosFiltrados = livros;
+    
+                if (selectedGenres.length > 0) {
+                    livrosFiltrados = livrosFiltrados.filter(book =>
+                        book.genero?.nome === selectedGenres[0]
+                    );
+                }
+    
+                const livrosComDados = livrosFiltrados.map(book => ({
+                    id: book.id,
+                    title: book.titulo,
+                    author: book.autor?.nome ?? 'Autor desconhecido',
+                    price: `R$ ${parseFloat(book.preco).toFixed(2)}`,
+                    freight: `R$ ${frete.toFixed(2)}`,
+                    image: { uri: api.defaults.baseURL + book.foto }
+                }));
+    
+                setBooks(livrosComDados);
+            } catch (error) {
+                console.error('Erro ao filtrar livros:', error);
+            }
+        }
+    
+        fetchAndFilterBooks();
+    }, [selectedGenres, selectedStates]);    
 
     useEffect(() => {
         const estadoSelecionado = selectedStates[0];
-        const novoFrete = fretePorEstado[estadoSelecionado] ?? 0;
-
+        const novoFrete = fretePorEstado[estadoSelecionado];
+    
         setBooks(prevBooks =>
             prevBooks.map(book => ({
                 ...book,
-                freight: `R$ ${novoFrete.toFixed(2)}`
+                freight: novoFrete !== undefined ? `R$ ${novoFrete.toFixed(2)}` : "Selecione um estado"
             }))
         );
     }, [selectedStates]);
+
 
     useEffect(() => {
         const livrosFiltrados = books.filter(book =>
@@ -147,11 +210,11 @@ export default function Home() {
     }, [searchText, books]);    
 
     function handleToggleGenreSelection(genre: string) {
-        toggleGenreSelection(genre, selectedGenres, setSelectedGenres);
+        setSelectedGenres(prev => prev[0] === genre ? [] : [genre]);
     }
 
     function handleToggleStateSelection(state: string) {
-        toggleStateSelection(state, selectedStates, setSelectedStates);
+        setSelectedStates(prev => prev[0] === state ? [] : [state]);
     }
 
     function handleCloseDropdowns() {
@@ -201,9 +264,9 @@ export default function Home() {
                             <DropdownFilter
                                 isVisible={isGenreDropdownVisible}
                                 buttonWidth={genreButtonWidth}
-                                items={genres}
+                                items={generosAPI.map(g => g.nome).filter(nome => nome.toLowerCase().includes(generoSearchText.toLowerCase()))}
                                 selectedItems={selectedGenres}
-                                onToggleItem={handleToggleGenreSelection}
+                                onToggleItem={(nomeSelecionado) => setSelectedGenres((prev) => prev[0] === nomeSelecionado ? [] : [nomeSelecionado])}
                             />
                         )}
                     </View>
@@ -249,11 +312,13 @@ export default function Home() {
                                         }}
                                         placeholder="UF de envio..."
                                         placeholderTextColor={themes.colors.textInput}
+                                        value={estadoSearchText}
+                                        onChangeText={setEstadoSearchText}
                                     />
                                 </View>
 
                                 <FlatList
-                                    data={estados.map(e => e.nome)}
+                                    data={estados.map(e => e.nome).filter(nome => nome.toLowerCase().includes(estadoSearchText.toLowerCase()))}
                                     keyExtractor={(item) => item}
                                     style={stylesDropDown.scrollableList}
                                     renderItem={({ item }) => (

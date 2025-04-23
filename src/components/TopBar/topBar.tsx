@@ -1,18 +1,19 @@
 // components/TopBar.tsx
 import React from 'react';
-import { View, TouchableOpacity, TextInput, Text, StyleSheet } from 'react-native';
-import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg'
-import ProfileIcon from '../../assets/iconsNavigation/Profile.svg'
+import { View, TouchableOpacity, TextInput } from 'react-native';
+import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
+import ProfileIcon from '../../assets/iconsNavigation/Profile.svg';
 import LumykWhiteIcon from '../../assets/logoWhite.svg'; 
 import { themes } from '../../global/themes'; 
 import { styles } from './styles'; 
 
 interface TopBarProps {
-    navigation?: any; 
+    navigation?: any;
     title?: string;
-}
+    onSearchTextChange?: (text: string) => void;
+};
 
-const TopBar: React.FC<TopBarProps> = ({ navigation, title }) => {
+const TopBar: React.FC<TopBarProps> = ({ navigation, title, onSearchTextChange }) => {
     return (
         <View style={styles.topBar}>
             <View style={styles.topBarContent}>
@@ -28,15 +29,15 @@ const TopBar: React.FC<TopBarProps> = ({ navigation, title }) => {
                         style={styles.searchInput}
                         placeholder={title}
                         placeholderTextColor={themes.colors.textInput}
+                        onChangeText={onSearchTextChange}
                     />
                 </View>
 
                 { navigation && 
                     <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                    <ProfileIcon style={{ marginRight: 5 }} />
+                        <ProfileIcon style={{ marginRight: 5 }} />
                     </TouchableOpacity>
                 }
-                
             </View>
         </View>
     );

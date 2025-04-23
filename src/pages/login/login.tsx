@@ -5,11 +5,11 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-import styles from './styles'
+import styles from './styles';
 import Logo from '../../assets/logo.svg';
-import Google from '../../assets/google-37 1.svg'
-import Facebook from '../../assets/facebook.svg'
-import {themes} from '../../global/themes'
+import Google from '../../assets/google-37 1.svg';
+import Facebook from '../../assets/facebook.svg';
+import {themes} from '../../global/themes';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button/button';
 

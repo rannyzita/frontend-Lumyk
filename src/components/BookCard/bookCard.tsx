@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { styles } from './styles'
+import { styles } from './styles';
 
 interface BookCardProps {
     title: string;
@@ -8,7 +8,7 @@ interface BookCardProps {
     price: string;
     freight: string;
     image: any;
-}
+};
 
 const BookCard: React.FC<BookCardProps> = ({ title, author, price, freight, image }) => {
     return (

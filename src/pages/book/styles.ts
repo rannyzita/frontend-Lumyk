@@ -186,15 +186,7 @@ const styles = StyleSheet.create({
         height: 10,
         borderRadius: 5,
         backgroundColor: themes.colors.primary,
-    },
-    authorImage: {
-        width: 80, 
-        height: 80,
-        borderRadius: 40, 
-        marginTop: 10,
-        marginBottom: 10, 
-        alignSelf: 'center', 
-    }      
+    }, 
 });
 
 export default styles;

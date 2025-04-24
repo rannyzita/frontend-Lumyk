@@ -51,13 +51,6 @@ type EstadoAPI = {
     nome: string;
 };
 
-type AutorAPI = {
-    id: string;
-    nome: string;
-    biografia: string;
-    foto: string;
-};
-
 // como na table de estados foi esquecido de incluir o atributo, criei
 // aqui um objeto com eles 
 const fretePorEstado: Record<string, number> = {

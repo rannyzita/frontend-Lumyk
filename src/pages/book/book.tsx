@@ -131,7 +131,7 @@ export default function Book() {
                     {bookData.foto && <Image source={bookData.foto}/>}
                     
                     <Text style={styles.author}>{bookData.autor.nome}</Text>
-                    <Text style={styles.stock}>{bookData.estoque} unidades (Em estoque)</Text>
+                    <Text style={styles.stock}>{bookData.estoque} unidades </Text>
 
                     <View style={styles.formatContainer}>
                     {/* Formato Digital */}

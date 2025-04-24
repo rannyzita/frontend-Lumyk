@@ -83,14 +83,14 @@ baseURL: 'http://192.168.1.7:5000',
 3. Escaneie o QR code com o app Expo Go no seu celular.
 
 ## 📄 Telas e Funcionalidades (Status Atual)
-### ✅ Telas Semi-funcionais:
+### ✅ Telas Semi-funcionais (São elas: Home e a de Book):
 - **Login**: apenas o botão de "Entrar" está funcionando (não há validação ainda).
-- **Home**:
+- **1 - Home**:
   - Possui filtro por gênero.
   - Filtro por estado com busca (foi criado um objeto manual para simular o frete).
   - Busca por título do livro.
   - Exibe livros de forma aleatória.
-- **Book (Detalhes do Livro)**:
+- **2 - Book (Detalhes do Livro)**:
   - Exibe dados do livro e autor.
   - Permite escolher entre formato digital ou físico (mas ignore o físico, pois não foi implementado no banco).
   - Os botões "Adicionar ao carrinho" e "Ver livros" ainda **não estão funcionando**.
@@ -108,5 +108,4 @@ O projeto está em andamento e algumas funcionalidades estão sendo finalizadas.
 
 ---
 
-Feito com carinho ❤️ por Ranny e Kariny :)
 

@@ -369,7 +369,7 @@ export default function Home() {
                         keyExtractor={(item) => item.id}
                         numColumns={2}
                         renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+                            <TouchableOpacity onPress={() => navigation.navigate('Book', { bookId: item.id})}>
                                 <BookCard
                                     title={item.title}
                                     author={item.author}

@@ -83,23 +83,26 @@ baseURL: 'http://192.168.1.7:5000',
 3. Escaneie o QR code com o app Expo Go no seu celular.
 
 ## 📄 Telas e Funcionalidades (Status Atual)
+-----LEVE EM CONSIDERAÇÃO O QUE ESTÁ AQUI-------------------
 ### ✅ Telas Semi-funcionais (São elas: Home e a de Book):
-- **Login**: apenas o botão de "Entrar" está funcionando (não há validação ainda).
+- **Login**: apenas o botão de "Entrar" está funcionando (não há validação ainda). Ela vai dar acesso a primeira tela semi-funciona
 - **1 - Home**:
   - Possui filtro por gênero.
   - Filtro por estado com busca (foi criado um objeto manual para simular o frete).
   - Busca por título do livro.
   - Exibe livros de forma aleatória.
+  - Possui também acesso no bottomNavigation para outras telas, só para dar o feedback que ta funcionando. Juntamente com a parte de perfil na parte superior e a de ver autores, somente para o feedback da navegação.
 - **2 - Book (Detalhes do Livro)**:
-  - Exibe dados do livro e autor.
-  - Permite escolher entre formato digital ou físico (mas ignore o físico, pois não foi implementado no banco).
-  - Os botões "Adicionar ao carrinho" e "Ver livros" ainda **não estão funcionando**.
-
-## ❌ Funcionalidades Ainda Não Implementadas
-- Adição ao carrinho.
-- Botão "Ver livros" na tela de detalhes.
+  - Exibe dados do livro e autor com base no livro clicado.
+  - Permite escolher entre formato digital ou físico (mas ignore o físico, pois não foi implementado no frontend e não está completo na estrutura do banco).
+  - Os botões "Adicionar ao carrinho" e "Ver livros" ainda **não estão funcionando**, ignore-os. 
+-----LEVE EM CONSIDERAÇÃO O QUE ESTÁ AQUI-------------------
+    
+## ❌ Funcionalidades Ainda Não Implementadas (Ignore também):
+- Adição ao carrinho + feedback.
+- Botão "Ver livros" na tela de detalhes, que leva pra outra tela.
 - Recuperação de senha.
-- Conexão real com banco de estados ou capas de livros físicos.
+- mais formatação nas caixas
 
 ---
 

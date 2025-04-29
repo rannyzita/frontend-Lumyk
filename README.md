@@ -109,10 +109,53 @@ baseURL: 'http://192.168.1.7:5000',
 ### ✉️ Dúvidas ou bugs
 O projeto está em andamento e algumas funcionalidades estão sendo finalizadas. Para avaliação, por favor considerar os pontos descritos acima.
 
-OBS: CASO DÊ ALGUM ERRO POR FALTA DE ALGUMA INSTALAÇÃO, RODE:
+---------------------------------------------------------------------------------------------------------------
+ OBS: CASO DÊ ALGUM ERRO POR FALTA DE ALGUMA INSTALAÇÃO, RODE:
 ```bash
 pip install Flask==3.1.0 Flask-RESTX==1.1.0 python-dotenv==1.0.0
 ```
----
+ESSE PACOTE DE CIMA RESOLVE ESSE ERRO DE BAIXO:
+
+```bash
+Error: While importing 'manage', an ImportError was raised:
+
+Traceback (most recent call last):
+  File "C:\Users\laura\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\cli.py", line 218, in locate_app
+    _import_(module_name)
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\manage.py", line 2, in <module>
+    from backend.app import create_app
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\backend\app\_init_.py", line 3, in <module>
+    from flask_restx import Api
+  File "C:\Users\laura\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_restx\_init_.py", line 2, in <module>
+    from .api import Api  # noqa
+    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\laura\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_restx\api.py", line 35, in <module>
+    from werkzeug import _version_ as werkzeug_version
+ImportError: cannot import name '_version' from 'werkzeug' (C:\Users\laura\AppData\Local\Programs\Python\Python311\Lib\site-packages\werkzeug\init_.py)
+```
+---------------------------------------------------------------------------------------------------------------
+E SE TIVER OUTRO ERRO RELACIONADO A NAO TER ACHADO UM MODULO BCRYPT, INSTALE:
+```bash
+pip install bcrypt
+```
+
+```bash
+Error: While importing 'manage', an ImportError was raised:
+
+Traceback (most recent call last):
+  File "C:\Users\laura\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\cli.py", line 245, in locate_app
+    _import_(module_name)
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\manage.py", line 2, in <module>
+    from backend.app import create_app
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\backend\app\_init_.py", line 6, in <module>
+    from backend.app.routes.usuario_routes import api as usuario
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\backend\app\routes\usuario_routes.py", line 3, in <module>
+    from backend.app.controllers import UsuarioController
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\backend\app\controllers\_init_.py", line 1, in <module>
+    from .authUsuario import *
+  File "C:\Users\laura\Desktop\Lumyk\Lumyk---backend\backend\app\controllers\authUsuario.py", line 1, in <module>
+    import bcrypt
+ModuleNotFoundError: No module named 'bcrypt'
+```
 
 

@@ -47,7 +47,7 @@ Abra **dois terminais** no VS Code:
 
 ## 💻 Rodando o Backend
 Na raiz do backend (`Lumyk---backend/`), execute:
-
+OBS: TEM QUE ESTAR NO TERMINAL DO BASH
 ```bash
 python run.py
 ```

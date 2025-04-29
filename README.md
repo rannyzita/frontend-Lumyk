@@ -34,7 +34,11 @@ Abra **dois terminais** no VS Code:
    ```bash
    flask --app manage.py db upgrade --directory backend/app/migrations
    ```
+4. Coloque os dados do banco de dados:
 
+   ```bash
+   PYTHONPATH=backend python -m backend.app.db.seeders.seeder
+   ```
 ### Terminal 2: Frontend (React Native + Expo)
 1. Acesse a pasta:
    ```bash

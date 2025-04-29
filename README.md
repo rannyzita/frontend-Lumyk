@@ -109,6 +109,10 @@ baseURL: 'http://192.168.1.7:5000',
 ### ✉️ Dúvidas ou bugs
 O projeto está em andamento e algumas funcionalidades estão sendo finalizadas. Para avaliação, por favor considerar os pontos descritos acima.
 
+OBS: CASO DÊ ALGUM ERRO POR FALTA DE ALGUMA INSTALAÇÃO, RODE:
+```bash
+pip install Flask==3.1.0 Flask-RESTX==1.1.0 python-dotenv==1.0.0
+```
 ---
 
 

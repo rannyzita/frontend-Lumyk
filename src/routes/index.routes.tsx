@@ -17,12 +17,12 @@ import Cart from '../pages/cart/cart';
 import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
 import Authors from '../pages/authors/authors';
-import Book from '../pages/book/book'
+import Book from '../pages/book/book';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-import {themes} from '../global/themes'
+import {themes} from '../global/themes';
 
 
 function TabNavigator() {
@@ -82,7 +82,7 @@ function TabNavigator() {
             />
         </Tab.Navigator>
     );
-}
+};
 
 export default function Routes() {
     return (
@@ -110,4 +110,4 @@ export default function Routes() {
             <Stack.Screen name="Book" component={Book} />
         </Stack.Navigator>
     );
-}
+};

@@ -3,12 +3,12 @@ import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ArrowNavigation from "../../assets/iconsNavigation/HeaderNavigation/Seta Voltar.svg";
-import { styles } from './styles'
+import { styles } from './styles';
 
 interface NavigationHeaderProps {
     onBack?: () => void;
     title?: string;
-}
+};
 
 export default function NavigationHeader({ onBack, title }: NavigationHeaderProps) {
     const navigation = useNavigation();
@@ -30,5 +30,5 @@ export default function NavigationHeader({ onBack, title }: NavigationHeaderProp
             {title && <Text style={styles.title}>{title}</Text>}
         </View>
     );
-}
+};
 

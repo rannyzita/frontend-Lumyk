@@ -44,9 +44,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 10,
         paddingVertical: 15,
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
         width: '47%',
         alignItems: 'center',
+        marginVertical: 5,
         elevation: 4,
         shadowColor: '#000',
         shadowOpacity: 0.1,
@@ -72,8 +73,7 @@ const styles = StyleSheet.create({
     formatContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 5,
+        gap: 8,
     },
     circle: {
         width: 20,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     dropdownItemText: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#333',
     },
     dropdownCircle: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
         height: 10,
         borderRadius: 5,
         backgroundColor: themes.colors.primary,
-    },
+    }, 
 });
 
 export default styles;

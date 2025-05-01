@@ -84,7 +84,7 @@ export default function Register() {
                     
                     <View style={{gap:1}}>
                         <Text style={styles.label}>Data de Nascimento</Text>
-                        <TouchableOpacity onPress={}>
+                        <TouchableOpacity>
                             <Input
                                 placeholder="00/00/0000"
                                 placeholderTextColor={themes.colors.textPlaceHolder}

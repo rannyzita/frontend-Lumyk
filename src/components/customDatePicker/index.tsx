@@ -1,52 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Platform, View } from 'react-native';
-import {styles} from './styles'
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import React from 'react';
+import { Platform, View } from 'react-native';
 
-interface CustomDateTimePickerProps {
-    type: 'date' | 'time';
-    onDateChange: (date: Date) => void;
+interface Props {
     show: boolean;
     setShow: (show: boolean) => void;
+    onDateChange: (date: Date) => void;
+    type: 'date' | 'time';
+    date?: Date | null;
 }
 
-export default function CustomDateTimePicker({type, onDateChange, show, setShow}: CustomDateTimePickerProps) {
-
-    const [date, setDate] = useState(new Date())
-
-    useEffect(()=> {
-        if (onDateChange){
-            onDateChange(date)
-        }
-    },[date, onDateChange])
-
-    const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-        const currentDate = selectedDate || date;
-
-        setDate(currentDate);
-        setShow(false); //oculta o picker apos a seleção
-    };
+export default function CustomDateTimePicker({ show, setShow, onDateChange, type, date }: Props) {
+    const today = new Date();
+    const fourteenYearsAgo = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
 
     return (
-        <Modal
-            transparent={true}
-            visible={show}
-            onRequestClose={()=>setShow(false)}
-        >
-            <View style={styles.modalOverlay}>
-                <View style={[
-                    styles.container,
-                    Platform.OS == 'android'&&{backgroundColor:'transparent'}
-                ]}>
-                    <DateTimePicker 
-                        value={date}
-                        mode={type}
-                        display={Platform.OS === 'ios'?'inline':'default'}
-                        onChange={onChange}
-                    />
-                </View>
-            </View>
-        </Modal>
-    )
+        <>
+        {show && (
+            <DateTimePicker
+                value={date || fourteenYearsAgo}
+                mode={type}
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={(event, selectedDate) => {
+                    setShow(false);
+                    if (selectedDate) {
+                    onDateChange(selectedDate);
+                    }
+                }}
+                maximumDate={fourteenYearsAgo} // impede selecionar < 14 anos; oq tava la na regra de negocio
+            />
+        )}
+        </>
+    );
 }
-

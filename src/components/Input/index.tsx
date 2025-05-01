@@ -76,7 +76,7 @@ export const Input = forwardRef((props: Props, ref) => {
                 )}
                 
                 {iconRightName == "IconCalendar" && (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={onIconRightPress}>
                         <IconCalendar/>
                     </TouchableOpacity>
                 )}

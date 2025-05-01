@@ -1,23 +1,21 @@
 import { StyleSheet } from "react-native";
-import { themas } from "../../global/themes";
+import { themes } from "../../global/themes";
 
 export const styles = StyleSheet.create({
     modalOverlay: {
-        flex: 1, 
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.4)',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: themas.colors.transparent
     },
     container: {
-        width: '80%',
-        padding: 16,
         backgroundColor: '#fff',
-        elevation:5,
-        alignItems: 'center'
+        borderRadius: 16,
+        padding: 20,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
     },
-    dateText: {
-        marginTop: 20,
-        fontSize: 18,
-        textAlign: 'center'
-    }
-})
+});

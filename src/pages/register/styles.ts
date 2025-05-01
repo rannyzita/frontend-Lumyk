@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems:'center',
+        marginTop:80
     },
     title: {
         fontSize: 36,
@@ -83,6 +84,19 @@ const styles = StyleSheet.create({
     label: {
         fontFamily: 'Roboto',
         fontSize:14
+    },
+    errorText: {
+        color: themes.colors.red,                
+        fontSize: 14,                
+        marginTop: 0,                
+        fontWeight: 'bold',    
+        minHeight: 18,               
+    },
+    textBottomClickHere: {
+        color: themes.colors.link,
+        fontWeight: 'regular',
+        textDecorationLine: 'underline',
+        marginTop: 7
     },
 });
 

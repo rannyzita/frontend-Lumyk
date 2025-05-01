@@ -78,6 +78,9 @@ Por **o IP que apareceu no terminal** do backend, por exemplo:
 baseURL: 'http://192.168.1.7:5000',
 ```
 
+OBS: e n se esqueça de configurar a variavel no .env;
+SECRET_KEY=suasenha, para a geração do token do usuario
+
 ## 🚀 Rodando o Frontend (Expo)
 1. Instale o **Expo Go** no seu celular (disponível na Play Store/App Store).
 2. No terminal do frontend, execute:

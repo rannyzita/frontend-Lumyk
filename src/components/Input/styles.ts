@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 12,
-        marginBottom: 16,
+        marginBottom: 12,
         
         boxShadow: themes.colors.shadow
     },
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Roboto',
         fontSize: 14,
         color: themes.colors.textPlaceHolder,
-        paddingVertical: 12,
+        paddingVertical: 0,
     },
     button: {
         paddingHorizontal: 4,

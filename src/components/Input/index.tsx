@@ -1,6 +1,8 @@
 import React, { useState, forwardRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import IconCalendar from '../../assets/iconsNavigation/calendar-days-solid 1.svg'
+
 import {
     View,
     TextInput,
@@ -70,6 +72,12 @@ export const Input = forwardRef((props: Props, ref) => {
                             color={themes.colors.textPlaceHolder}
                             style={styles.icon}
                         />
+                    </TouchableOpacity>
+                )}
+                
+                {iconRightName == "IconCalendar" && (
+                    <TouchableOpacity>
+                        <IconCalendar/>
                     </TouchableOpacity>
                 )}
             </View>

@@ -18,6 +18,7 @@ import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
 import Authors from '../pages/authors/authors';
 import Book from '../pages/book/book';
+import Register from '../pages/register/register'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,6 +109,8 @@ export default function Routes() {
             <Stack.Screen name="Authors" component={Authors} />
 
             <Stack.Screen name="Book" component={Book} />
+
+            <Stack.Screen name="Register" component={Register} />
         </Stack.Navigator>
     );
 };

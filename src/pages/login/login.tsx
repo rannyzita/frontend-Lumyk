@@ -17,7 +17,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Login', 'Main'>;
+type NavigationProps = StackNavigationProp<RootStackParamList>;
 export default function LoginScreen() { 
     const [isPressed, setIsPressed] = useState(false);
     const navigation = useNavigation<NavigationProps>();
@@ -57,7 +57,7 @@ export default function LoginScreen() {
                         <View style={{gap:1}}>
                             <Text style={[styles.label]}>E-mail</Text>
                             <Input
-                                placeholder="Insira seu e-mail"
+                                placeholder="Insira seu e-mai"
                                 placeholderTextColor={themes.colors.textPlaceHolder}
                                 width={320}
                                 height={40}
@@ -131,7 +131,7 @@ export default function LoginScreen() {
             <View style={styles.footer}>
                 <Text style={styles.textBottom}>Não tem uma conta </Text>
 
-                <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                     <Text style={styles.textBottomClickHere}> Clique aqui</Text>
                 </TouchableOpacity>
             </View>

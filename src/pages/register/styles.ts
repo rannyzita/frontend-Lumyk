@@ -7,43 +7,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center',
     },
-    boxTop: {
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop:20
-    },
     title: {
         fontSize: 36,
         fontFamily: 'Roboto',
         textAlign: 'center',
-        marginBottom: 30,
-    },
-    label: {
-        fontFamily: 'Roboto',
-        fontSize:14
-    },
-    textBottomClickHere: {
-        color: themes.colors.link,
-        fontWeight: 'regular',
-        textDecorationLine: 'underline'
-    },
-    separatorContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical:5,
-        marginTop: 14
-    },
-    line: {
-        flex:1,
-        height: 2   ,
-        backgroundColor: themes.colors.purpleDark
-    },
-    separatorText: {
-        color:themes.colors.purpleDark,    
+        marginTop: 10, 
+        marginBottom: 10,
     },
     buttonLogin: {
         alignItems:'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     socialButtonGoogle: {
         flexDirection: 'row',
@@ -93,21 +66,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    footer: {
+    separatorContainer: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
-        position: 'static'
+        marginVertical:5,
+        marginTop: 14
     },
-    textBottom: {
-        fontSize: 14,
-        fontWeight: 100
+    line: {
+        flex:1,
+        height: 2   ,
+        backgroundColor: themes.colors.purpleDark
+    },
+    separatorText: {
+        color:themes.colors.purpleDark,    
+    },
+    label: {
+        fontFamily: 'Roboto',
+        fontSize:14
     },
 });
 

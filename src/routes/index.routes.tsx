@@ -38,7 +38,7 @@ function TabNavigator() {
                 tabBarStyle: {
                     backgroundColor: themes.colors.primary,
                     borderTopWidth: 0,
-                    height: 60,
+                    height: 70,
                     paddingTop: 10, 
                     paddingBottom: 10,
                 },

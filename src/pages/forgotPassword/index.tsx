@@ -12,8 +12,8 @@ import NavigationHeader from '../../components/NavigationHeader/navigationHeader
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
-import checkFeedback from '../../assets/iconsNavigation/check-solid 1.svg';
-import xFeedback from '../../assets/iconsNavigation/x-solid 1.svg';
+
+import ModalFeedback from '../../components/feedbackButton/feedbackButton';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -24,7 +24,7 @@ const RedefinirSenha = () => {
 
     const handleEnviarCodigo = () => {
         setShowModal(true);
-        setTimeout(() => setShowModal(false), 5000);
+        setTimeout(() => setShowModal(false), 10000);
     };
 
     return (
@@ -68,33 +68,21 @@ const RedefinirSenha = () => {
                     />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{flexDirection: 'row'}}>
-                    <View style={{ marginLeft: 207, marginTop:50 }}>
-                        <Button
-                            text="Confirmar"
-                            width={110}
-                            height={35}
-                            onPress={() => navigation.navigate('VerifyCode')}
-                        />
-                    </View>
-                </TouchableOpacity>
-            </View>
+                <View style={{marginTop:50, flexDirection: 'row'}}></View>
+                    <Button
+                        text="Confirmar"
+                        width={110}
+                        height={35}
+                        onPress={() => navigation.navigate('VerifyCode')}
+                        style={{marginLeft:207}}
+                    />
+                </View>
 
             {showModal && (
-                <View style={styles.modalStyle}>
-                    {/* Ícone de fechar */}
-                    <TouchableOpacity onPress={() => setShowModal(false)} style={{ marginRight: 10 }}>
-                    <xFeedback width={16} height={16} />
-                    </TouchableOpacity>
-
-                    {/* Texto centralizado */}
-                    <Text style={{ color: 'white', fontSize: 12, flex: 1, textAlign: 'center' }}>
-                    Código enviado com sucesso!
-                    </Text>
-
-                    {/* Ícone de check */}
-                    <checkFeedback width={16} height={16} />
-                </View>
+                <ModalFeedback
+                    title='Código enviado com sucesso!'
+                    closeModal={() => setShowModal(false)} style={{ marginRight: 15 }}
+                />
             )}
         </View>
     );

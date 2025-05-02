@@ -84,18 +84,19 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     modalStyle: {
+        alignItems: 'center',
+        flexDirection: 'row',
         position: 'absolute',
+        justifyContent: 'space-between',
         bottom: 50, 
         alignSelf: 'flex-start',
         backgroundColor: themes.colors.greenDark,
         padding: 12,
         borderRadius: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
         zIndex: 999, 
         elevation: 10,
         marginLeft:35,
-        width: 250,
+        width: 270,
         height: 40
     }
 });

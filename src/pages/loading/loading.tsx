@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Image, ActivityIndicator, Text} from 'react-native';
+import { View, ActivityIndicator} from 'react-native';
 import styles from './styles';
 import Logo from '../../assets/logo.svg';
 import { useNavigation } from "@react-navigation/native";

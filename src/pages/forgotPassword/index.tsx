@@ -72,7 +72,7 @@ const RedefinirSenha = () => {
                     <Button
                         text="Confirmar"
                         width={110}
-                        height={35}
+                        height={40}
                         onPress={() => navigation.navigate('VerifyCode')}
                         style={{marginLeft:207}}
                     />

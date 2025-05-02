@@ -20,70 +20,59 @@ type NavigationProps = StackNavigationProp<RootStackParamList>;
 const verifyCode = () => {
     const navigation = useNavigation<NavigationProps>();
     const [email, setEmail] = useState('');
-    const [showModal, setShowModal] = useState(false);
-
-    const handleEnviarCodigo = () => {
-        setShowModal(true);
-        setTimeout(() => setShowModal(false), 10000);
-    };
 
     return (
         <View style={styles.container}>
             <NavigationHeader
-                iconArrow={true}
-                onBack={() => navigation.navigate('Login')}
             />
 
-            <View style={styles.content}>
+            <View style={[styles.content, {marginBottom:95}]}>
                 <Logo style={{marginBottom: 50}} />
                 <View style={styles.separatorContainer}>
                     <View style={styles.line} />
                 </View>
 
-                <Text style={styles.title}>Redefinir Senha</Text>
+                <Text style={styles.title}>Inserindo o Código</Text>
                 <Text style={styles.subtitle}>
-                    Para redefinir sua senha, informe o e-mail cadastrado na sua conta e lhe enviaremos um código.
+                    Para redefinir sua senha, informe o código que enviamos ao seu e-mail. Caso não tenha enviado, volte para a página anterior e aperte em enviar novamente.
                 </Text>
 
                 <View style={styles.separatorContainer}>
                     <View style={styles.line} />
                 </View>
 
-                <Text style={styles.label}>E-mail</Text>
-                <Input
-                    placeholder="Insira seu e-mail aqui"
-                    placeholderTextColor={themes.colors.textPlaceHolder}
-                    width={320}
-                    height={38}
-                    value={email}
-                    onChangeText={setEmail}
-                />
-
-                <TouchableOpacity style={{marginTop:10}}>
-                    <Button
-                        text="Enviar Código"
-                        width={320}
+                <Text style={styles.label}>Código de Verificação</Text>
+                <View style={{ alignItems: 'flex-start', width: '100%' }}>
+                    <Input
+                        placeholder="Insira seu código aqui"
+                        placeholderTextColor={themes.colors.textPlaceHolder}
+                        width={200}
                         height={38}
-                        onPress={handleEnviarCodigo}
-                    />
-                </TouchableOpacity>
-
-                <View style={{marginTop:50, flexDirection: 'row'}}></View>
-                    <Button
-                        text="Confirmar"
-                        width={110}
-                        height={35}
-                        onPress={() => navigation.navigate('VerifyCode')}
-                        style={{marginLeft:207}}
+                        value={email}
+                        onChangeText={setEmail}
                     />
                 </View>
 
-            {showModal && (
-                <ModalFeedback
-                    title='Código enviado com sucesso!'
-                    closeModal={() => setShowModal(false)} style={{ marginRight: 15 }}
-                />
-            )}
+
+                    <View style={{ marginTop: 50, flexDirection: 'row', alignItems: 'center', marginLeft:140 }}>
+                        
+                        <View style={{ marginRight: 20 }}>
+                            <TouchableOpacity style={{ marginRight: 20 }}>
+                                <Text onPress={() => navigation.navigate('ForgotPassword')}>Anterior</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View>
+                            <Button
+                            text="Confirmar"
+                            width={110}
+                            height={40}
+                            onPress={() => navigation.navigate('ResetPassword')}
+                            />
+                        </View>
+
+                    </View>
+                </View>
         </View>
     );
 };

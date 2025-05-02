@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         borderWidth: 1,
         borderColor: '#ccc',
-        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
+        boxShadow: themes.colors.shadow
     },
     socialButtonFacebook: {
         flexDirection: 'row',
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 20,
         marginTop: 10,
-        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
+        boxShadow: themes.colors.shadow
     },    
     socialText: {
         color: '#fff',

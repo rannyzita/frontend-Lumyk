@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -22,6 +22,7 @@ import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
 import api from '../../../API';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -31,19 +32,35 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    useEffect(() => {
+        const checkLogin = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token) {
+                navigation.navigate('Main');
+            }
+        };
+        checkLogin();
+    }, []);
+
     const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert('Erro', 'Preencha o e-mail e a senha!');
             return;
         }
-    
+
         try {
             const response = await api.post('/auth/login', {
                 email,
                 senha: password,
             });
-    
+
             if (response.status === 200 || response.status === 201) {
+                const { token, IdUsuario } = response.data;
+
+                // Armazena o token e o ID do usuário
+                await AsyncStorage.setItem('userToken', token);
+                await AsyncStorage.setItem('userId', IdUsuario);
+
                 Alert.alert('Sucesso', 'Login realizado com sucesso!');
                 navigation.navigate('Main');
             } else {
@@ -57,7 +74,7 @@ export default function LoginScreen() {
             }
         }
     };
-    
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -114,7 +131,7 @@ export default function LoginScreen() {
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
                                 <Text style={styles.textBottom}>Esqueceu sua senha?</Text>
 
-                                <TouchableOpacity onPress={() => navigation.navigate('NomeDaTela')}>
+                                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
                                     <Text style={styles.textBottomClickHere}> Clique aqui</Text>
                                 </TouchableOpacity>
                             </View>

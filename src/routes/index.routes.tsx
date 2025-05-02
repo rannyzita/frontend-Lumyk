@@ -18,7 +18,9 @@ import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
 import Authors from '../pages/authors/authors';
 import Book from '../pages/book/book';
-import Register from '../pages/register/register'
+import Register from '../pages/register/register';
+import ForgotPassword from '../pages/forgotPassword/index';
+import VerifyCode from '../pages/forgotPassword/verifyCode';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -111,6 +113,10 @@ export default function Routes() {
             <Stack.Screen name="Book" component={Book} />
 
             <Stack.Screen name="Register" component={Register} />
+
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+
+            <Stack.Screen name="VerifyCode" component={VerifyCode} />
         </Stack.Navigator>
     );
 };

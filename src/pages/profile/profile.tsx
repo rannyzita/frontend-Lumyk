@@ -8,7 +8,7 @@ export default function Profile() {
 
     return (
         <View style={styles.container}>
-            <NavigationHeader/>
+            <NavigationHeader iconArrow={true}/>
         </View>
     )
 };

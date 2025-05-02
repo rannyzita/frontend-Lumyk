@@ -54,10 +54,6 @@ export default function Book() {
                 const bookImage = { uri: api.defaults.baseURL + book.foto };
                 const authorImage = { uri: api.defaults.baseURL + book.autor?.foto };
 
-                console.log('Foto original do autor:', book.autor?.foto);
-
-                console.log('URL da imagem do book:', bookImage);
-
             setBookData({
             id: book.id,
             titulo: book.titulo,

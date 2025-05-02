@@ -1,6 +1,6 @@
 // ignore esse moi de codigo, eu vou modularizar dps ainda :3
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 import { themes } from '../../global/themes';
@@ -88,6 +88,8 @@ export default function Home() {
 
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isStateDropdownVisible, setStateDropdownVisible] = useState(false);
+    const [isLoadingBooks, setIsLoadingBooks] = useState(true);
+
     const [genreButtonWidth, setGenreButtonWidth] = useState(0);
     const [stateButtonWidth, setStateButtonWidth] = useState(0);
 
@@ -127,6 +129,7 @@ export default function Home() {
     // padrao sem nada selecionado
     useEffect(() => {
         async function fetchData() {
+            setIsLoadingBooks(true);
             try {
                 const [livrosRes, estadosRes, generosRes] = await Promise.all([
                     api.get('/livros'),
@@ -154,6 +157,10 @@ export default function Home() {
                 setBooks(embaralhar(livrosComDados));
             } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
+            } finally {
+                setTimeout(() => {
+                    setIsLoadingBooks(false);
+                }, 4000);
             }
         }
     
@@ -162,7 +169,8 @@ export default function Home() {
     
     // usado qnd o genre ou state for modificado
     useEffect(() => {
-        async function fetchAndFilterBooks() {
+        async function fetchAndFilterBooks() {  
+            setIsLoadingBooks(true);
             try {
                 const response = await api.get('/livros');
                 const livros: BookFromAPI[] = response.data;
@@ -190,6 +198,10 @@ export default function Home() {
                 setBooks(embaralhar(livrosComDados)); 
             } catch (error) {
                 console.error('Erro ao filtrar livros:', error);
+            } finally {
+                setTimeout(() => {
+                    setIsLoadingBooks(false);
+                }, 3000);
             }
         }
     
@@ -198,31 +210,41 @@ export default function Home() {
 
     useEffect(() => {
         const estadoSelecionado = selectedStates[0];
-
-        setBooks(prevBooks =>
-            prevBooks.map(book => {
-                if (!estadoSelecionado) {
+    
+        const timeout = setTimeout(() => {
+            setBooks(prevBooks =>
+                prevBooks.map(book => {
+                    if (!estadoSelecionado) {
+                        return {
+                            ...book,
+                            freight: `R$ 8.00`
+                        };
+                    }
+    
+                    const valorFrete = fretePorEstado[estadoSelecionado];
                     return {
                         ...book,
-                        freight: `R$ 8.00`
+                        freight: `R$ ${valorFrete.toFixed(2)}`
                     };
-                }
-
-            const valorFrete = fretePorEstado[estadoSelecionado];
-            return {
-                ...book,
-                freight: `R$ ${valorFrete.toFixed(2)}`
-                };
-            })
+                })
             );
-        }, [selectedStates]);
+        }, 3000);
+    
+        return () => clearTimeout(timeout);
+    }, [selectedStates]);
+    
 
     useEffect(() => {
-        const livrosFiltrados = books.filter(book =>
-            book.title.toLowerCase().includes(searchText.toLowerCase())
-        );
-        setFilteredBooks(livrosFiltrados);
-    }, [searchText, books]);    
+        const timeout = setTimeout(() => {
+            const livrosFiltrados = books.filter(book =>
+                book.title.toLowerCase().includes(searchText.toLowerCase())
+            );
+            setFilteredBooks(livrosFiltrados);
+        }, 3000); 
+    
+        return () => clearTimeout(timeout); 
+    }, [searchText, books]);
+    
 
     function handleToggleGenreSelection(genre: string) {
         setSelectedGenres(prev => prev[0] === genre ? [] : [genre]);
@@ -369,17 +391,25 @@ export default function Home() {
 
                 <View style={styles.separator}></View>
 
-                <View style={{ flex: 1, paddingHorizontal: 15 }}>
+                {isLoadingBooks ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
+                        <ActivityIndicator size={40} color={themes.colors.primary} />
+                        <Text style={{ marginTop: 10 }}>Carregando livros...</Text>
+                    </View>
+                ) : (
                     <FlatList
                         data={filteredBooks}
-                        keyExtractor={(item) => String(item.id)}
-                        numColumns={2}
+                        keyExtractor={(item) => item.id}
                         renderItem={renderBookItem}
-                        contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
-                        showsVerticalScrollIndicator={true}
+                        numColumns={2}
+                        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
+                        contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}
+                        // ListEmptyComponent={
+                        //     <Text style={{ textAlign: 'center', marginTop: 20 }}>Nenhum livro encontrado.</Text>
+                        // }
                     />
-                </View>
-            </View>
+                )}
+            </View> 
         </TouchableWithoutFeedback>
     );
 }

@@ -160,7 +160,7 @@ export default function Home() {
             } finally {
                 setTimeout(() => {
                     setIsLoadingBooks(false);
-                }, 4000);
+                }, 2000);
             }
         }
     
@@ -201,7 +201,7 @@ export default function Home() {
             } finally {
                 setTimeout(() => {
                     setIsLoadingBooks(false);
-                }, 3000);
+                }, 2000);
             }
         }
     
@@ -228,23 +228,18 @@ export default function Home() {
                     };
                 })
             );
-        }, 3000);
+        }, 2000);
     
         return () => clearTimeout(timeout);
     }, [selectedStates]);
     
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            const livrosFiltrados = books.filter(book =>
-                book.title.toLowerCase().includes(searchText.toLowerCase())
-            );
-            setFilteredBooks(livrosFiltrados);
-        }, 3000); 
-    
-        return () => clearTimeout(timeout); 
+        const livrosFiltrados = books.filter(book =>
+            book.title.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setFilteredBooks(livrosFiltrados);
     }, [searchText, books]);
-    
 
     function handleToggleGenreSelection(genre: string) {
         setSelectedGenres(prev => prev[0] === genre ? [] : [genre]);
@@ -252,7 +247,6 @@ export default function Home() {
 
     function handleToggleStateSelection(state: string) {
         const isSelected = selectedStates[0] === state;
-        
         
         if (isSelected) {
             setSelectedStates([]);
@@ -404,9 +398,6 @@ export default function Home() {
                         numColumns={2}
                         columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
                         contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}
-                        // ListEmptyComponent={
-                        //     <Text style={{ textAlign: 'center', marginTop: 20 }}>Nenhum livro encontrado.</Text>
-                        // }
                     />
                 )}
             </View> 

@@ -111,6 +111,19 @@ export default function Home() {
             .sort((a, b) => a.sort - b.sort) 
             .map(({ item }) => item);  
     }
+
+    const renderBookItem = ({ item }: { item: any }) => (
+        <TouchableOpacity onPress={() => navigation.navigate('Book', { bookId: item.id })}>
+            <BookCard
+                title={item.title}
+                author={item.author}
+                price={item.price}
+                freight={item.freight}
+                image={item.image}
+            />
+        </TouchableOpacity>
+    );
+    
     // padrao sem nada selecionado
     useEffect(() => {
         async function fetchData() {
@@ -359,19 +372,9 @@ export default function Home() {
                 <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
                         data={filteredBooks}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => String(item.id)}
                         numColumns={2}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => navigation.navigate('Book', { bookId: item.id})}>
-                                <BookCard
-                                    title={item.title}
-                                    author={item.author}
-                                    price={item.price}
-                                    freight={item.freight}
-                                    image={item.image}
-                                />
-                            </TouchableOpacity>
-                        )}
+                        renderItem={renderBookItem}
                         contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
                         showsVerticalScrollIndicator={true}
                     />

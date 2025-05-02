@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent:'center',
         paddingHorizontal: 34,
-        marginBottom: 80
+        marginBottom: 60
     },
     logo: {
         width: 140,
@@ -98,7 +98,15 @@ const styles = StyleSheet.create({
         marginLeft:35,
         width: 270,
         height: 40
+    },
+    loadingContainer: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
     }
+    
 });
 
 export default styles;

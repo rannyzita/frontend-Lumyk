@@ -120,7 +120,7 @@ export default function Book() {
 
     return (
         <>
-            <NavigationHeader />
+            <NavigationHeader iconArrow={true}/>
                 <ScrollView contentContainerStyle={styles.container}>
                     {/* Imagem do livro */}
                     <Image source={bookData.foto} style={styles.image} />

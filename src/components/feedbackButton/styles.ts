@@ -16,6 +16,6 @@ export const styles = StyleSheet.create({
         elevation: 10,
         marginLeft:35,
         width: 270,
-        height: 40
+        height: 45
     }
 });

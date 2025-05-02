@@ -35,7 +35,6 @@ const ResetPassword = () => {
                 setShowLoading(false);
                 navigation.navigate('Login');
             }, 3000);
-
         }, 5000);
     };
 
@@ -43,7 +42,7 @@ const ResetPassword = () => {
         <View style={styles.container}>
             <NavigationHeader />
 
-            <View style={styles.content}>
+            <View style={[styles.content, {marginBottom:99}]}>
                 <Logo style={{ marginBottom: 50 }} />
                 <View style={styles.separatorContainer}>
                     <View style={styles.line} />
@@ -56,7 +55,7 @@ const ResetPassword = () => {
                     <Input
                         placeholder="Insira a nova senha"
                         placeholderTextColor={themes.colors.textPlaceHolder}
-                        width={200}
+                        width={324}
                         height={38}
                         value={newPassword}
                         onChangeText={setNewPassword}
@@ -69,7 +68,7 @@ const ResetPassword = () => {
                     <Input
                         placeholder="Confirme a senha"
                         placeholderTextColor={themes.colors.textPlaceHolder}
-                        width={200}
+                        width={324}
                         height={38}
                         value={confirmerPassword}
                         onChangeText={setConfirmerPassword}

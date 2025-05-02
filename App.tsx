@@ -1,10 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes/index.routes';
-import { useFonts, Roboto_400Regular, Roboto_600SemiBold, Roboto_700Bold } from '@expo-google-fonts/roboto';
-import AppLoading from 'expo-app-loading';
+
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './src/routes/types/navigation';
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function App() {
-  
+
   return (
     <NavigationContainer>
       <Routes></Routes>

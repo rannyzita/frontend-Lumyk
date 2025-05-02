@@ -17,7 +17,7 @@ import ModalFeedback from '../../components/feedbackButton/feedbackButton';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
-const verifyCode = () => {
+const VerifyCode = () => {
     const navigation = useNavigation<NavigationProps>();
     const [email, setEmail] = useState('');
 
@@ -77,4 +77,4 @@ const verifyCode = () => {
     );
 };
 
-export default verifyCode;
+export default VerifyCode;

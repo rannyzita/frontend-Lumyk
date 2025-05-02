@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -31,16 +31,6 @@ export default function LoginScreen() {
     const navigation = useNavigation<NavigationProps>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    useEffect(() => {
-        const checkLogin = async () => {
-            const token = await AsyncStorage.getItem('userToken');
-            if (token) {
-                navigation.navigate('Main');
-            }
-        };
-        checkLogin();
-    }, []);
 
     const handleLogin = async () => {
         if (!email || !password) {

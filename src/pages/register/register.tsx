@@ -63,12 +63,6 @@ export default function Register() {
             return;
         }
 
-        // validação de senha (6 a 8 caracteres)
-        if (password.length < 6 || password.length > 8) {
-            Alert.alert('Erro', 'A senha deve ter entre 6 e 8 caracteres!');
-            return;
-        }
-
         const payload = {
             nome: name,
             email,
@@ -87,8 +81,20 @@ export default function Register() {
                 const data = response.data;
                 Alert.alert('Erro', data.message || 'Erro ao cadastrar');
             }
-        } catch (error) {
-            Alert.alert('Erro', 'Erro ao conectar com o servidor');
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.mensagem) {
+                const msg = error.response.data.mensagem;
+        
+                if (msg === 'Usuário já existe.') {
+                    Alert.alert('Erro', 'Este e-mail já está cadastrado!');
+                }  else if (msg === 'A senha deve ter entre 6 e 8 caracteres.') {
+                    Alert.alert('Erro', 'A senha precisa ter entre 6 e 8 caracteres!');
+                } else {
+                    Alert.alert('Erro', msg);
+                }
+            } else {
+                Alert.alert('Erro', 'Erro ao conectar com o servidor');
+            }
         }
     };
 

@@ -5,4 +5,6 @@ export type RootStackParamList = {
     Authors: undefined;
     Book: { bookId: string};
     Register: undefined;
+    ForgotPassword: undefined;
+    VerifyCode: undefined;
 }; 

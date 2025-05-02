@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         alignSelf: 'center', 
 
-        boxShadow: "0 5px 10px  rgba(0, 0, 0, 0.35)"
+        boxShadow: themes.colors.shadow
     },
     textButton: {
         color: '#fff',

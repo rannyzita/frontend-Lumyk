@@ -17,6 +17,7 @@ import Cart from '../pages/cart/cart';
 import About from '../pages/about/about';
 import Profile from '../pages/profile/profile';
 import Authors from '../pages/authors/authors';
+import AuthorDetails from '../pages/authors/authorDetails';
 import Book from '../pages/book/book';
 import Register from '../pages/register/register';
 import ForgotPassword from '../pages/forgotPassword/index';
@@ -111,6 +112,8 @@ export default function Routes() {
 
             <Stack.Screen name="Authors" component={Authors} />
 
+            <Stack.Screen name="AuthorDetails" component={AuthorDetails} />
+
             <Stack.Screen name="Book" component={Book} />
 
             <Stack.Screen name="Register" component={Register} />
@@ -120,6 +123,7 @@ export default function Routes() {
             <Stack.Screen name="VerifyCode" component={VerifyCode} />
 
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
+
         </Stack.Navigator>
     );
 };

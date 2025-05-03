@@ -8,4 +8,5 @@ export type RootStackParamList = {
     ForgotPassword: undefined;
     VerifyCode: undefined;
     ResetPassword: undefined;
+    AuthorDetails: { authorId: string};
 }; 

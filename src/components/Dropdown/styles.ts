@@ -36,7 +36,7 @@ export const stylesDropDown = StyleSheet.create({
     dropdownItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         paddingVertical: 10,
         paddingHorizontal: 12,
         borderBottomWidth: 1,
@@ -44,7 +44,10 @@ export const stylesDropDown = StyleSheet.create({
     },
     dropdownItemText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: 10,
+        flex: 1, // Permite que o texto ocupe o espaço restante
+        flexWrap: 'wrap', // Permite quebra de linha
+        marginRight: 10, // Espaço entre texto e checkbox
     },
     scrollableList: {
         maxHeight: 200, 

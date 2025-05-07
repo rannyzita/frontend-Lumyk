@@ -30,6 +30,8 @@ type Props = TextInputProps & {
     height?: DimensionValue;
     width?: DimensionValue;
     labelStyle?: StyleProp<TextStyle>;
+    editInput?: boolean;
+    focusInput?: boolean;
 };
 
 export const Input = forwardRef((props: Props, ref) => {
@@ -45,6 +47,8 @@ export const Input = forwardRef((props: Props, ref) => {
         height = 48,
         width = '100%',
         secureTextEntry,
+        editInput,
+        focusInput,
         ...rest
     } = props;
 
@@ -60,6 +64,8 @@ export const Input = forwardRef((props: Props, ref) => {
             <View style={[styles.boxInput, { height, width }]}>
                 <TextInput
                     style={[styles.input, { flex: 1 }]}
+                    editable={editInput}
+                    selectTextOnFocus={focusInput}
                     secureTextEntry={secureTextEntry && isPasswordVisible}
                     {...rest}
                 />

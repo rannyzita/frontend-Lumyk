@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
@@ -19,7 +19,7 @@ import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
-
+7
 // aqui vai pegar o token que ta armazenado do async, pra poder 
 // filtrar as informações pro profile
 const getTokenAndUserId = async () => {
@@ -35,22 +35,26 @@ const getTokenAndUserId = async () => {
 };  
 
 export default function Profile() {
-    const [password, setPassword] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [street, setStreet] = useState('');
-    const [number, setNumber] = useState('');
-    const [neighborhood, setNeighborhood] = useState('');
-    const [state, setState] = useState('');
+
+    const [isNomeEditable, setIsNomeEditable] = useState(false);
+    const [isEmailEditable, setIsEmailEditable] = useState(false);
+    const [isBirthEditable, setIsBirthEditable] = useState(false);
+    const [isStreetEditable, setIsStreetEditable] = useState(false);
+    const [isNumberEditable, setIsNumberEditable] = useState(false);
+    const [isBairroEditable, setIsBairroEditable] = useState(false);
+    const [isStateEditable, setIsStateEditable] = useState(false);
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+
     const [userData, setUserData] = useState({
         nome: '',
         email: '',
         data_nascimento: '',
-    });
-
-    const [isEditing, setIsEditing] = useState({
-        nome: false,
-        email: false,
-        data_nascimento: false,
+        rua: '',
+        numero: '',
+        bairro: '',
+        estado: ''
     });
 
     const navigation = useNavigation<NavigationProps>();
@@ -107,11 +111,14 @@ export default function Profile() {
                             placeholder="E-mail"
                             value={userData.email}
                             onChangeText={(text) => setUserData({...userData, email:text})}
-                            editable={isEditing.email}
+                            editInput={isEmailEditable}
+                            focusInput={isEmailEditable}
                             width={270}
                             height={40}
                         />
-                        <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                        <TouchableOpacity onPress={()=> setIsEmailEditable(true)}>
+                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -120,13 +127,14 @@ export default function Profile() {
                     <Text style={styles.label}>Senha</Text>
                     <View style={styles.inputWithIcon}>
                         <Input
-                            placeholder="Insira sua senha"
+                            placeholder="********"
                             placeholderTextColor={themes.colors.textPlaceHolder}
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
+                            secureTextEntry={isPasswordVisible}
                             width={270}
                             height={40}
+                            editInput={false}
+                            focusInput={false}
+
                         />
                         <TouchableOpacity>
                             <EditIcon 
@@ -141,17 +149,20 @@ export default function Profile() {
                 </View>
                 
                 {/* Data de Nascimento */}
+                {/* vai ser com o coisa da biblioteca de datetimerpicker */}
                 <View style={{marginRight:'45%', marginBottom:-5}}>
                     <Text style={styles.label}>Data de Nascimento</Text>
                     <View style={styles.inputWithIcon}>
                         <Input
                             placeholder="XX/XX/XXXX"
-                            value={birthDate}
-                            onChangeText={setBirthDate}
                             width={120}
                             height={40}
+                            editInput={isBirthEditable}
+                            focusInput={isBirthEditable}
                         />
-                        <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                        <TouchableOpacity onPress={()=> setIsBirthEditable(true)}>
+                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 
@@ -168,12 +179,16 @@ export default function Profile() {
                         <View style={styles.inputWithIcon}>
                             <Input
                                 placeholder="Sua Rua"
-                                value={birthDate}
-                                onChangeText={setBirthDate}
+                                value={userData.rua}
+                                onChangeText={(text) => setUserData({...userData, rua: text})}
                                 width={165}
                                 height={40}
+                                editInput={isStreetEditable}
+                                focusInput={isStreetEditable}
                             />
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            <TouchableOpacity onPress={()=> setIsStreetEditable(true)}>
+                                <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
@@ -182,12 +197,16 @@ export default function Profile() {
                         <View style={styles.inputWithIcon}>
                             <Input
                                 placeholder="XXX"
-                                value={birthDate}
-                                onChangeText={setBirthDate}
+                                value={userData.numero}
+                                onChangeText={(text) => setUserData({...userData, numero:text})}
                                 width={70}
                                 height={40}
+                                editInput={isNumberEditable}
+                                focusInput={isNumberEditable}
                             />
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            <TouchableOpacity onPress={() => setIsNumberEditable(true)}>
+                                <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -198,12 +217,16 @@ export default function Profile() {
                         <View style={styles.inputWithIcon}>
                             <Input
                                 placeholder="Seu bairro"
-                                value={birthDate}
-                                onChangeText={setBirthDate}
+                                value={userData.bairro}
+                                onChangeText={(text) => setUserData({...userData, bairro:text})}
                                 width={135}
                                 height={40}
+                                editInput={isBairroEditable}
+                                focusInput={isBairroEditable}
                             />
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            <TouchableOpacity onPress={() => setIsBairroEditable(true)}>
+                                <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -214,12 +237,16 @@ export default function Profile() {
                         <View style={styles.inputWithIcon}>
                             <Input
                                 placeholder="Seu estado"
-                                value={birthDate}
-                                onChangeText={setBirthDate}
+                                value={userData.estado}
+                                onChangeText={(text) => setUserData({...userData, estado:text})}
                                 width={135}
                                 height={40}
+                                editInput={isStateEditable}
+                                focusInput={isStateEditable}
                             />
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            <TouchableOpacity onPress={() => setIsStateEditable(true)}>
+                                <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>

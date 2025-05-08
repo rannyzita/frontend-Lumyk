@@ -46,7 +46,6 @@ export default function Profile() {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-
     const [userData, setUserData] = useState({
         nome: '',
         email: '',
@@ -56,6 +55,9 @@ export default function Profile() {
         bairro: '',
         estado: ''
     });
+
+    const [originalData, setOriginalData] = useState(userData);
+
 
     const navigation = useNavigation<NavigationProps>();
 
@@ -70,6 +72,7 @@ export default function Profile() {
                         },
                     });
                     setUserData(response.data);
+                    setOriginalData(response.data);
                 } catch (error) {
                     console.error('Erro ao buscar dados do usuário:', error);
                 }

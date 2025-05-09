@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from "react";
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 
 import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
 import { Input } from '../../components/Input';
@@ -19,7 +19,16 @@ import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
-7
+
+type UserData = {
+    nome: string;
+    email: string;
+    data_nascimento: string;
+    rua: string;
+    numero: string;
+    bairro: string;
+    estado: string;
+};
 // aqui vai pegar o token que ta armazenado do async, pra poder 
 // filtrar as informações pro profile
 const getTokenAndUserId = async () => {
@@ -34,19 +43,27 @@ const getTokenAndUserId = async () => {
     }
 };  
 
+
 export default function Profile() {
 
-    const [isNomeEditable, setIsNomeEditable] = useState(false);
-    const [isEmailEditable, setIsEmailEditable] = useState(false);
-    const [isBirthEditable, setIsBirthEditable] = useState(false);
-    const [isStreetEditable, setIsStreetEditable] = useState(false);
-    const [isNumberEditable, setIsNumberEditable] = useState(false);
-    const [isBairroEditable, setIsBairroEditable] = useState(false);
-    const [isStateEditable, setIsStateEditable] = useState(false);
+    const nomeRef = useRef<TextInput>(null);
+    const emailRef = useRef<TextInput>(null);
+    const ruaRef = useRef<TextInput>(null);
+    const numeroRef = useRef<TextInput>(null);
+    const bairroRef = useRef<TextInput>(null);
+    const estadoRef = useRef<TextInput>(null);
 
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-    const [userData, setUserData] = useState({
+    const [isEditable, setIsEditable] = useState({
+        nome: false,
+        email: false,
+        rua: false,
+        numero: false,
+        bairro: false,
+        estado: false,
+        nascimento: false
+    });
+    
+    const [userData, setUserData] = useState<UserData>({
         nome: '',
         email: '',
         data_nascimento: '',
@@ -56,8 +73,11 @@ export default function Profile() {
         estado: ''
     });
 
-    const [originalData, setOriginalData] = useState(userData);
+    type Campo = keyof UserData;
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const [originalData, setOriginalData] = useState<UserData>(userData);
 
     const navigation = useNavigation<NavigationProps>();
 
@@ -81,12 +101,40 @@ export default function Profile() {
         fetchUserData();
     }, []);
 
-    const toggleEdit = (field) => {
-        setIsEditing((prevState) => ({
-            ...prevState,
-            [field]: !prevState[field],
+    useEffect(() => {
+        if (isEditable.nome && nomeRef.current) {
+            nomeRef.current.focus();
+        }
+        if (isEditable.email && emailRef.current) {
+            emailRef.current.focus();
+        }
+        if (isEditable.rua && ruaRef.current) {
+            ruaRef.current.focus();
+        }
+        if (isEditable.numero && numeroRef.current) {
+            numeroRef.current.focus();
+        }
+        if (isEditable.bairro && bairroRef.current) {
+            bairroRef.current.focus();
+        }
+        if (isEditable.estado && estadoRef.current) {
+            estadoRef.current.focus();
+        }
+    }, [isEditable]);
+
+    const handleConfirm = (field: keyof UserData) => {
+        setIsEditable(prev => ({ ...prev, [field]: false }));
+        setOriginalData(prev => ({
+            ...prev,
+            [field]: userData[field] as string  
         }));
     };
+    
+
+    const handleCancel = (field: Campo) => {
+        setUserData(prev => ({ ...prev, [field]: originalData[field] }));
+        setIsEditable(prev => ({ ...prev, [field]: false }));
+};
 
     return (
         <View style={styles.container}>
@@ -96,7 +144,7 @@ export default function Profile() {
                 <IconProfile style={styles.profileIcon}></IconProfile>
 
                 <View style={styles.nameRow}>
-                    <Text style={styles.profileName}>Seu nome</Text>
+                <Text style={styles.profileName}>{userData.nome || 'Seu nome'}</Text>
                     <TouchableOpacity>
                         <EditIconPurple width={30} height={30} style={styles.iconSmall}></EditIconPurple>
                     </TouchableOpacity>
@@ -114,12 +162,12 @@ export default function Profile() {
                             placeholder="E-mail"
                             value={userData.email}
                             onChangeText={(text) => setUserData({...userData, email:text})}
-                            editInput={isEmailEditable}
-                            focusInput={isEmailEditable}
+                            editInput={isEditable.email}
+                            focusInput={isEditable.email}
                             width={270}
                             height={40}
                         />
-                        <TouchableOpacity onPress={()=> setIsEmailEditable(true)}>
+                        <TouchableOpacity onPress={() => setIsEditable(prev=> ({...prev, email:true}))}>
                             <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                         </TouchableOpacity>
                     </View>
@@ -160,10 +208,10 @@ export default function Profile() {
                             placeholder="XX/XX/XXXX"
                             width={120}
                             height={40}
-                            editInput={isBirthEditable}
-                            focusInput={isBirthEditable}
+                            editInput={isEditable.nascimento}
+                            focusInput={isEditable.nascimento}
                         />
-                        <TouchableOpacity onPress={()=> setIsBirthEditable(true)}>
+                        <TouchableOpacity onPress={()=> setIsEditable(prev => ({...prev, nascimento:true}))}>
                             <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                         </TouchableOpacity>
                     </View>
@@ -186,10 +234,10 @@ export default function Profile() {
                                 onChangeText={(text) => setUserData({...userData, rua: text})}
                                 width={165}
                                 height={40}
-                                editInput={isStreetEditable}
-                                focusInput={isStreetEditable}
+                                editInput={isEditable.rua}
+                                focusInput={isEditable.rua}
                             />
-                            <TouchableOpacity onPress={()=> setIsStreetEditable(true)}>
+                            <TouchableOpacity onPress={()=> setIsEditable(prev => ({...prev, rua:true}))}>
                                 <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                             </TouchableOpacity>
                         </View>
@@ -204,10 +252,10 @@ export default function Profile() {
                                 onChangeText={(text) => setUserData({...userData, numero:text})}
                                 width={70}
                                 height={40}
-                                editInput={isNumberEditable}
-                                focusInput={isNumberEditable}
+                                editInput={isEditable.numero}
+                                focusInput={isEditable.numero}
                             />
-                            <TouchableOpacity onPress={() => setIsNumberEditable(true)}>
+                            <TouchableOpacity onPress={() => setIsEditable(prev => ({...prev, numero:true}))}>
                                 <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                             </TouchableOpacity>
                         </View>
@@ -224,10 +272,10 @@ export default function Profile() {
                                 onChangeText={(text) => setUserData({...userData, bairro:text})}
                                 width={135}
                                 height={40}
-                                editInput={isBairroEditable}
-                                focusInput={isBairroEditable}
+                                editInput={isEditable.bairro}
+                                focusInput={isEditable.bairro}
                             />
-                            <TouchableOpacity onPress={() => setIsBairroEditable(true)}>
+                            <TouchableOpacity onPress={() => setIsEditable(prev => ({...prev, bairro:true}))}>
                                 <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                             </TouchableOpacity>
                         </View>
@@ -244,10 +292,10 @@ export default function Profile() {
                                 onChangeText={(text) => setUserData({...userData, estado:text})}
                                 width={135}
                                 height={40}
-                                editInput={isStateEditable}
-                                focusInput={isStateEditable}
+                                editInput={isEditable.estado}
+                                focusInput={isEditable.estado}
                             />
-                            <TouchableOpacity onPress={() => setIsStateEditable(true)}>
+                            <TouchableOpacity onPress={() => setIsEditable(prev => ({...prev, estado:true}))}>
                                 <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
                             </TouchableOpacity>
                         </View>

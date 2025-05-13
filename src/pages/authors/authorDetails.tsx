@@ -68,7 +68,7 @@ export default function AuthorDetails() {
 
   return (
     <View style={styles.container}>
-      <NavigationHeader iconArrow={true} title='LIVROS DO AUTOR' />
+      <NavigationHeader iconArrow={true} title='LIVROS DO AUTOR' onBack={()=> navigation.navigate('Authors')}/>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {autor && (
           <View style={styles.authorCard}>

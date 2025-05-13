@@ -58,7 +58,7 @@ export default function Authors() {
 
     return (
         <View style={styles.container}>
-            <NavigationHeader iconArrow={true} />
+            <NavigationHeader iconArrow={true} onBack={()=> navigation.navigate('Main')}/>
             <View style={{ alignItems: 'center', marginTop: 15 }}>
                 <Text style={styles.title}>LISTA DE AUTORES</Text>
             </View>

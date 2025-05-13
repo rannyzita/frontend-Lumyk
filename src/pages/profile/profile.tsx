@@ -20,6 +20,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
+import { DeleteAccountModal } from '../../components/DeleteAccount/deleteAccount';
+
 type UserData = {
     nome: string;
     email: string;
@@ -81,6 +83,25 @@ export default function Profile() {
 
     const navigation = useNavigation<NavigationProps>();
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleDeleteAccount = async () => {
+        const { token, userId } = await getTokenAndUserId();
+    
+        try {
+            await api.delete(`/usuarios/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+    
+            await AsyncStorage.clear();
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error("Erro ao excluir conta:", error);
+        }
+    };
+    
     useEffect(() => {
         const fetchUserData = async () => {
             const { token, userId } = await getTokenAndUserId();
@@ -304,14 +325,24 @@ export default function Profile() {
 
                 {/* Botões */}
                 <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.deleteButton}>
+                    <TouchableOpacity style={styles.deleteButton} onPress={() => setShowDeleteModal(true)}>
                         <Text style={styles.deleteText}>Excluir Conta</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Login')}>
                         <Text style={styles.logoutText}>Sair da Conta</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+
+            <DeleteAccountModal
+                visible={showDeleteModal}
+                onCancel={() => setShowDeleteModal(false)}
+                onConfirm={() => {
+                    setShowDeleteModal(false);
+                    handleDeleteAccount();
+                }}
+            />
         </View>
     );
 }

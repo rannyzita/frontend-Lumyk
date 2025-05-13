@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 8,
+        boxShadow: themes.colors.shadow
     },
     deleteText: {
         color: '#FFFFFF',

@@ -5,6 +5,12 @@ import NavigationHeader from "../../components/NavigationHeader/navigationHeader
 import { useRoute } from '@react-navigation/native';
 import api from '../../../API/index';
 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
 type RouteParams = {
     bookId: string;
 };
@@ -33,6 +39,7 @@ type BookData = {
 
 export default function Book() {
     const route = useRoute();
+    const navigation = useNavigation<NavigationProps>();
     const { bookId } = route.params as RouteParams;
 
     const [selectedFormat, setSelectedFormat] = useState<'digital' | 'fisico'>('digital');
@@ -46,11 +53,9 @@ export default function Book() {
     useEffect(() => {
         async function fetchBookData() {
             try {
-                // Fazendo a requisição para pegar os dados do livro e do autor
                 const response = await api.get(`/livros/${bookId}`);
                 const book = response.data;
 
-                // Pega a foto do livro e do autor
                 const bookImage = { uri: api.defaults.baseURL + book.foto };
                 const authorImage = { uri: api.defaults.baseURL + book.autor?.foto };
 
@@ -116,7 +121,7 @@ export default function Book() {
 
     return (
         <>
-            <NavigationHeader iconArrow={true}/>
+            <NavigationHeader iconArrow={true} onBack={()=> navigation.navigate('Main')}/>
                 <ScrollView contentContainerStyle={styles.container}>
                     {/* Imagem do livro */}
                     <Image source={bookData.foto} style={styles.image} />
@@ -186,7 +191,7 @@ export default function Book() {
                     <Text style={styles.description}>{bookData.sinopse}</Text>
                     <Image source={bookData.autor.fotoAutor} style={styles.bottomImage} />
                     <Text style={styles.bottomText}>Obra feita por: {bookData.autor.nome}</Text>
-                    <TouchableOpacity style={styles.viewBooksButton}>
+                    <TouchableOpacity style={styles.viewBooksButton} onPress={() => navigation.navigate('AuthorDetails', {authorId: bookData.autor.id})}>
                         <Text style={styles.viewBooksButtonText}>Ver livros</Text>
                     </TouchableOpacity>
                 </View>

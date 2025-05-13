@@ -21,15 +21,16 @@ authorImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginRight: 12,
+    marginRight: 14
 },
 authorInfo: {
     flex: 1,
+    paddingLeft:14
 },
 authorName: {
     fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 4,
+    fontSize: 12,
+    marginTop: 10,
 },
 biographyTitle: {
     fontWeight: 'bold',

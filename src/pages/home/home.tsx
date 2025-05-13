@@ -24,6 +24,7 @@ import api from '../../../API/index';
 import {
     closeDropdowns
 } from './functions/index';
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -49,38 +50,7 @@ type BookFromAPI = {
 type EstadoAPI = {
     id: string;
     nome: string;
-};
-
-// como na table de estados foi esquecido de incluir o atributo, criei
-// aqui um objeto com eles 
-const fretePorEstado: Record<string, number> = {
-    "Ceará": 8,
-    "Piauí": 12,
-    "Rio Grande do Norte": 12,
-    "Paraíba": 12,
-    "Pernambuco": 12,
-    "Alagoas": 12,
-    "Sergipe": 12,
-    "Bahia": 15,
-    "Maranhão": 18,
-    "Amazonas": 25,
-    "Roraima": 25,
-    "Acre": 25,
-    "Rondônia": 25,
-    "Pará": 20,
-    "Amapá": 20,
-    "Tocantins": 18,
-    "Goiás": 18,
-    "Mato Grosso": 18,
-    "Mato Grosso do Sul": 18,
-    "Distrito Federal": 18,
-    "São Paulo": 20,
-    "Rio de Janeiro": 20,
-    "Minas Gerais": 20,
-    "Espírito Santo": 20,
-    "Paraná": 22,
-    "Santa Catarina": 22,
-    "Rio Grande do Sul": 22,
+    taxa_frete: Float;
 };
 
 export default function Home() {
@@ -134,15 +104,15 @@ export default function Home() {
                 const [livrosRes, estadosRes, generosRes] = await Promise.all([
                     api.get('/livros'),
                     api.get('/estados'),
-                    api.get('/generos')
+                    api.get('/generos'),
                 ]);
     
                 const livros: BookFromAPI[] = embaralhar(livrosRes.data);
                 const estadosAPI: EstadoAPI[] = estadosRes.data;
                 setEstados(estadosAPI);
     
-                const estadoPadrao = selectedStates[0];
-                const frete = fretePorEstado[estadoPadrao] ?? 0;
+                const estadoPadrao = estadosAPI.find(e => e.nome === selectedStates[0]);
+                const frete = estadoPadrao?.taxa_frete ?? 8;
     
                 const livrosComDados = livros.map(book => ({
                     id: book.id,
@@ -175,8 +145,9 @@ export default function Home() {
                 const response = await api.get('/livros');
                 const livros: BookFromAPI[] = response.data;
     
-                const estadoSelecionado = selectedStates[0];
-                const frete = fretePorEstado[estadoSelecionado] ?? 0;
+                const estadoSelecionado = estados.find(e => e.nome === selectedStates[0]);
+                const frete = estadoSelecionado?.taxa_frete ?? 8;
+
     
                 let livrosFiltrados = livros;
 
@@ -221,7 +192,9 @@ export default function Home() {
                         };
                     }
     
-                    const valorFrete = fretePorEstado[estadoSelecionado];
+                    const estadoInfo = estados.find(e => e.nome === estadoSelecionado);
+                    const valorFrete = estadoInfo?.taxa_frete ?? 8;
+
                     return {
                         ...book,
                         freight: `R$ ${valorFrete.toFixed(2)}`
@@ -254,12 +227,8 @@ export default function Home() {
         } else {
             setSelectedStates([state]);
     
-            const freightValue = fretePorEstado[state];
-            if (freightValue) {
-                setSelectedFreight(freightValue); 
-            } else {
-                setSelectedFreight(8); 
-            }
+            const estadoSelecionado = estados.find(e => e.nome === state);
+            setSelectedFreight(estadoSelecionado?.taxa_frete ?? 8);
         }
     }    
 

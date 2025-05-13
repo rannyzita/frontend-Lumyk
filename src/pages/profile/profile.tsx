@@ -73,7 +73,7 @@ export default function Profile() {
         estado: ''
     });
 
-    type Campo = keyof UserData;
+    type Campo = keyof UserData
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 

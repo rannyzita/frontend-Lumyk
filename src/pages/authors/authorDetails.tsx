@@ -1,44 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
+
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import api from '../../../API/index';
 import styles from './stylesAuthorDetails';
 import { themes } from '../../global/themes';
 
-type AuthorFromAPI = {
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
+type Livro = {
   id: string;
-  nome?: string;
-  biografia?: string;
-  foto?: string;
+  titulo: string;
+  sinopse: string;
+  foto: string;
+  formato: string;
+  preco: number;
+  id_autor: string;
+  autor: {
+    nome: string;
+    biografia: string;
+    foto: string;
+  };
 };
 
-function embaralhar<T>(array: T[]): T[] {
-  return array
-    .map(item => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ item }) => item);
-}
+type RouteParams = {
+  authorId: string;
+};
 
 export default function AuthorDetails() {
-  const [authors, setAuthors] = useState<AuthorFromAPI[]>([]);
+  const [livros, setLivros] = useState<Livro[]>([]);
+  const navigation = useNavigation<NavigationProps>();
   const [isLoading, setIsLoading] = useState(true);
+  const route = useRoute();
+  const { authorId } = route.params as RouteParams;
 
   useEffect(() => {
-    async function fetchAuthors() {
+    async function fetchBooks() {
       try {
-        const response = await api.get('/autores');
-        const dados: AuthorFromAPI[] = response.data;
-        setAuthors(embaralhar(dados));
+        const response = await api.get('/livros');
+        const livrosFiltrados = response.data.filter((livro: Livro) => livro.id_autor === authorId);
+        setLivros(livrosFiltrados);
       } catch (error) {
-        console.error('Erro ao buscar autores:', error);
+        console.error('Erro ao buscar livros do autor:', error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchAuthors();
-  }, []);
+    fetchBooks();
+  }, [authorId]);
 
   if (isLoading) {
     return (
@@ -48,28 +64,46 @@ export default function AuthorDetails() {
     );
   }
 
+  const autor = livros[0]?.autor;
+
   return (
     <View style={styles.container}>
-      <NavigationHeader iconArrow={true} />
-      <View style={{ alignItems: 'center', marginTop: 15 }}>
-        <Text style={styles.title}>LISTA DE AUTORES</Text>
-      </View>
-      <View style={styles.separator} />
-
+      <NavigationHeader iconArrow={true} title='LIVROS DO AUTOR' />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {authors.map(author => (
-          <View key={author.id} style={styles.card}>
-  <Image
-    source={{ uri: api.defaults.baseURL + (author.foto ?? '/imagens/autor_padrao.png') }}
-    style={styles.image}
-  />
-  <Text style={styles.authorName}>{author.nome ?? 'Autor desconhecido'}</Text>
-  <View style={styles.buttonContainer}>
-    <Text style={styles.buttonText}>Ver livros</Text>
-  </View>
-</View>
+        {autor && (
+          <View style={styles.authorCard}>
+            <Image source={{ uri: api.defaults.baseURL + autor.foto }} style={styles.authorImage} />
+            <View style={styles.authorInfo}>
+              <Text style={styles.authorName}>{autor.nome}</Text>
+              <Text style={styles.biographyTitle}>Biografia</Text>
+              <Text style={styles.authorBio}>{autor.biografia}</Text>
+            </View>
+          </View>
+        )}
 
-        ))}
+        <Text style={styles.sectionTitle}>DESCUBRA SUAS CRIAÇÕES LITERÁRIAS:</Text>
+
+        {livros.length === 0 ? (
+          <Text style={styles.emptyText}>Nenhum livro encontrado para este autor.</Text>
+        ) : (
+          livros.map(livro => (
+            <View key={livro.id} style={styles.bookCard}>
+              <Image
+                source={{ uri: api.defaults.baseURL + livro.foto }}
+                style={styles.bookImage}
+              />
+              <View style={styles.bookInfo}>
+                <Text style={styles.bookTitle}>{livro.titulo}</Text>
+                <Text style={styles.bookFormat}>{livro.formato}</Text>
+                <Text style={styles.bookPrice}>R$ {livro.preco.toFixed(2)}</Text>
+                <Text style={styles.bookFormats}>Outros formatos: capa dura, digital</Text>
+              </View>
+              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Book', { bookId: livro.id })}>
+                <Text style={styles.buttonText}>Saiba mais</Text>
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );

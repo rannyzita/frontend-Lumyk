@@ -9,4 +9,6 @@ export type RootStackParamList = {
     VerifyCode: undefined;
     ResetPassword: undefined;
     AuthorDetails: { authorId: string};
+    AccountDeleting: undefined;
+    AccountDeleted: undefined;
 }; 

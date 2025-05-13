@@ -72,11 +72,13 @@ export default function AuthorDetails() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {autor && (
           <View style={styles.authorCard}>
-            <Image source={{ uri: api.defaults.baseURL + autor.foto }} style={styles.authorImage} />
-            <View style={styles.authorInfo}>
+            <View style={{ alignItems: 'center' }}>
+              <Image source={{ uri: api.defaults.baseURL + autor.foto }} style={styles.authorImage} />
               <Text style={styles.authorName}>{autor.nome}</Text>
-              <Text style={styles.biographyTitle}>Biografia</Text>
-              <Text style={styles.authorBio}>{autor.biografia}</Text>
+            </View>
+            <View style={styles.authorInfo}>
+                <Text style={styles.biographyTitle}>Biografia</Text>
+                <Text style={styles.authorBio}>{autor.biografia}</Text>
             </View>
           </View>
         )}
@@ -94,7 +96,7 @@ export default function AuthorDetails() {
               />
               <View style={styles.bookInfo}>
                 <Text style={styles.bookTitle}>{livro.titulo}</Text>
-                <Text style={styles.bookFormat}>{livro.formato}</Text>
+                <Text style={styles.bookFormat}>Digital</Text>
                 <Text style={styles.bookPrice}>R$ {livro.preco.toFixed(2)}</Text>
                 <Text style={styles.bookFormats}>Outros formatos: capa dura, digital</Text>
               </View>

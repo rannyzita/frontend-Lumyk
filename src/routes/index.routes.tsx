@@ -23,6 +23,8 @@ import Register from '../pages/register/register';
 import ForgotPassword from '../pages/forgotPassword/index';
 import VerifyCode from '../pages/forgotPassword/verifyCode';
 import ResetPassword from '../pages/forgotPassword/resetPassword';
+import AccountDeleting from '../pages/accountDeleting/accountDeleting';
+import AccountDeleted from '../pages/accountDeleting/feedbackDeleted';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -123,6 +125,10 @@ export default function Routes() {
             <Stack.Screen name="VerifyCode" component={VerifyCode} />
 
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
+
+            <Stack.Screen name="AccountDeleting" component={AccountDeleting} />
+
+            <Stack.Screen name="AccountDeleted" component={AccountDeleted} />
 
         </Stack.Navigator>
     );

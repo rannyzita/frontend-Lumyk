@@ -35,7 +35,7 @@ type UserData = {
 // filtrar as informações pro profile
 const getTokenAndUserId = async () => {
     try {
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem('userToken');
         const userId = await AsyncStorage.getItem('userId');
 
         return { token, userId };
@@ -44,7 +44,6 @@ const getTokenAndUserId = async () => {
         return { token: null, userId: null };
     }
 };  
-
 
 export default function Profile() {
 
@@ -87,18 +86,19 @@ export default function Profile() {
 
     const handleDeleteAccount = async () => {
         const { token, userId } = await getTokenAndUserId();
-    
+
         try {
-            await api.delete(`/usuarios/${userId}`, {
+            await api.delete(`/usuarios/${userId}/deletar`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             });
     
             await AsyncStorage.clear();
-            navigation.navigate('Login');
+            navigation.navigate('AccountDeleting');
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
+            
         }
     };
     

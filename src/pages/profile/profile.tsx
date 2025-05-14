@@ -14,6 +14,7 @@ import EditIconPurple from '../../assets/profile/EditorCampoRoxo.svg';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -53,6 +54,7 @@ export default function Profile() {
     const numeroRef = useRef<TextInput>(null);
     const bairroRef = useRef<TextInput>(null);
     const estadoRef = useRef<TextInput>(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const [isEditable, setIsEditable] = useState({
         nome: false,
@@ -61,7 +63,7 @@ export default function Profile() {
         numero: false,
         bairro: false,
         estado: false,
-        nascimento: false
+        data_nascimento: false
     });
     
     const [userData, setUserData] = useState<UserData>({
@@ -74,6 +76,8 @@ export default function Profile() {
         estado: ''
     });
 
+    const [dateOfBirth, setDateOfBirth] = useState(new Date(userData.data_nascimento));
+
     type Campo = keyof UserData
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -84,6 +88,50 @@ export default function Profile() {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const formatDate = (date: Date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const handleUpdateUserData = async () => {
+        const { token, userId } = await getTokenAndUserId();
+        try {
+            await api.put(`/usuarios/${userId}/atualizar`, {
+                nome: userData.nome,
+                email: userData.email,  
+                data_nascimento: userData.data_nascimento,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            setOriginalData({
+                ...originalData,
+                nome: userData.nome,
+                email: userData.email,
+                data_nascimento: userData.data_nascimento,
+            });
+            
+        } catch (error) {
+            console.error('Erro ao atualizar dados:', error);
+        }
+    };
+    
+    const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+        const currentDate = selectedDate || dateOfBirth;
+        setShowDatePicker(false);
+        setDateOfBirth(currentDate);
+        setUserData({
+            ...userData,
+            data_nascimento: currentDate.toISOString().split('T')[0], 
+        });
+
+        handleUpdateUserData();
+    };
+    
     const handleDeleteAccount = async () => {
         const { token, userId } = await getTokenAndUserId();
 
@@ -109,11 +157,12 @@ export default function Profile() {
                 try {
                     const response = await api.get(`/usuarios/${userId}`, {
                         headers: {
-                        Authorization: `Bearer ${token}`,
+                            Authorization: `Bearer ${token}`,
                         },
                     });
                     setUserData(response.data);
                     setOriginalData(response.data);
+                    setDateOfBirth(new Date(response.data.data_nascimento));
                 } catch (error) {
                     console.error('Erro ao buscar dados do usuário:', error);
                 }
@@ -144,13 +193,16 @@ export default function Profile() {
     }, [isEditable]);
 
     const handleConfirm = (field: keyof UserData) => {
-        setIsEditable(prev => ({ ...prev, [field]: false }));
-        setOriginalData(prev => ({
-            ...prev,
-            [field]: userData[field] as string  
-        }));
+        if (field === 'data_nascimento' as keyof UserData) {
+            handleUpdateUserData(); 
+        } else {
+            setIsEditable(prev => ({ ...prev, [field]: false }));
+            setOriginalData(prev => ({
+                ...prev,
+                [field]: userData[field] as string,
+            }));
+        }        
     };
-    
 
     const handleCancel = (field: Campo) => {
         setUserData(prev => ({ ...prev, [field]: originalData[field] }));
@@ -221,21 +273,36 @@ export default function Profile() {
                 </View>
                 
                 {/* Data de Nascimento */}
-                {/* vai ser com o coisa da biblioteca de datetimerpicker */}
-                <View style={{marginRight:'45%', marginBottom:-5}}>
+                <View style={{ marginRight: '45%', marginBottom: -5 }}> 
                     <Text style={styles.label}>Data de Nascimento</Text>
-                    <View style={styles.inputWithIcon}>
-                        <Input
-                            placeholder="XX/XX/XXXX"
-                            width={120}
-                            height={40}
-                            editInput={isEditable.nascimento}
-                            focusInput={isEditable.nascimento}
-                        />
-                        <TouchableOpacity onPress={()=> setIsEditable(prev => ({...prev, nascimento:true}))}>
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
-                        </TouchableOpacity>
-                    </View>
+                        <View style={styles.inputWithIcon}>
+                            <Input
+                                placeholder="XX/XX/XXXX"
+                                value={formatDate(new Date(userData.data_nascimento))}
+                                onChangeText={(text) => setUserData({ ...userData, data_nascimento: text })}
+                                width={120}
+                                height={40}
+                                editInput={isEditable.data_nascimento}
+                                focusInput={isEditable.data_nascimento}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowDatePicker(true);
+                                    setIsEditable(prev => ({ ...prev, data_nascimento: true }));
+                                }}
+                            >
+                                <EditIcon width={22} height={22} style={styles.iconSmall} />
+                            </TouchableOpacity>
+                        </View>
+
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={dateOfBirth}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateChange}
+                            />
+                        )}
                 </View>
                 
                 {/* Endereço */}

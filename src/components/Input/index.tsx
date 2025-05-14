@@ -34,7 +34,7 @@ type Props = TextInputProps & {
     focusInput?: boolean;
 };
 
-export const Input = forwardRef((props: Props, ref) => {
+export const Input = forwardRef<TextInput, Props>((props, ref) => {
     const {
         IconLeft,
         IconRight,
@@ -63,6 +63,7 @@ export const Input = forwardRef((props: Props, ref) => {
             {title && <Text style={[styles.textInput, labelStyle]}>{title}</Text>}
             <View style={[styles.boxInput, { height, width }]}>
                 <TextInput
+                    ref={ref}
                     style={[styles.input, { flex: 1 }]}
                     editable={editInput}
                     selectTextOnFocus={focusInput}

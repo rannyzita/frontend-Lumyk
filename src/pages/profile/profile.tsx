@@ -16,6 +16,9 @@ import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import ConfirmAlteration from '../../assets/profile/circle-check-solid.svg';
+import CalcelAlteration from '../../assets/profile/xmark-solid.svg';
+
 import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -76,9 +79,7 @@ export default function Profile() {
         estado: ''
     });
 
-    const [dateOfBirth, setDateOfBirth] = useState(new Date(userData.data_nascimento));
-
-    type Campo = keyof UserData
+    const [dateOfBirth, setDateOfBirth] = useState(parseDateAsLocal(userData.data_nascimento));
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -88,20 +89,22 @@ export default function Profile() {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const formatDate = (date: Date) => {
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
+    const formatDate = (date: string) => {
+        if (!date) return '';
+
+        const isoDate = date.split('T')[0]; 
+        const [year, month, day] = isoDate.split('-');
         return `${day}/${month}/${year}`;
     };
 
-    const handleUpdateUserData = async () => {
+    const handleUpdateUserData = async (updatedUserData: typeof userData) => {
         const { token, userId } = await getTokenAndUserId();
+
         try {
             await api.put(`/usuarios/${userId}/atualizar`, {
-                nome: userData.nome,
-                email: userData.email,  
-                data_nascimento: userData.data_nascimento,
+                nome: updatedUserData.nome,
+                email: updatedUserData.email,  
+                data_nascimento: updatedUserData.data_nascimento,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -110,9 +113,9 @@ export default function Profile() {
     
             setOriginalData({
                 ...originalData,
-                nome: userData.nome,
-                email: userData.email,
-                data_nascimento: userData.data_nascimento,
+                nome: updatedUserData.nome,
+                email: updatedUserData.email,
+                data_nascimento: updatedUserData.data_nascimento,
             });
             
         } catch (error) {
@@ -120,16 +123,32 @@ export default function Profile() {
         }
     };
     
+    function parseDateAsLocal(dateString: string): Date {
+        const [year, month, day] = dateString.split("-").map(Number);
+        return new Date(year, month - 1, day); 
+    }
+
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
         const currentDate = selectedDate || dateOfBirth;
         setShowDatePicker(false);
         setDateOfBirth(currentDate);
-        setUserData({
-            ...userData,
-            data_nascimento: currentDate.toISOString().split('T')[0], 
-        });
 
-        handleUpdateUserData();
+        const localDate = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000);
+
+        const newDataNascimento = localDate.toISOString().split('T')[0];
+        
+        setUserData(prev => {
+            const updatedData = {
+                ...prev,
+                data_nascimento: newDataNascimento,
+            };
+            
+            // Garante que os dados atualizados são enviados
+            handleUpdateUserData(updatedData);
+            
+            setIsEditable(prev => ({ ...prev, data_nascimento: false }));
+            return updatedData;
+        });
     };
     
     const handleDeleteAccount = async () => {
@@ -146,7 +165,6 @@ export default function Profile() {
             navigation.navigate('AccountDeleting');
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
-            
         }
     };
     
@@ -192,23 +210,46 @@ export default function Profile() {
         }
     }, [isEditable]);
 
-    const handleConfirm = (field: keyof UserData) => {
-        if (field === 'data_nascimento' as keyof UserData) {
-            handleUpdateUserData(); 
-        } else {
-            setIsEditable(prev => ({ ...prev, [field]: false }));
-            setOriginalData(prev => ({
-                ...prev,
-                [field]: userData[field] as string,
-            }));
-        }        
-    };
+    // const handleConfirm = (field: keyof UserData) => {
+    //     if (field === 'data_nascimento' as keyof UserData) {
+    //         handleUpdateUserData(); 
+    //     } else {
+    //         setIsEditable(prev => ({ ...prev, [field]: false }));
+    //         setOriginalData(prev => ({
+    //             ...prev,
+    //             [field]: userData[field] as string,
+    //         }));
+    //     }        
+    // };
 
-    const handleCancel = (field: Campo) => {
-        setUserData(prev => ({ ...prev, [field]: originalData[field] }));
-        setIsEditable(prev => ({ ...prev, [field]: false }));
-};
+    // const handleCancel = (field: Campo) => {
+    //     setUserData(prev => ({ ...prev, [field]: originalData[field] }));
+    //     setIsEditable(prev => ({ ...prev, [field]: false }));
+    // };
 
+    const handleEditEmail = (): void => {
+        setIsEditable(prev => ({ ...prev, email: true }));
+        setTimeout(() => {
+          emailRef.current?.focus(); // foca no campo
+        }, 100);
+      };
+
+      const handleCancelEditEmail = () => {
+        setIsEditable(prev => ({ ...prev, email: false }));
+        setUserData(prev => ({
+          ...prev,
+          email: originalData.email // volta ao original
+        }));
+      };
+      
+      const handleConfirmEditEmail = () => {
+        handleUpdateUserData({
+          ...userData,
+          email: userData.email,
+        });
+        setIsEditable(prev => ({ ...prev, email: false }));
+      };
+      
     return (
         <View style={styles.container}>
             <NavigationHeader iconArrow={true} />
@@ -232,29 +273,49 @@ export default function Profile() {
                     <Text style={styles.label}>E-mail</Text>
                     <View style={styles.inputWithIcon}>
                         <Input
+                            ref={emailRef}
                             placeholder="E-mail"
                             value={userData.email}
                             onChangeText={(text) => setUserData({...userData, email:text})}
                             editInput={isEditable.email}
                             focusInput={isEditable.email}
-                            width={270}
+                            width={230}
                             height={40}
                         />
-                        <TouchableOpacity onPress={() => setIsEditable(prev=> ({...prev, email:true}))}>
-                            <EditIcon width={22} height={22} style={styles.iconSmall}></EditIcon>
-                        </TouchableOpacity>
+
+                        {!isEditable.email ? (
+                            <TouchableOpacity
+                                onPress={handleEditEmail}
+                            >
+                                <EditIcon width={22} height={22} style={[styles.iconSmall, {marginRight: 50}]} />
+                            </TouchableOpacity>
+                            ) : (
+                            <View style={{ flexDirection: 'row', marginBottom:10, marginRight: 15}}>
+                                <View>
+                                    <TouchableOpacity onPress={handleCancelEditEmail}>
+                                        <CalcelAlteration width={30} height={30} />
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{marginLeft: 10}}>
+                                    <TouchableOpacity onPress={handleConfirmEditEmail}>
+                                        <ConfirmAlteration width={30} height={30} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            )}
                     </View>
                 </View>
 
                 {/* Senha */}
-                <View style={{marginBottom:-20}}>
+                <View style={{marginBottom:-20, width:'100%'}}>
                     <Text style={styles.label}>Senha</Text>
                     <View style={styles.inputWithIcon}>
                         <Input
                             placeholder="********"
                             placeholderTextColor={themes.colors.textPlaceHolder}
                             secureTextEntry={isPasswordVisible}
-                            width={270}
+                            width={120}
                             height={40}
                             editInput={false}
                             focusInput={false}
@@ -264,7 +325,7 @@ export default function Profile() {
                             <EditIcon 
                                 width={22} 
                                 height={22} 
-                                style={styles.iconSmall}
+                                style={[styles.iconSmall, {marginRight: 190}]}
                                 onPress={()=> navigation.navigate('ForgotPassword')}
                             >   
                             </EditIcon>
@@ -273,17 +334,16 @@ export default function Profile() {
                 </View>
                 
                 {/* Data de Nascimento */}
-                <View style={{ marginRight: '45%', marginBottom: -5 }}> 
+                <View style={{ marginBottom: -5, width:'100%' }}> 
                     <Text style={styles.label}>Data de Nascimento</Text>
                         <View style={styles.inputWithIcon}>
                             <Input
                                 placeholder="XX/XX/XXXX"
-                                value={formatDate(new Date(userData.data_nascimento))}
-                                onChangeText={(text) => setUserData({ ...userData, data_nascimento: text })}
+                                value={formatDate(userData.data_nascimento)}
                                 width={120}
                                 height={40}
-                                editInput={isEditable.data_nascimento}
-                                focusInput={isEditable.data_nascimento}
+                                editInput={false}
+                                focusInput={false}
                             />
                             <TouchableOpacity
                                 onPress={() => {
@@ -291,10 +351,10 @@ export default function Profile() {
                                     setIsEditable(prev => ({ ...prev, data_nascimento: true }));
                                 }}
                             >
-                                <EditIcon width={22} height={22} style={styles.iconSmall} />
+                                <EditIcon width={22} height={22} style={[styles.iconSmall, {marginRight: 190}]} />
                             </TouchableOpacity>
                         </View>
-
+                        
                         {showDatePicker && (
                             <DateTimePicker
                                 value={dateOfBirth}

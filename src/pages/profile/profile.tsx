@@ -361,7 +361,7 @@ export default function Profile() {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -30}
             >
                 <KeyboardAwareScrollView
-                    contentContainerStyle={styles.container}
+                    contentContainerStyle={styles.scrollContent}
                     keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={true}
                     keyboardDismissMode="on-drag"

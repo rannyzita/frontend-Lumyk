@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        flexGrow: 1,
     },
     profileContent: {
         marginTop: 20,

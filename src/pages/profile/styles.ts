@@ -5,11 +5,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        flexGrow: 1,
     },
     profileContent: {
         marginTop: 20,
-        width: '80%',
+        width: '85%',
         alignItems: 'center',
     },
     profileIcon: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     nameRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: -8
+        marginBottom: -6
     },
     profileName: {
         fontSize: 22,
@@ -50,16 +50,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         gap:14
     },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: 320,
-        marginBottom: 10,
-    },
     iconSmall: {
         width: 30,
         height: 30,
-        marginRight: 10,
+        marginRight: 50,
         marginBottom: 7
     },
     addressTitle: {
@@ -71,23 +65,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: 320,
-        marginTop: 30,
+        marginTop: 60,
     },
     deleteButton: {
         backgroundColor: themes.colors.red,
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderRadius: 8,
         boxShadow: themes.colors.shadow
     },
     deleteText: {
         color: '#FFFFFF',
-        fontWeight: 'bold',
     },
     logoutButton: {
         backgroundColor: '#E0E0E0',
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderRadius: 8,
         boxShadow: themes.colors.shadow
 
@@ -98,6 +91,18 @@ const styles = StyleSheet.create({
     section: {
         marginBottom: -20,
         width: '100%',
+    },
+    keyboardView: {
+        flex: 1
+    },
+    scrollContent: {
+        flexGrow: 1,
+        padding: 16,
+        justifyContent: 'flex-start'
+    },
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff'
     },
 });
 

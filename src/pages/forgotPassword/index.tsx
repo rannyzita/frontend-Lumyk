@@ -31,7 +31,6 @@ const RedefinirSenha = () => {
         <View style={styles.container}>
             <NavigationHeader
                 iconArrow={true}
-                onBack={() => navigation.navigate('Login')}
             />
 
             <View style={styles.content}>

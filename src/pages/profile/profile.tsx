@@ -106,29 +106,56 @@ export default function Profile() {
     useEffect(() => {
         const fetchUserData = async () => {
             const { token, userId } = await getTokenAndUserId();
+    
             if (token && userId) {
                 try {
+                    // Busca os dados do usuário
                     const response = await api.get(`/usuarios/${userId}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     });
+    
                     setUserData(response.data);
                     setOriginalData(response.data);
                     setDateOfBirth(new Date(response.data.data_nascimento));
+    
+                    // Busca todos os endereços
+                    const enderecosResponse = await api.get('/enderecos', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+    
+                    // Filtra para encontrar o endereço do usuário atual
+                    const enderecoDoUsuario = enderecosResponse.data.find(
+                        (endereco: any) => endereco.id_usuario === userId
+                    );
+
+                    if (enderecoDoUsuario) {
+                        // Junta o endereço nos dados do usuário, se desejar
+                        setUserData((prev: any) => ({
+                            ...prev,
+                            rua: enderecoDoUsuario.rua || '',
+                            numero: enderecoDoUsuario.numero?.toString() || '',
+                            bairro: enderecoDoUsuario.bairro || '',
+                            id_estado: enderecoDoUsuario.id_estado || '',
+                            id_endereco: enderecoDoUsuario.id || '',
+                        }));
+                    }
                 } catch (error) {
-                    console.error('Erro ao buscar dados do usuário:', error);
+                    console.error('Erro ao buscar dados do usuário ou endereço:', error);
                 }
             }
         };
+    
         fetchUserData();
-    }, []);
+    }, []);    
 
-    const handleUpdateUserData = async (updatedUserData: typeof userData) => {
+    const atualizarUsuario = async (updatedUserData: typeof userData) => {
         const { token, userId } = await getTokenAndUserId();
     
         try {
-            // Atualiza dados do usuário
             await api.put(`/usuarios/${userId}/atualizar`, {
                 nome: updatedUserData.nome,
                 email: updatedUserData.email,
@@ -139,39 +166,76 @@ export default function Profile() {
                 },
             });
     
-            // Monta os dados do endereço
-            const enderecoData = {
-                id_estado: updatedUserData.id_estado,
-                id_usuario: userId,
-                numero: parseInt(updatedUserData.numero),
-                bairro: updatedUserData.bairro,
-                rua: updatedUserData.rua,
-            };
+        } catch (error) {
+            console.error("Erro ao atualizar dados do usuário:", error);
+            throw error;
+        }
+    };
     
-            if (updatedUserData.id_endereco) {
-                // Atualiza endereço existente
-                await api.put(`/enderecos/${updatedUserData.id_endereco}`, enderecoData, {
+    const atualizarOuCriarEndereco = async (updatedUserData: typeof userData) => {
+        const { token, userId } = await getTokenAndUserId();
+    
+        // Busca todos os endereços
+        let enderecoExistente;
+        try {
+            const response = await api.get('/enderecos', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            // Encontra o endereço do usuário atual
+            enderecoExistente = response.data.find((endereco: any) => endereco.id_usuario === userId);
+        } catch (error) {
+            console.error("Erro ao buscar endereços existentes:", error);
+        }
+    
+        const enderecoData = {
+            id_estado: updatedUserData.id_estado,
+            id_usuario: userId,
+            numero: parseInt(updatedUserData.numero),
+            bairro: updatedUserData.bairro,
+            rua: updatedUserData.rua,
+        };
+    
+        try {
+            if (enderecoExistente) {
+                // Atualiza o endereço existente
+                await api.put(`/enderecos/${enderecoExistente.id}`, enderecoData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+    
+                console.log("Endereço atualizado com sucesso.");
             } else {
                 // Cria novo endereço
-                const response = await api.post('/enderecos/', enderecoData, {
+                const response = await api.post('/enderecos', enderecoData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
     
-                const novoEnderecoId = response.data.id; 
+                console.log("Novo endereço criado com ID:", response.data.id);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar ou criar endereço:", error);
+            throw error;
+        }
+    };
     
-                updatedUserData.id_endereco = novoEnderecoId;
+    
+    const handleUpdateUserData = async (updatedUserData: typeof userData) => {
+        try {
+            await atualizarUsuario(updatedUserData);
+    
+            if (updatedUserData.rua || updatedUserData.bairro || updatedUserData.numero || updatedUserData.id_estado) {
+                await atualizarOuCriarEndereco(updatedUserData);
             }
     
             setOriginalData({ ...updatedUserData });
-    
         } catch (error) {
-            console.error('Erro ao atualizar dados e endereço:', error);
+            console.error("Erro ao salvar dados:", error);
         }
     };
     
@@ -268,7 +332,17 @@ export default function Profile() {
 
         // RUA
     const handleEditRua = () => {
-        setIsEditable(prev => ({ ...prev, rua: true }));
+
+        setIsEditable({
+            nome: false,
+            email: false,
+            rua: true,
+            numero: false,
+            bairro: false,
+            estado: false,
+            data_nascimento: false,
+        });
+
         setTimeout(() => {
             ruaRef.current?.focus();
         }, 300);
@@ -289,7 +363,17 @@ export default function Profile() {
 
     // NÚMERO
     const handleEditNumero = () => {
-        setIsEditable(prev => ({ ...prev, numero: true }));
+
+        setIsEditable({
+            nome: false,
+            email: false,
+            rua: false,
+            numero: true,
+            bairro: false,
+            estado: false,
+            data_nascimento: false,
+        });
+
         setTimeout(() => {
             ruaRef.current?.focus();
         }, 300);
@@ -310,7 +394,17 @@ export default function Profile() {
 
     // BAIRRO
     const handleEditBairro = () => {
-        setIsEditable(prev => ({ ...prev, bairro: true }));
+
+        setIsEditable({
+        nome: false,
+        email: false,
+        rua: false,
+        numero: false,
+        bairro: true,
+        estado: false,
+        data_nascimento: false,
+    });
+
         setTimeout(() => {
             ruaRef.current?.focus();
         }, 300);

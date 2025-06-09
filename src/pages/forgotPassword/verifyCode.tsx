@@ -40,7 +40,7 @@ const VerifyCode = () => {
         await api.put('/usuarios/atualizar_senha', { codigo: email });
         setApiMessage('Código confirmado com sucesso.');
         setIsError(false);
-        navigation.navigate('ResetPassword');
+        navigation.navigate('ResetPassword', { codigo: email });
     } catch (error: any) {
         setIsError(true);
         if (error.response && error.response.status === 404) {

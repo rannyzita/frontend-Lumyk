@@ -30,6 +30,8 @@ const ResetPassword = () => {
     const [apiMessage, setApiMessage] = useState('');
     const [isError, setIsError] = useState(false);
 
+    const codigoRecebido = route.params?.codigo ?? '';
+
     const handleConfirmar = async () => {
         setApiMessage('');
         setIsError(false);
@@ -44,6 +46,7 @@ const ResetPassword = () => {
 
         try {
             await api.put('/usuarios/atualizar_senha', {
+                codigo: codigoRecebido,
                 new_password: newPassword,
                 confirm_password: confirmerPassword
             });

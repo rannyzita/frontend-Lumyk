@@ -59,7 +59,7 @@ const ResetPassword = () => {
             setTimeout(() => {
                 setShowModal(false);
                 navigation.navigate('Login');
-            }, 2000);
+            }, 4000);
         } catch (error: any) {
             setShowLoading(false);
             setIsError(true);

@@ -24,12 +24,15 @@ const RedefinirSenha = () => {
     const [email, setEmail] = useState('');
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [emailError, setEmailError] = useState(''); // texto de erro
+    const [loading, setLoading] = useState(false);
 
     const handleEnviarCodigo = async () => {
         if (!email.trim()) {
             setEmailError('O campo de e-mail é obrigatório.');
             return;
         }
+
+        setLoading(true);
 
         try {
             await api.post('/usuarios/recuperar_senha', { email });
@@ -45,6 +48,8 @@ const RedefinirSenha = () => {
             } else {
                 setEmailError('Erro ao enviar o código. Tente novamente.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -100,10 +105,11 @@ const RedefinirSenha = () => {
 
                 <TouchableOpacity style={{ marginTop: 10 }}>
                     <Button
-                        text="Enviar Código"
+                        text={loading ? 'Enviando código...' : 'Enviar Código'}
                         width={320}
                         height={38}
                         onPress={handleEnviarCodigo}
+                        disabled={loading}
                     />
                 </TouchableOpacity>
 

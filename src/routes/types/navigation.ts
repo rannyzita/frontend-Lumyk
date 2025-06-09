@@ -7,7 +7,7 @@ export type RootStackParamList = {
     Register: undefined;
     ForgotPassword: undefined;
     VerifyCode: undefined;
-    ResetPassword: undefined;
+    ResetPassword:  { codigo: string };
     AuthorDetails: { authorId: string};
     AccountDeleting: undefined;
     AccountDeleted: undefined;

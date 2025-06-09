@@ -11,38 +11,69 @@ import NavigationHeader from '../../components/NavigationHeader/navigationHeader
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import ModalFeedback from '../../components/feedbackButton/feedbackButton';
+import api from '../../../API/index'; // Certifique-se de que isso está configurado
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
+type RouteProps = RouteProp<RootStackParamList, 'ResetPassword'>;
 
 const ResetPassword = () => {
     const navigation = useNavigation<NavigationProps>();
+    const route = useRoute<RouteProps>();
+
     const [showModal, setShowModal] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmerPassword, setConfirmerPassword] = useState('');
+    const [apiMessage, setApiMessage] = useState('');
+    const [isError, setIsError] = useState(false);
 
-    const handleConfirmar = () => {
-        setShowModal(true);
+    const handleConfirmar = async () => {
+        setApiMessage('');
+        setIsError(false);
 
-        setTimeout(() => {
-            setShowModal(false);
-            setShowLoading(true);
+        if (newPassword !== confirmerPassword) {
+            setApiMessage('As senhas não coincidem.');
+            setIsError(true);
+            return;
+        }
+
+        setShowLoading(true);
+
+        try {
+            await api.put('/usuarios/atualizar_senha', {
+                new_password: newPassword,
+                confirm_password: confirmerPassword
+            });
+
+            setShowLoading(false);
+            setIsError(false);
+            setApiMessage('Senha atualizada com sucesso!');
+            setShowModal(true);
 
             setTimeout(() => {
-                setShowLoading(false);
+                setShowModal(false);
                 navigation.navigate('Login');
-            }, 3000);
-        }, 5000);
+            }, 2000);
+        } catch (error: any) {
+            setShowLoading(false);
+            setIsError(true);
+
+            if (error.response && error.response.data && error.response.data.mensagem) {
+                setApiMessage(error.response.data.mensagem);
+            } else {
+                setApiMessage('Erro ao atualizar a senha. Tente novamente.');
+            }
+        }
     };
 
     return (
         <View style={styles.container}>
             <NavigationHeader />
 
-            <View style={[styles.content, {marginBottom:99}]}>
+            <View style={[styles.content, { marginBottom: 99 }]}>
                 <Logo style={{ marginBottom: 50 }} />
                 <View style={styles.separatorContainer}>
                     <View style={styles.line} />
@@ -75,6 +106,20 @@ const ResetPassword = () => {
                         secureTextEntry
                     />
                 </View>
+
+                {/* 🔴 Mensagem de erro ou sucesso */}
+                {apiMessage !== '' && (
+                    <Text style={{
+                        color: isError ? 'red' : 'green',
+                        marginTop: 10,
+                        fontSize: 13,
+                        height: 20,
+                        textAlign: 'left',
+                        alignSelf: 'flex-start'
+                    }}>
+                        {apiMessage}
+                    </Text>
+                )}
 
                 <View style={{ marginTop: 50, flexDirection: 'row', alignItems: 'center', marginLeft: 140 }}>
                     <View style={{ marginRight: 20 }}>

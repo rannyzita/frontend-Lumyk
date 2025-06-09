@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import { themes } from '../../global/themes';
 
@@ -15,26 +15,59 @@ import { useNavigation } from "@react-navigation/native";
 
 import ModalFeedback from '../../components/feedbackButton/feedbackButton';
 
+import api from '../../../API/index'; // Ajuste conforme seu projeto
+
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 const RedefinirSenha = () => {
     const navigation = useNavigation<NavigationProps>();
     const [email, setEmail] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [emailError, setEmailError] = useState(''); // texto de erro
 
-    const handleEnviarCodigo = () => {
-        setShowModal(true);
-        setTimeout(() => setShowModal(false), 10000);
+    const handleEnviarCodigo = async () => {
+        if (!email.trim()) {
+            setEmailError('O campo de e-mail é obrigatório.');
+            return;
+        }
+
+        try {
+            await api.post('/usuarios/recuperar_senha', { email });
+
+            setShowSuccessModal(true);
+            setTimeout(() => setShowSuccessModal(false), 10000);
+
+            // Limpa erro se houver
+            setEmailError('');
+        } catch (error: any) {
+            if (error.response && error.response.status === 404) {
+                setEmailError('E-mail não encontrado.');
+            } else {
+                setEmailError('Erro ao enviar o código. Tente novamente.');
+            }
+        }
+    };
+
+    const handleConfirmar = () => {
+        if (!email.trim()) {
+            setEmailError('O campo de e-mail é obrigatório.');
+            return;
+        }
+        setEmailError('');
+        navigation.navigate('VerifyCode');
+    };
+
+    const handleEmailChange = (text: string) => {
+        setEmail(text);
+        if (emailError) setEmailError(''); // limpa o erro quando o usuário digitar algo novo
     };
 
     return (
         <View style={styles.container}>
-            <NavigationHeader
-                iconArrow={true}
-            />
+            <NavigationHeader iconArrow={true} />
 
             <View style={styles.content}>
-                <Logo style={{marginBottom: 50}} />
+                <Logo style={{ marginBottom: 50 }} />
                 <View style={styles.separatorContainer}>
                     <View style={styles.line} />
                 </View>
@@ -55,10 +88,17 @@ const RedefinirSenha = () => {
                     width={320}
                     height={38}
                     value={email}
-                    onChangeText={setEmail}
+                    onChangeText={handleEmailChange}
                 />
 
-                <TouchableOpacity style={{marginTop:10}}>
+                {/* Texto de erro em vermelho embaixo do input */}
+                {!!emailError && (
+                    <Text style={{ color: 'red', marginTop: 3, marginBottom: 8 }}>
+                        {emailError}
+                    </Text>
+                )}
+
+                <TouchableOpacity style={{ marginTop: 10 }}>
                     <Button
                         text="Enviar Código"
                         width={320}
@@ -67,20 +107,22 @@ const RedefinirSenha = () => {
                     />
                 </TouchableOpacity>
 
-                <View style={{marginTop:50, flexDirection: 'row'}}></View>
+                <View style={{ marginTop: 50, flexDirection: 'row' }}>
                     <Button
                         text="Confirmar"
                         width={110}
                         height={40}
-                        onPress={() => navigation.navigate('VerifyCode')}
-                        style={{marginLeft:207}}
+                        onPress={handleConfirmar}
+                        style={{ marginLeft: 207 }}
                     />
                 </View>
+            </View>
 
-            {showModal && (
+            {showSuccessModal && (
                 <ModalFeedback
                     title='Código enviado com sucesso!'
-                    closeModal={() => setShowModal(false)} style={{ marginRight: 15 }}
+                    closeModal={() => setShowSuccessModal(false)}
+                    style={{ marginRight: 15 }}
                 />
             )}
         </View>

@@ -9,6 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 type RouteParams = {
@@ -50,6 +52,18 @@ export default function Book() {
     const buttonRef = useRef(null);
     const [bookData, setBookData] = useState<BookData | null>(null);
 
+    const getTokenAndUserId = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            const userId = await AsyncStorage.getItem('userId');
+    
+            return { token, userId };
+        } catch (error) {
+            console.error('Erro ao recuperar token e ID do usuário:', error);
+            return { token: null, userId: null };
+        }
+    };
+
     useEffect(() => {
         async function fetchBookData() {
             try {
@@ -81,6 +95,41 @@ export default function Book() {
 
         fetchBookData();
     }, [bookId]);
+
+    const handleAdicionarCarrinho = async () => {
+        const { token, userId } = await getTokenAndUserId();
+
+        if (!token || !userId) return;
+    
+        try {
+          // 1. Criar carrinho
+            const carrinhoResponse = await api.post('/carrinhos/', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const carrinhoId = carrinhoResponse.data.id;
+            // 2. Adicionar item ao carrinho
+            const itemPayload = {
+                id_carrinho: carrinhoId,
+                id_livro: livroSelecionado.id, // supondo que você tenha um estado chamado livroSelecionado
+                formato: selectedFormat,       // "digital" ou "fisico", por exemplo
+                tipo: selectedTipo,            // se houver algo como "capa dura", "pocket", etc.
+            };
+
+            await api.post('/item-carrinho/', itemPayload, {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            });
+
+            Alert.alert('Sucesso', 'Item adicionado ao carrinho!');
+            } catch (error) {
+                console.error('Erro ao adicionar ao carrinho:', error);
+                Alert.alert('Erro', 'Não foi possível adicionar ao carrinho.');
+            }
+    };
 
     const formatPrice = (price: string) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -138,53 +187,67 @@ export default function Book() {
                     {/* Formato Digital */}
                     <TouchableOpacity
                         style={[
-                        styles.formatButton,
-                        selectedFormat === 'digital' && styles.selectedButton,
-                        selectedFormat === 'digital' && { paddingVertical: 15 },
-                        ]}
+                            styles.formatButton,
+                            selectedFormat === 'digital' && styles.selectedButton,
+                        
+                            ]}
                         onPress={() => handleSelectFormat('digital')}
                         activeOpacity={0.8}
                     >
                     <Text style={styles.formatTitle}>Formato Digital</Text>
                     <View style={styles.separator} />
                     <View style={styles.formatContent}>
-                        <View style={styles.circle}>
-                            {selectedFormat === 'digital' && <View style={styles.filledCircle} />}
+                    <View style={styles.circle}>
+                        <View style={[
+                            styles.filledCircle,
+                            selectedFormat !== 'digital' && { opacity: 0 }
+                        ]} />
                         </View>
+
                         <Text style={styles.priceText}>{formatPrice(bookData.preco)}</Text>
                     </View>
                 </TouchableOpacity>
 
-                {/* Formato Físico */}
-                <TouchableOpacity
-                    ref={buttonRef}
-                    style={[
-                    styles.formatButton,
-                    selectedFormat === 'fisico' && styles.selectedButton,
-                    { paddingVertical: selectedFormat === 'fisico' ? 15 : 10 },
-                    ]}
-                    onPress={() => handleSelectFormat('fisico')}
-                    activeOpacity={0.8}
-                >
-                    <Text style={styles.formatTitle}>Formato Físico</Text>
-                    <View style={styles.separator} />
-                    <View style={styles.formatContent}>
-                        <View style={styles.circle}>
-                            {selectedFormat === 'fisico' && <View style={styles.filledCircle} />}
+                    {/* Formato Físico */}
+                    <TouchableOpacity
+                        ref={buttonRef}
+                        style={[
+                            styles.formatButton,
+                            selectedFormat === 'fisico' && styles.selectedButton,
+                            { paddingVertical: 15 },
+                            ]}
+                        onPress={() => handleSelectFormat('fisico')}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.formatTitle}>Formato Físico</Text>
+
+                        <View style={styles.separator} />
+
+                        <View style={styles.formatContent}>
+                            <View style={styles.circle}>
+                                <View style={[
+                                    styles.filledCircle,
+                                    selectedFormat !== 'fisico' && { opacity: 0 } // Oculta, mas mantém espaço
+                                ]} />
+                            </View>
+
+                            <Text style={styles.priceText}>
+                                {selectedCover
+                                    ? `${selectedCover} - ${
+                                        selectedCover === 'Capa Dura'
+                                            ? formatPrice((parseFloat(bookData.preco) * 1.30).toFixed(2))
+                                            : formatPrice((parseFloat(bookData.preco) * 1.15).toFixed(2))
+                                    }`
+                                    : 'Selecione a capa'}
+                            </Text>
                         </View>
-                        <Text style={styles.priceText}>
-                            {selectedCover
-                            ? `${selectedCover} - ${formatPrice(bookData.physicalOptions.find(opt => opt.type === selectedCover)?.price || '')}`
-                            : 'Selecione a capa'}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={{ marginTop: 15 }}>
-                <TouchableOpacity style={styles.addToCartButton}>
-                    <Text style={styles.addToCartText}>Adicionar ao Carrinho</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.addToCartButton} onPress={handleAdicionarCarrinho}>
+                        <Text style={styles.addToCartText}>Adicionar ao Carrinho</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.bottomBox}>
@@ -211,20 +274,25 @@ export default function Book() {
                         { top: modalPosition.top, left: modalPosition.left },
                         ]}
                     >
-                        {bookData.physicalOptions?.map((option: PhysicalOption) => (
-                        <TouchableOpacity
-                            key={option.type}
-                            onPress={() => handleSelectCover(option.type)}
-                            style={styles.dropdownItem}
-                        >
-                            <Text style={styles.dropdownItemText}>
-                            {option.type} - {formatPrice(option.price)}
-                            </Text>
-                            <View style={styles.dropdownCircle}>
-                            {selectedCover === option.type && <View style={styles.dropdownFilledCircle} />}
-                            </View>
-                        </TouchableOpacity>
-                        ))}
+                        {['Capa Comum', 'Capa Dura'].map((option) => {
+                            const multiplier = option === 'Capa Dura' ? 1.30 : 1.15;
+                            const adjustedPrice = formatPrice((parseFloat(bookData.preco) * multiplier).toFixed(2));
+
+                            return (
+                                <TouchableOpacity
+                                    key={option}
+                                    onPress={() => handleSelectCover(option)}
+                                    style={styles.dropdownItem}
+                                >
+                                    <Text style={styles.dropdownItemText}>
+                                        {option} - {adjustedPrice}
+                                    </Text>
+                                    <View style={styles.dropdownCircle}>
+                                        {selectedCover === option && <View style={styles.dropdownFilledCircle} />}
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })}
                     </View>
                 </Pressable>
             </Modal>

@@ -1,31 +1,43 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import styles from './styles';
 
 import Logo from '../../assets/logo.svg';
-import AnuncioSubscription from '../../assets/subscription/Informações do plano.svg';
-import IconePlano from '../../assets/subscription/Informações do plano.svg';
+const AnuncioSubscription = require('../../assets/subscription/Resumo plano.png');
 
 export default function Subscription() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scroll}>
-                <Text style={styles.title}>ASSINATURAS</Text>
+                <View style={styles.AssinaturaCard}>
+                    <Text style={styles.title}>ASSINATURAS</Text>
+                </View>
 
-                {/* Caixa branca com o SVG no topo */}
+                {/* Imagem ampliada */}
                 <View style={styles.svgContainer}>
-                    <AnuncioSubscription width={200} height={180} />
+                    <ImageBackground
+                        source={AnuncioSubscription}
+                        resizeMode="contain"
+                        style={styles.subscriptionImage}
+                    />
                 </View>
 
                 {/* Plano 1 */}
                 <View style={styles.card}>
-                    <View style={styles.cardHeader}>
+                    <View style={styles.cardPlanos}>
                         <Text style={styles.planTitle}>Plano 1</Text>
-                        <IconePlano width={30} height={30} />
                     </View>
-                    <Text style={styles.price}>R$ 15,90/mês</Text>
-                    <View style={styles.benefitsContainer}>
+
+                    <View style={styles.priceRow}>
+                        <Text style={styles.price}>R$ 15,90/mês</Text>
+                        <Logo width={45} height={45} />
+                    </View>
+
+                    <View style={styles.benefitsRow}>
                         <Text style={styles.benefitsTitle}>Benefícios</Text>
+                    </View>
+                    
+                    <View style={styles.benefitsContainer}>
                         <Text style={styles.benefitText}>
                             ○ Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.
                         </Text>
@@ -37,18 +49,26 @@ export default function Subscription() {
 
                 {/* Plano 2 */}
                 <View style={styles.card}>
-                    <View style={styles.cardHeader}>
+                    
+                    <View style={styles.cardPlanos}>
                         <Text style={styles.planTitle}>Plano 2</Text>
-                        <IconePlano width={30} height={30} />
                     </View>
-                    <Text style={styles.price}>R$ 29,99/mês</Text>
+
+                    <View style={styles.priceRow}>
+                        <Text style={styles.price}>R$ 29,99/mês</Text>
+                        <Logo width={45} height={45} />
+                    </View>
+
+                    <View style={styles.benefitsRow}>
+                        <Text style={styles.benefitsTitle}>Benefícios</Text>
+                    </View>
+
                     <View style={styles.benefitsContainer}>
-                        <Text style={styles.benefitsTitle}>Benefício</Text>
                         <Text style={styles.benefitText}>
                             ○ Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.
                         </Text>
                         <Text style={styles.benefitText}>
-                            ○ Desconto no valor de 10% aplicado automaticamente em todos os livros.
+                            ○ Desconto no valor de 20% aplicado automaticamente em todos os livros.
                         </Text>
                     </View>
                     <TouchableOpacity style={styles.button}>
@@ -56,10 +76,6 @@ export default function Subscription() {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-
-            <View style={styles.footer}>
-                <Logo width={40} height={40} />
-            </View>
         </View>
     );
 }

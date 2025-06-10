@@ -19,7 +19,10 @@ export default function QrCode() {
             <NavigationHeader iconArrow={true} />
             <View style={styles.qrContainer}>
                 <View style={styles.qrBox}>
-                    <QRCode value={pixCode} size={180} />
+                    <View style={styles.qrCode}>
+                        <QRCode value={pixCode} size={180} />
+                    </View>
+                    
                     <Text style={styles.qrText}>
                         Por favor, escaneie o QR Code ou copie o código abaixo para efetuar o pagamento.
                     </Text>

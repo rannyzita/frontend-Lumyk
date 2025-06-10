@@ -4,7 +4,7 @@ import { themes } from '../../global/themes';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: themes.colors.backgroundLumyk, // lilás claro
+    backgroundColor: themes.colors.backgroundLumyk, 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -14,11 +14,7 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     width: '85%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    boxShadow: themes.colors.shadow
   },
   iconWrapper: {
     borderRadius: 50,

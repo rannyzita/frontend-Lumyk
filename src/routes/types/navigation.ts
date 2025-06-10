@@ -11,4 +11,5 @@ export type RootStackParamList = {
     AuthorDetails: { authorId: string};
     AccountDeleting: undefined;
     AccountDeleted: undefined;
+    PaymentSubscription: { id: string};
 }; 

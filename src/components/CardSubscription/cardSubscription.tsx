@@ -1,17 +1,34 @@
-// components/PlanCard.js
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Logo from '../../assets/logo.svg'; // ajuste o caminho se necessário
-import styles from './styles'
+import Logo from '../../assets/logo.svg';
+import styles from './styles';
 
 interface PlanCardProps {
-    title: string;
-    price: string;
-    benefits: string[];
-    onSelect: () => void;
+    id: string;
+    onSelect?: () => void;
+    planSelected?: string;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({ title, price, benefits, onSelect }) => {
+const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected }) => {
+    let title = '';
+    let price = '';
+    let benefits: string[] = [];
+
+    if (id === '1') {
+        title = 'Plano 1';
+        price = 'R$ 15,90/mês';
+        benefits = [
+        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
+        ];
+    } else if (id === '2') {
+        title = 'Plano 2';
+        price = 'R$ 29,99/mês';
+        benefits = [
+        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
+        'Desconto no valor de 20% aplicado automaticamente em todos os livros.',
+        ];
+    }
+
     return (
         <View style={styles.card}>
             <View style={styles.cardPlanos}>
@@ -28,13 +45,15 @@ const PlanCard: React.FC<PlanCardProps> = ({ title, price, benefits, onSelect })
             </View>
 
             <View style={styles.benefitsContainer}>
-                {benefits.map((item:any, index:any) => (
-                    <Text key={index} style={styles.benefitText}>○ {item}</Text>
+                {benefits.map((item, index) => (
+                <Text key={index} style={styles.benefitText}>○ {item}</Text>
                 ))}
             </View>
 
             <TouchableOpacity style={styles.button} onPress={onSelect}>
-                <Text style={styles.buttonText}>Escolher {title}</Text>
+                <Text style={styles.buttonText}>
+                    {planSelected ? `Escolhido o Plano ${planSelected}` : `Escolher ${title}`}
+                </Text>
             </TouchableOpacity>
         </View>
     );

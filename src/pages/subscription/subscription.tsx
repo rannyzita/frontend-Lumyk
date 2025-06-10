@@ -32,25 +32,8 @@ export default function Subscription() {
                     />
                 </View>
 
-                <PlanCard
-                    title="Plano 1"
-                    price="R$ 15,90/mês"
-                    benefits={[
-                        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.'
-                    ]}
-                    onSelect={() => navigation.navigate('PaymentSubscription', { id: '1' })}
-                />
-
-                <PlanCard
-                    title="Plano 2"
-                    price="R$ 29,99/mês"
-                    benefits={[
-                        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
-                        'Desconto no valor de 20% aplicado automaticamente em todos os livros.'
-                    ]}
-                    onSelect={() => navigation.navigate('PaymentSubscription', { id: '2' })}
-                />
-                
+                <PlanCard id="1" onSelect={() => navigation.navigate('PaymentSubscription', { id: '1' })} />
+                <PlanCard id="2" onSelect={() => navigation.navigate('PaymentSubscription', { id: '2' })} /> 
             </ScrollView>
         </View>
     );

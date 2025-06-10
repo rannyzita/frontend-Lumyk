@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
     addToCartText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold',
     },
     bottomBox: {
         backgroundColor: '#fff',

@@ -5,6 +5,7 @@ import NavigationHeader from "../../components/NavigationHeader/navigationHeader
 import { useRoute } from '@react-navigation/native';
 import api from '../../../API/index';
 
+import FeedbackCardAdd from '../../components/feedbackButton/feedbackButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
@@ -48,6 +49,8 @@ export default function Book() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedCover, setSelectedCover] = useState<string | null>(null);
     const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+
+    const [showModal, setShowModal] = useState(false);
 
     const buttonRef = useRef(null);
     const [bookData, setBookData] = useState<BookData | null>(null);
@@ -96,6 +99,22 @@ export default function Book() {
         fetchBookData();
     }, [bookId]);
 
+    const adicionarAoCarrinhoLocal = async (novoItem:any) => {
+        try {
+            const carrinhoJSON = await AsyncStorage.getItem('carrinho');
+            let carrinho = carrinhoJSON ? JSON.parse(carrinhoJSON) : [];
+            // Adiciona o novo item à lista
+            carrinho.push(novoItem);
+
+            // Salva de volta
+            await AsyncStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+            console.log('Item adicionado ao carrinho local');
+        } catch (error) {
+            console.error('Erro ao salvar no AsyncStorage:', error);
+        }
+    };
+
     const handleAdicionarCarrinho = async () => {
         const { token, userId } = await getTokenAndUserId();
 
@@ -109,25 +128,39 @@ export default function Book() {
                 },
             });
 
-            const carrinhoId = carrinhoResponse.data.id;
-            // 2. Adicionar item ao carrinho
-            const itemPayload = {
-                id_carrinho: carrinhoId,
-                id_livro: livroSelecionado.id, // supondo que você tenha um estado chamado livroSelecionado
-                formato: selectedFormat,       // "digital" ou "fisico", por exemplo
-                tipo: selectedTipo,            // se houver algo como "capa dura", "pocket", etc.
-            };
+            
+            const carrinhoResponseId = await api.get('/carrinhos/', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-            await api.post('/item-carrinho/', itemPayload, {
+            const carrinhos = carrinhoResponseId.data;
+
+            const ultimoCarrinho = carrinhos[carrinhos.length - 1];
+            const carrinhoId = ultimoCarrinho.id;
+
+            await adicionarAoCarrinhoLocal ({
+                id_livro: bookId,
+                formato: selectedFormat,
+                capa: selectedCover,
+            })
+            
+            await api.post('/item-carrinho/', {id_carrinho: carrinhoId,
+                id_livro: bookId,}, {
                 headers: {
                 Authorization: `Bearer ${token}`,
                 },
             });
 
-            Alert.alert('Sucesso', 'Item adicionado ao carrinho!');
+            setShowModal(true);
+
+            setTimeout(() => {
+                setShowModal(false);
+            }, 10000);
+
             } catch (error) {
                 console.error('Erro ao adicionar ao carrinho:', error);
-                Alert.alert('Erro', 'Não foi possível adicionar ao carrinho.');
             }
     };
 
@@ -245,8 +278,17 @@ export default function Book() {
                 </View>
 
                 <View style={{ marginTop: 15 }}>
-                    <TouchableOpacity style={styles.addToCartButton} onPress={handleAdicionarCarrinho}>
-                        <Text style={styles.addToCartText}>Adicionar ao Carrinho</Text>
+                    <TouchableOpacity
+                        style={[
+                        styles.addToCartButton,
+                        bookData.estoque === 0 && { backgroundColor: 'gray' }, // muda a cor se sem estoque
+                        ]}
+                        onPress={handleAdicionarCarrinho}
+                        disabled={bookData.estoque === 0} // desabilita o botão se sem estoque
+                    >
+                        <Text style={styles.addToCartText}>
+                            {bookData.estoque === 0 ? 'Sem Estoque' : 'Adicionar ao Carrinho'}
+                        </Text>
                     </TouchableOpacity>
                 </View>
 
@@ -296,6 +338,14 @@ export default function Book() {
                     </View>
                 </Pressable>
             </Modal>
+
+            {showModal && (
+                <FeedbackCardAdd
+                    title='Adicionado com sucesso!'
+                    closeModal={() => setShowModal(false)}
+                    style={{ marginRight: 15 }}
+                />
+            )}
         </>
     );
 }

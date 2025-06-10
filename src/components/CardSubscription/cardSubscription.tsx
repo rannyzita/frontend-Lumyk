@@ -7,9 +7,10 @@ interface PlanCardProps {
     id: string;
     onSelect?: () => void;
     planSelected?: string;
+    faixaWidth?: number;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected }) => {
+const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected, faixaWidth }) => {
     let title = '';
     let price = '';
     let benefits: string[] = [];
@@ -31,7 +32,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected }) => {
 
     return (
         <View style={styles.card}>
-            <View style={styles.cardPlanos}>
+            <View style={[styles.cardPlanos, typeof faixaWidth === 'number' ? { width: faixaWidth } : {}]}>
                 <Text style={styles.planTitle}>{title}</Text>
             </View>
 

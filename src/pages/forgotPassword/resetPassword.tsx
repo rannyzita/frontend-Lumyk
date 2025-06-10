@@ -110,7 +110,7 @@ const ResetPassword = () => {
                     />
                 </View>
 
-                {/* 🔴 Mensagem de erro ou sucesso */}
+                {/* Mensagem de erro ou sucesso */}
                 {apiMessage !== '' && (
                     <Text style={{
                         color: isError ? 'red' : 'green',

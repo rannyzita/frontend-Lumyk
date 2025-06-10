@@ -9,6 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
+import PlanCard from "../../components/CardSubscription/cardSubscription";
+
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function Subscription() {
@@ -30,59 +32,25 @@ export default function Subscription() {
                     />
                 </View>
 
-                {/* Plano 1 */}
-                <View style={styles.card}>
-                    <View style={styles.cardPlanos}>
-                        <Text style={styles.planTitle}>Plano 1</Text>
-                    </View>
+                <PlanCard
+                    title="Plano 1"
+                    price="R$ 15,90/mês"
+                    benefits={[
+                        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.'
+                    ]}
+                    onSelect={() => navigation.navigate('PaymentSubscription', { id: '1' })}
+                />
 
-                    <View style={styles.priceRow}>
-                        <Text style={styles.price}>R$ 15,90/mês</Text>
-                        <Logo width={45} height={45} />
-                    </View>
-
-                    <View style={styles.benefitsRow}>
-                        <Text style={styles.benefitsTitle}>Benefícios</Text>
-                    </View>
-                    
-                    <View style={styles.benefitsContainer}>
-                        <Text style={styles.benefitText}>
-                            ○ Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.
-                        </Text>
-                    </View>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PaymentSubscription', {id: '1'})}>
-                        <Text style={styles.buttonText}>Escolher Plano 1</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Plano 2 */}
-                <View style={styles.card}>
-                    
-                    <View style={styles.cardPlanos}>
-                        <Text style={styles.planTitle}>Plano 2</Text>
-                    </View>
-
-                    <View style={styles.priceRow}>
-                        <Text style={styles.price}>R$ 29,99/mês</Text>
-                        <Logo width={45} height={45} />
-                    </View>
-
-                    <View style={styles.benefitsRow}>
-                        <Text style={styles.benefitsTitle}>Benefícios</Text>
-                    </View>
-
-                    <View style={styles.benefitsContainer}>
-                        <Text style={styles.benefitText}>
-                            ○ Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.
-                        </Text>
-                        <Text style={styles.benefitText}>
-                            ○ Desconto no valor de 20% aplicado automaticamente em todos os livros.
-                        </Text>
-                    </View>
-                    <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('PaymentSubscription', {id: '2'})}>
-                        <Text style={styles.buttonText}>Escolher Plano 2</Text>
-                    </TouchableOpacity>
-                </View>
+                <PlanCard
+                    title="Plano 2"
+                    price="R$ 29,99/mês"
+                    benefits={[
+                        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
+                        'Desconto no valor de 20% aplicado automaticamente em todos os livros.'
+                    ]}
+                    onSelect={() => navigation.navigate('PaymentSubscription', { id: '2' })}
+                />
+                
             </ScrollView>
         </View>
     );

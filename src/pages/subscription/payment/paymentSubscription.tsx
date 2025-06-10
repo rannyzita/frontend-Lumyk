@@ -16,8 +16,7 @@ export default function Cart() {
                 iconArrow={true}
                 title="PAGAMENTO"
             />
-            
-            <Text>Tela de Pagamento de Assinatura</Text>
+
         </View>
     );
 };

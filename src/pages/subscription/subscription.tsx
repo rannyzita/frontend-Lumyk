@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import styles from './styles';
 
-import Logo from '../../assets/logo.svg';
 const AnuncioSubscription = require('../../assets/subscription/Resumo plano.png');
 
 import { StackNavigationProp } from '@react-navigation/stack';

@@ -23,6 +23,7 @@
     "axios": "^1.8.4",
     "expo": "^53.0.10",
     "expo-app-loading": "^1.1.2",
+    "expo-clipboard": "~7.1.4",
     "expo-font": "~13.3.1",
     "expo-status-bar": "~2.2.3",
     "metro-react-native-babel-transformer": "^0.77.0",

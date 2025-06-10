@@ -152,6 +152,15 @@ export default function Profile() {
         fetchUserData();
     }, []);    
 
+    const logout = async () => {
+        try {
+            await AsyncStorage.removeItem('userToken');
+            navigation.navigate('Login'); 
+        } catch (error) {
+            console.error('Erro ao sair da conta:', error);
+        }
+    };
+
     const atualizarUsuario = async (updatedUserData: typeof userData) => {
         const { token, userId } = await getTokenAndUserId();
     
@@ -770,7 +779,7 @@ export default function Profile() {
                                     <Text style={styles.deleteText}>Excluir Conta</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Login')}>
+                                <TouchableOpacity style={styles.logoutButton} onPress={logout}>
                                     <Text style={styles.logoutText}>Sair da Conta</Text>
                                 </TouchableOpacity>
                             </View>

@@ -5,7 +5,15 @@ import styles from './styles';
 import Logo from '../../assets/logo.svg';
 const AnuncioSubscription = require('../../assets/subscription/Resumo plano.png');
 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+import { useNavigation } from "@react-navigation/native";
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
 export default function Subscription() {
+    const navigation = useNavigation<NavigationProps>();
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scroll}>
@@ -42,7 +50,7 @@ export default function Subscription() {
                             ○ Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.
                         </Text>
                     </View>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PaymentSubscription', {id: '1'})}>
                         <Text style={styles.buttonText}>Escolher Plano 1</Text>
                     </TouchableOpacity>
                 </View>
@@ -71,7 +79,7 @@ export default function Subscription() {
                             ○ Desconto no valor de 20% aplicado automaticamente em todos os livros.
                         </Text>
                     </View>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('PaymentSubscription', {id: '2'})}>
                         <Text style={styles.buttonText}>Escolher Plano 2</Text>
                     </TouchableOpacity>
                 </View>

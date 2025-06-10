@@ -26,6 +26,7 @@ import ResetPassword from '../pages/forgotPassword/resetPassword';
 import AccountDeleting from '../pages/accountDeleting/accountDeleting';
 import AccountDeleted from '../pages/accountDeleting/feedbackDeleted';
 import PaymentSubscription from '../pages/subscription/payment/paymentSubscription';
+import QrCode from '../pages/qrCode/qrcode';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -132,6 +133,8 @@ export default function Routes() {
             <Stack.Screen name="AccountDeleted" component={AccountDeleted} />
 
             <Stack.Screen name="PaymentSubscription" component={PaymentSubscription} />
+
+            <Stack.Screen name="QrCode" component={QrCode} />
 
         </Stack.Navigator>
     );

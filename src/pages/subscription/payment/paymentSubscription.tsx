@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
 import styles from './paymentStyles';
 import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
 import PlanCard from "../../../components/CardSubscription/cardSubscription";
@@ -16,6 +16,11 @@ export default function PaymentSubscription() {
     const route = useRoute();
     const { id } = route.params as RouteParams;
     const price = id === '1' ? 'R$ 15,90/mês' : 'R$ 29,99/mês';
+
+    const [selectedMethod, setSelectedMethod] = useState<'dinheiro' | 'pix' | null>(null);
+    const [showCashModal, setShowCashModal] = useState(false);
+
+    const [paymentError, setPaymentError] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -40,28 +45,94 @@ export default function PaymentSubscription() {
 
                     <Text style={styles.paymentLabel}>Método de Pagamento:</Text>
 
-                    <TouchableOpacity style={styles.paymentOption}>
+                    <TouchableOpacity style={styles.paymentOption}
+                        onPress={() => {
+                            setSelectedMethod('dinheiro');
+                            setShowCashModal(true);
+                            setPaymentError(false);
+                        }}
+                    >
                         <IconMoney width={24} height={24}/>
                         <Text style={styles.paymentText}>Dinheiro</Text>
+
+                        <View style={styles.radioCircle}>
+                            {selectedMethod === 'dinheiro' && <View style={styles.radioInner} />}
+                        </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.paymentOption}>
+                    <TouchableOpacity style={styles.paymentOption} 
+                        onPress={() => {
+                            setSelectedMethod('pix');
+                            setPaymentError(false);
+                        }}
+                    >
                         <IconPix width={24} height={24}/>
                         <Text style={styles.paymentText}>Pix</Text>
+
+                        <View style={styles.radioCircle}>
+                            {selectedMethod === 'pix' && <View style={styles.radioInner} />}
+                        </View>
                     </TouchableOpacity>
 
                     <View style={styles.divider} />
 
                     <Text style={styles.totalText}>
                         Pagamento Total: <Text style={styles.price}>{price}</Text>
-                    </Text>
+                    </Text> 
+
+                    {paymentError && (
+                        <Text style={[styles.errorText, { marginTop: 10 }]}>
+                            Por favor, selecione uma forma de pagamento antes de continuar.
+                        </Text>
+                    )}
 
                     <View style={{alignItems: 'center'}}>
-                        <TouchableOpacity style={styles.submitButton}>
+                        <TouchableOpacity style={styles.submitButton}
+                            onPress={() => {
+                                if (!selectedMethod) {
+                                    setPaymentError(true);
+                                } else {
+                                    setPaymentError(false);
+                                }
+                            }}
+                        >
                             <Text style={styles.submitText}>FAZER PEDIDO</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                <Modal
+                    transparent
+                    visible={showCashModal}
+                    animationType="none"
+                    onRequestClose={() => setShowCashModal(false)}
+                    >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.moneyLabel}>● Dinheiro</Text>
+                            <IconMoney width={24} height={24}/>
+                        </View>
+
+                        <Text style={styles.modalQuestion}>Precisa de troco?</Text>
+                        <Text style={styles.modalSubtext}>Se não precisar, ignore e clique em confirmar.</Text>
+
+                        <TextInput
+                            placeholder="Digite seu troco aqui."
+                            style={styles.input}
+                            placeholderTextColor="#666"
+                        />
+
+                        <TouchableOpacity
+                            style={styles.confirmButton}
+                            onPress={() => setShowCashModal(false)}
+                        >
+                            <Text style={styles.confirmText}>Confirmar</Text>
+                        </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
             </ScrollView>
         </View>
     );

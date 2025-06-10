@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from "react";
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, SafeAreaView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, FlatList, SafeAreaView, Platform } from 'react-native';
 
 import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
 import { Input } from '../../components/Input';
@@ -28,6 +28,8 @@ import { DeleteAccountModal } from '../../components/DeleteAccount/deleteAccount
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import { Picker } from '@react-native-picker/picker';
+
 type UserData = {
     nome: string;
     email: string;
@@ -39,6 +41,11 @@ type UserData = {
     id_usuario: string;
     id_endereco: string;
 };
+
+interface Estado {
+    id: string;
+    nome: string;
+}
 // aqui vai pegar o token que ta armazenado do async, pra poder 
 // filtrar as informações pro profile
 const getTokenAndUserId = async () => {
@@ -60,8 +67,9 @@ export default function Profile() {
     const ruaRef = useRef<TextInput>(null);
     const numeroRef = useRef<TextInput>(null);
     const bairroRef = useRef<TextInput>(null);
-    const estadoRef = useRef<TextInput>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [estados, setEstados] = useState<Estado[]>([]);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
 
     const [isEditable, setIsEditable] = useState({
         nome: false,
@@ -115,6 +123,10 @@ export default function Profile() {
                             Authorization: `Bearer ${token}`,
                         },
                     });
+
+                    const ResponseEstados = await api.get('/estados');
+
+                    setEstados(ResponseEstados.data);
     
                     setUserData(response.data);
                     setOriginalData(response.data);
@@ -448,8 +460,10 @@ export default function Profile() {
         }));
     };
 
-    const handleConfirmEditEstado = () => {
+    const handleConfirmEditEstado = async (estadoId: string) => {
         handleUpdateUserData(userData);
+        setUserData({ ...userData, id_estado: estadoId });
+        await AsyncStorage.setItem('estadoSelecionado', estadoId);
         setIsEditable(prev => ({ ...prev, estado: false }));
     };
 
@@ -736,40 +750,36 @@ export default function Profile() {
                             </View>
 
                             <View style={[styles.section, {marginTop:10}]}>
-                                <Text style={styles.label}>Estado</Text>
+                            <Text style={styles.label}>Estado</Text>
                                 <View style={styles.inputWithIcon}>
-                                    <Input
-                                        ref={estadoRef}
-                                        placeholder="Seu estado"
-                                        value={userData.id_estado}
-                                        onChangeText={(text) => setUserData({...userData, id_estado:text})}
-                                        width={150}
-                                        height={38}
-                                        editInput={isEditable.estado}
-                                        focusInput={isEditable.estado}
-                                    />
-
-                                    {!isEditable.estado ? (
-                                        <TouchableOpacity
-                                            onPress={handleEditEstado}
-                                        >
-                                            <EditIcon width={22} height={22} style={[styles.iconSmall, {marginRight:150}]} />
+                                    {!dropdownVisible ? (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 16, marginRight: 10 }}>
+                                        {estados.find(e => e.id === userData.id_estado)?.nome || 'Não informado'}
+                                        </Text>
+                                        <TouchableOpacity onPress={() => setDropdownVisible(true)}>
+                                        <EditIcon width={22} height={22} style={[styles.iconSmall, { marginRight: 150 }]} />
                                         </TouchableOpacity>
-                                        ) : (
-                                        <View style={{ flexDirection: 'row', marginBottom:10, marginRight: 80}}>
-                                            <View>
-                                                <TouchableOpacity onPress={handleCancelEditEstado}>
-                                                    <CalcelAlteration width={30} height={30}/>
-                                                </TouchableOpacity>
-                                            </View>
-
-                                            <View style={{marginLeft: 10}}>
-                                                <TouchableOpacity onPress={handleConfirmEditEstado}>
-                                                    <ConfirmAlteration width={30} height={30}/>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
+                                    </View>
+                                    ) : (
+                                    <View style={{ backgroundColor: '#f1f1f1', borderRadius: 6, width: 200 }}>
+                                        <FlatList
+                                        data={estados}
+                                        keyExtractor={(item) => item.id}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity
+                                            onPress={() => handleConfirmEditEstado(item.id)}
+                                            style={{ paddingVertical: 8, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center' }}
+                                            >
+                                            <Text style={{ marginRight: 10 }}>
+                                                {item.id === userData.id_estado ? '●' : '○'}
+                                            </Text>
+                                            <Text>{item.nome}</Text>
+                                            </TouchableOpacity>
                                         )}
+                                        />
+                                    </View>
+                                    )}
                                 </View>
                             </View>
 

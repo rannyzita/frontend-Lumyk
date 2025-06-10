@@ -1,65 +1,57 @@
 import { StyleSheet } from "react-native";
-import { themes } from "../../global/themes"; 
+import { themes } from "../../global/themes";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#D7BFFF', 
-    },
-    content: {
-        flex: 1,
-        padding: 20,
-        justifyContent: 'space-between',
+        backgroundColor: themes.colors.backgroundLumyk,
     },
     qrContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
+        flex: 1,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 5,
-        elevation: 4,
+        justifyContent: 'center',
+        paddingHorizontal: 20,
     },
-    qrImage: {
-        width: 200,
-        height: 200,
-        marginBottom: 20,
+    qrBox: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+        elevation: 3,
+        width: '100%',
     },
-    instruction: {
-        fontSize: 14,
+    qrText: {
         textAlign: 'center',
-        color: '#333',
-        marginBottom: 15,
+        marginVertical: 12,
+        fontSize: 14,
     },
-    codeBox: {
-        backgroundColor: '#f2f2f2',
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
+    codeRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
         width: '100%',
     },
     codeText: {
         flex: 1,
-        fontSize: 12,
-        color: '#555',
-        marginRight: 10,
+        fontSize: 13,
+        marginRight: 8,
     },
     confirmButton: {
-        backgroundColor: '#B97CFC',
-        borderRadius: 8,
-        paddingVertical: 14,
-        alignItems: 'center',
+        backgroundColor: themes.colors.primary,
+        paddingVertical: 12,
+        borderRadius: 10,
         marginTop: 20,
+        width: '100%',
+        alignItems: 'center',
     },
     confirmText: {
-        color: '#fff',
+        color: 'white',
         fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 16,
     },
 });
 

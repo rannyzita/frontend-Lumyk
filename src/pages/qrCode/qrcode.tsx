@@ -7,10 +7,14 @@ import {themes} from '../../global/themes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
+import iconCopy from './assets/iconCopy.svg';
+
+import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
+
 export default function QrCode() {
     return (
         <View style={styles.container}>
-            <Text>Tela de Histórico de Pedidos</Text>
+            <NavigationHeader iconArrow={true}/>
         </View>
     )
 };

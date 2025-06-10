@@ -5,12 +5,18 @@ import NavigationHeader from "../../../components/NavigationHeader/navigationHea
 import PlanCard from "../../../components/CardSubscription/cardSubscription";
 import { useRoute } from '@react-navigation/native';
 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../routes/types/navigation';
+import { useNavigation } from "@react-navigation/native";
+
 import IconMoney from '../../../assets/subscription/money.svg';
 import IconPix from '../../../assets/subscription/pix.svg';
 
 type RouteParams = {
     id: string
 }
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function PaymentSubscription() {
     const route = useRoute();
@@ -21,6 +27,8 @@ export default function PaymentSubscription() {
     const [showCashModal, setShowCashModal] = useState(false);
 
     const [paymentError, setPaymentError] = useState(false);
+
+    const navigation = useNavigation<NavigationProps>();
 
     return (
         <View style={styles.container}>
@@ -93,6 +101,7 @@ export default function PaymentSubscription() {
                                     setPaymentError(true);
                                 } else {
                                     setPaymentError(false);
+                                    navigation.navigate('QrCode')
                                 }
                             }}
                         >

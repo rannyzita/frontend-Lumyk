@@ -1,4 +1,4 @@
-    import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -71,7 +71,7 @@ export default function Cart() {
               formato: livro.formato,
               quantidade: 1,
               estoque: livro.estoque,
-              checked: false,
+              // checked: false,
             };
           }
         }
@@ -122,17 +122,17 @@ export default function Cart() {
     }
   };
 
-  const toggleCheckbox = (id: string) => {
-    setLivros((prevLivros) =>
-      prevLivros.map((livro) =>
-        livro.id === id ? { ...livro, checked: !livro.checked } : livro
-      )
-    );
-  };
+  // const toggleCheckbox = (id: string) => {
+  //   setLivros((prevLivros) =>
+  //     prevLivros.map((livro) =>
+  //       livro.id === id ? { ...livro, checked: !livro.checked } : livro
+  //     )
+  //   );
+  // };
 
-  const subtotal = livros.reduce((total, livro) => {
-    return livro.checked ? total + livro.preco * livro.quantidade : total;
-  }, 0);
+  // const subtotal = livros.reduce((total, livro) => {
+  //   return livro.checked ? total + livro.preco * livro.quantidade : total;
+  // }, 0);
 
   const renderItem = ({ item }: any) => (
     <View style={styles.card}>
@@ -164,10 +164,10 @@ export default function Cart() {
           <TrashIcon width={24} height={24} />
         </TouchableOpacity>
 
-        <CheckBox
+        {/* <CheckBox
           value={item.checked || false}
           onValueChange={() => toggleCheckbox(item.id)}
-        />
+        /> */}
 
         <Text style={styles.title}>{item.titulo}</Text>
         <Text style={styles.author}>por {item.autor}</Text>
@@ -210,12 +210,12 @@ export default function Cart() {
         />
       </View>
 
-      <View style={styles.subtotalContainer}>
+      {/* <View style={styles.subtotalContainer}>
         <Text style={styles.subtotalText}>Subtotal: R$ {subtotal.toFixed(2)}</Text>
         <TouchableOpacity style={styles.checkoutButton}>
           <Text style={styles.checkoutButtonText}>Finalizar Compra</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }

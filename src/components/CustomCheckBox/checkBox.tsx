@@ -11,7 +11,7 @@ interface CustomCheckboxProps {
 export default function CustomCheckbox({ checked, onPress }: CustomCheckboxProps) {
     return (
         <TouchableOpacity onPress={onPress} style={styles.checkbox}>
-        {checked && <View style={styles.innerCheckbox} />}
+            {checked && <View style={styles.innerCheckbox} />}
         </TouchableOpacity>
     );
 };

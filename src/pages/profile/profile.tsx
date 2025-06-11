@@ -18,6 +18,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import ConfirmAlteration from '../../assets/profile/circle-check-solid.svg';
 import CalcelAlteration from '../../assets/profile/xmark-solid.svg';
+import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
+import { stylesDropDown } from "../../components/Dropdown/styles";
+
+import ArrowDownIcon from '../../assets/iconFilter.svg';
+import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
+import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
 
 import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,8 +33,6 @@ type NavigationProps = StackNavigationProp<RootStackParamList>;
 import { DeleteAccountModal } from '../../components/DeleteAccount/deleteAccount';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { Picker } from '@react-native-picker/picker';
 
 type UserData = {
     nome: string;
@@ -70,6 +74,9 @@ export default function Profile() {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [estados, setEstados] = useState<Estado[]>([]);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [selectedState, setSelectedState] = useState<string | null>(null);
+    const [estadoSearchText, setEstadoSearchText] = useState('');
+    const [buttonWidth, setButtonWidth] = useState(0);
 
     const [isEditable, setIsEditable] = useState({
         nome: false,
@@ -163,6 +170,15 @@ export default function Profile() {
     
         fetchUserData();
     }, []);    
+
+    const handleToggleStateSelection = (nome: string) => {
+        const estado = estados.find((e) => e.nome === nome);
+        if (estado) {
+            setSelectedState(nome);
+            handleConfirmEditEstado(estado.id); 
+            setDropdownVisible(false);
+        }
+    };
 
     const logout = async () => {
         try {
@@ -749,39 +765,75 @@ export default function Profile() {
                                 </View>
                             </View>
 
-                            <View style={[styles.section, {marginTop:10}]}>
+                            {/* <View style={[styles.section, {marginTop:10}]}>
                             <Text style={styles.label}>Estado</Text>
-                                <View style={styles.inputWithIcon}>
-                                    {!dropdownVisible ? (
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ fontSize: 16, marginRight: 10 }}>
-                                        {estados.find(e => e.id === userData.id_estado)?.nome || 'Não informado'}
-                                        </Text>
-                                        <TouchableOpacity onPress={() => setDropdownVisible(true)}>
-                                        <EditIcon width={22} height={22} style={[styles.iconSmall, { marginRight: 150 }]} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    ) : (
-                                    <View style={{ backgroundColor: '#f1f1f1', borderRadius: 6, width: 200 }}>
-                                        <FlatList
-                                        data={estados}
-                                        keyExtractor={(item) => item.id}
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                            onPress={() => handleConfirmEditEstado(item.id)}
-                                            style={{ paddingVertical: 8, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center' }}
-                                            >
-                                            <Text style={{ marginRight: 10 }}>
-                                                {item.id === userData.id_estado ? '●' : '○'}
-                                            </Text>
-                                            <Text>{item.nome}</Text>
-                                            </TouchableOpacity>
-                                        )}
+                                                            <ButtonFilter
+                                    title={selectedState ?? "Calcular Frete"}
+                                    onPress={() => setDropdownVisible(!dropdownVisible)}
+                                    onLayout={(event:any) => setButtonWidth(event.nativeEvent.layout.width)}
+                                    style={{
+                                    backgroundColor: selectedState ? '#d3d3d3' : undefined // cinza se selecionado
+                                    }}
+                                    icon={
+                                    <ArrowDownIcon
+                                        style={{ transform: [{ rotate: dropdownVisible ? '180deg' : '0deg' }] }}
+                                        width={14}
+                                        height={14}
+                                    />
+                                    }
+                                />
+
+                                {dropdownVisible && (
+                                    <View style={[stylesDropDown.dropdownContent, { width: buttonWidth || 200 }]}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        backgroundColor: 'white',
+                                        borderRadius: 10,
+                                        paddingHorizontal: 8,
+                                        height: 30,
+                                        marginHorizontal: 8,
+                                        marginTop: 10,
+                                        gap: 1,
+                                    }}>
+                                        <SearchIcon width={15} height={15} />
+                                        <TextInput
+                                        style={{
+                                            flex: 1,
+                                            fontSize: 12,
+                                            color: themes.colors.textInput,
+                                            paddingVertical: 0,
+                                        }}
+                                        placeholder="UF de envio..."
+                                        placeholderTextColor={themes.colors.textInput}
+                                        value={estadoSearchText}
+                                        onChangeText={setEstadoSearchText}
                                         />
                                     </View>
-                                    )}
-                                </View>
-                            </View>
+
+                                    <FlatList
+                                        data={estados
+                                        .map(e => e.nome)
+                                        .filter(nome => nome.toLowerCase().includes(estadoSearchText.toLowerCase()))}
+                                        keyExtractor={(item) => item}
+                                        style={stylesDropDown.scrollableList}
+                                        renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            onPress={() => handleToggleStateSelection(item)}
+                                            style={stylesDropDown.dropdownItem}
+                                        >
+                                            <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
+                                            <CustomCheckbox
+                                            checked={selectedState === item}
+                                            onPress={() => handleToggleStateSelection(item)}
+                                            />
+                                        </TouchableOpacity>
+                                        )}
+                                        showsVerticalScrollIndicator={true}
+                                    />
+                                    </View>
+                                )}
+                            </View> */}
 
                             {/* Botões */}
                             <View style={styles.buttonRow}>

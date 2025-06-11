@@ -3,5 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }

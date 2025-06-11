@@ -128,17 +128,13 @@ export default function Book() {
                 },
             });
 
-            
             const carrinhoResponseId = await api.get('/carrinhos/', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            const carrinhos = carrinhoResponseId.data;
-
-            const ultimoCarrinho = carrinhos[carrinhos.length - 1];
-            const carrinhoId = ultimoCarrinho.id;
+            const carrinhoId = carrinhoResponseId.data[0]?.id;
 
             await adicionarAoCarrinhoLocal ({
                 id_livro: bookId,
@@ -146,6 +142,8 @@ export default function Book() {
                 capa: selectedCover,
             })
             
+            await AsyncStorage.setItem('idCarrinho', carrinhoId);
+
             await api.post('/item-carrinho/', {id_carrinho: carrinhoId,
                 id_livro: bookId,}, {
                 headers: {
@@ -157,7 +155,7 @@ export default function Book() {
 
             setTimeout(() => {
                 setShowModal(false);
-            }, 10000);
+            }, 5000);
 
             } catch (error) {
                 console.error('Erro ao adicionar ao carrinho:', error);

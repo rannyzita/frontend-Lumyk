@@ -53,21 +53,6 @@ export default function PaymentSubscription() {
 
                     <Text style={styles.paymentLabel}>Método de Pagamento:</Text>
 
-                    <TouchableOpacity style={styles.paymentOption}
-                        onPress={() => {
-                            setSelectedMethod('dinheiro');
-                            setShowCashModal(true);
-                            setPaymentError(false);
-                        }}
-                    >
-                        <IconMoney width={24} height={24}/>
-                        <Text style={styles.paymentText}>Dinheiro</Text>
-
-                        <View style={styles.radioCircle}>
-                            {selectedMethod === 'dinheiro' && <View style={styles.radioInner} />}
-                        </View>
-                    </TouchableOpacity>
-
                     <TouchableOpacity style={styles.paymentOption} 
                         onPress={() => {
                             setSelectedMethod('pix');
@@ -109,38 +94,6 @@ export default function PaymentSubscription() {
                         </TouchableOpacity>
                     </View>
                 </View>
-
-                <Modal
-                    transparent
-                    visible={showCashModal}
-                    animationType="none"
-                    onRequestClose={() => setShowCashModal(false)}
-                    >
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.moneyLabel}>● Dinheiro</Text>
-                            <IconMoney width={24} height={24}/>
-                        </View>
-
-                        <Text style={styles.modalQuestion}>Precisa de troco?</Text>
-                        <Text style={styles.modalSubtext}>Se não precisar, ignore e clique em confirmar.</Text>
-
-                        <TextInput
-                            placeholder="Digite seu troco aqui."
-                            style={styles.input}
-                            placeholderTextColor="#666"
-                        />
-
-                        <TouchableOpacity
-                            style={styles.confirmButton}
-                            onPress={() => setShowCashModal(false)}
-                        >
-                            <Text style={styles.confirmText}>Confirmar</Text>
-                        </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
 
             </ScrollView>
         </View>

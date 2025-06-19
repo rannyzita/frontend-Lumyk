@@ -16,7 +16,7 @@ import Facebook from '../../assets/facebook.svg';
 import { themes } from '../../global/themes';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button/button';
-
+import { useBiometria } from '../../hooks/useBiometria';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
@@ -31,6 +31,7 @@ export default function LoginScreen() {
     const navigation = useNavigation<NavigationProps>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { autenticarBiometria } = useBiometria();
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -50,6 +51,11 @@ export default function LoginScreen() {
                 // Armazena o token e o ID do usuário
                 await AsyncStorage.setItem('userToken', token);
                 await AsyncStorage.setItem('userId', IdUsuario);
+                const sucesso = await autenticarBiometria();
+
+                if (!sucesso) {
+                    return; // Cancelado ou falhou biometria
+                }
 
                 Alert.alert('Sucesso', 'Login realizado com sucesso!');
                 navigation.navigate('Main');

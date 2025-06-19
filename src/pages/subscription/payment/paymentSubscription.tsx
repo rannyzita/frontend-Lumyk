@@ -8,6 +8,7 @@ import { useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
+import { useBiometria } from '../../../hooks/useBiometria'
 
 import IconMoney from '../../../assets/subscription/money.svg';
 import IconPix from '../../../assets/subscription/pix.svg';
@@ -25,10 +26,21 @@ export default function PaymentSubscription() {
 
     const [selectedMethod, setSelectedMethod] = useState<'dinheiro' | 'pix' | null>(null);
     const [showCashModal, setShowCashModal] = useState(false);
+    const { autenticarBiometria } = useBiometria();
 
     const [paymentError, setPaymentError] = useState(false);
 
     const navigation = useNavigation<NavigationProps>();
+
+    const handleFinalizarCompra = async () => {
+        const sucesso = await autenticarBiometria();
+    
+        if (!sucesso) {
+            return; // Cancelado ou falhou biometria
+        }
+    
+        navigation.navigate('QrCode')
+    };
 
     return (
         <View style={styles.container}>
@@ -86,7 +98,7 @@ export default function PaymentSubscription() {
                                     setPaymentError(true);
                                 } else {
                                     setPaymentError(false);
-                                    navigation.navigate('QrCode')
+                                    handleFinalizarCompra();
                                 }
                             }}
                         >

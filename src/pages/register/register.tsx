@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
-import * as LocalAuthentication from 'expo-local-authentication';
+import { useBiometria } from '../../hooks/useBiometria';
 
 import Logo from '../../assets/logo.svg';
 import Google from '../../assets/google-37 1.svg';
@@ -36,35 +36,9 @@ export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { autenticarBiometria } = useBiometria();
 
     const navigation = useNavigation<NavigationProps>();
-
-    const autenticarBiometria = async () => {
-        const compatible = await LocalAuthentication.hasHardwareAsync();
-        if (!compatible) {
-            Alert.alert('Biometria não disponível', 'Seu dispositivo não suporta autenticação biométrica.');
-            return false;
-        }
-    
-        const biometricRecords = await LocalAuthentication.isEnrolledAsync();
-        if (!biometricRecords) {
-            Alert.alert('Biometria não configurada', 'Configure sua biometria no dispositivo para usar esta funcionalidade.');
-            return false;
-        }
-    
-        const result = await LocalAuthentication.authenticateAsync({
-            promptMessage: 'Confirme sua identidade',
-            cancelLabel: 'Cancelar',
-            disableDeviceFallback: false, // permite PIN/senha se biometria falhar
-        });
-    
-        if (result.success) {
-            return true;
-        } else {
-            Alert.alert('Falha na autenticação', 'Biometria não reconhecida ou cancelada.');
-            return false;
-        }
-    };
     
     const formatDate = (date: Date | null) => {
         if (!date) return '00/00/0000';
@@ -91,9 +65,9 @@ export default function Register() {
             return;
         }
     
-        const sucessoBiometria = await autenticarBiometria();
-    
-        if (!sucessoBiometria) {
+        const sucesso = await autenticarBiometria();
+
+        if (!sucesso) {
             Alert.alert('Erro', 'Biometria não foi autenticada!');
             return;
         }

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 import Logo from '../../assets/logo.svg';
 import Google from '../../assets/google-37 1.svg';
@@ -38,6 +39,33 @@ export default function Register() {
 
     const navigation = useNavigation<NavigationProps>();
 
+    const autenticarBiometria = async () => {
+        const compatible = await LocalAuthentication.hasHardwareAsync();
+        if (!compatible) {
+            Alert.alert('Biometria não disponível', 'Seu dispositivo não suporta autenticação biométrica.');
+            return false;
+        }
+    
+        const biometricRecords = await LocalAuthentication.isEnrolledAsync();
+        if (!biometricRecords) {
+            Alert.alert('Biometria não configurada', 'Configure sua biometria no dispositivo para usar esta funcionalidade.');
+            return false;
+        }
+    
+        const result = await LocalAuthentication.authenticateAsync({
+            promptMessage: 'Confirme sua identidade',
+            cancelLabel: 'Cancelar',
+            disableDeviceFallback: false, // permite PIN/senha se biometria falhar
+        });
+    
+        if (result.success) {
+            return true;
+        } else {
+            Alert.alert('Falha na autenticação', 'Biometria não reconhecida ou cancelada.');
+            return false;
+        }
+    };
+    
     const formatDate = (date: Date | null) => {
         if (!date) return '00/00/0000';
         const day = String(date.getDate()).padStart(2, '0');
@@ -62,6 +90,13 @@ export default function Register() {
             Alert.alert('Erro', 'Digite um e-mail válido!');
             return;
         }
+    
+        const sucessoBiometria = await autenticarBiometria();
+    
+        if (!sucessoBiometria) {
+            Alert.alert('Erro', 'Biometria não foi autenticada!');
+            return;
+        }
 
         const payload = {
             nome: name,
@@ -73,8 +108,7 @@ export default function Register() {
         try {
             const response = await api.post('/auth/registro', payload);
 
-            console.log(response.status)
-            if (response.status === 200 || response.status === 201) { 
+            if (response.status === 200 || response.status === 201) {
                 Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
                 navigation.navigate('Login');
             } else {
@@ -84,19 +118,19 @@ export default function Register() {
         } catch (error: any) {
             if (error.response && error.response.data && error.response.data.mensagem) {
                 const msg = error.response.data.mensagem;
-        
-                if (msg === 'Usuário já existe.') {
-                    Alert.alert('Erro', 'Este e-mail já está cadastrado!');
-                }  else if (msg === 'A senha deve ter entre 6 e 8 caracteres.') {
-                    Alert.alert('Erro', 'A senha precisa ter entre 6 e 8 caracteres!');
-                } else {
-                    Alert.alert('Erro', msg);
-                }
+    
+            if (msg === 'Usuário já existe.') {
+                Alert.alert('Erro', 'Este e-mail já está cadastrado!');
+            } else if (msg === 'A senha deve ter entre 6 e 8 caracteres.') {
+                Alert.alert('Erro', 'A senha precisa ter entre 6 e 8 caracteres!');
             } else {
-                Alert.alert('Erro', 'Erro ao conectar com o servidor');
+                Alert.alert('Erro', msg);
+            }
+        } else {
+            Alert.alert('Erro', 'Erro ao conectar com o servidor');
             }
         }
-    };
+    };      
 
     return (
         <KeyboardAvoidingView

@@ -7,7 +7,6 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import CheckBox from "@react-native-community/checkbox";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 
@@ -122,18 +121,6 @@ export default function Cart() {
     }
   };
 
-  // const toggleCheckbox = (id: string) => {
-  //   setLivros((prevLivros) =>
-  //     prevLivros.map((livro) =>
-  //       livro.id === id ? { ...livro, checked: !livro.checked } : livro
-  //     )
-  //   );
-  // };
-
-  // const subtotal = livros.reduce((total, livro) => {
-  //   return livro.checked ? total + livro.preco * livro.quantidade : total;
-  // }, 0);
-
   const renderItem = ({ item }: any) => (
     <View style={styles.card}>
       <View style={styles.leftColumn}>
@@ -163,11 +150,6 @@ export default function Cart() {
         >
           <TrashIcon width={24} height={24} />
         </TouchableOpacity>
-
-        {/* <CheckBox
-          value={item.checked || false}
-          onValueChange={() => toggleCheckbox(item.id)}
-        /> */}
 
         <Text style={styles.title}>{item.titulo}</Text>
         <Text style={styles.author}>por {item.autor}</Text>

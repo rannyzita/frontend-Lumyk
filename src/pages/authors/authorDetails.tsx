@@ -1,60 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useRoute } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
-import api from '../../../API/index';
-import styles from './stylesAuthorDetails';
-import { themes } from '../../global/themes';
-
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
-import { useNavigation } from "@react-navigation/native";
+import { themes } from '../../global/themes';
+import styles from './stylesAuthorDetails';
 
-type NavigationProps = StackNavigationProp<RootStackParamList>;
-
-type Livro = {
-  id: string;
-  titulo: string;
-  sinopse: string;
-  foto: string;
-  formato: string;
-  preco: number;
-  id_autor: string;
-  autor: {
-    nome: string;
-    biografia: string;
-    foto: string;
-  };
-};
+import { useAuthorBooks } from './hooks/useAuthorBooks';
+import { AuthorInfoCard } from './components/AuthorInfoCard';
+import { BookCard } from './components/BookCard';
 
 type RouteParams = {
   authorId: string;
 };
 
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
 export default function AuthorDetails() {
-  const [livros, setLivros] = useState<Livro[]>([]);
-  const navigation = useNavigation<NavigationProps>();
-  const [isLoading, setIsLoading] = useState(true);
   const route = useRoute();
+  const navigation = useNavigation<NavigationProps>();
   const { authorId } = route.params as RouteParams;
 
-  useEffect(() => {
-    async function fetchBooks() {
-      try {
-        const response = await api.get('/livros');
-        const livrosFiltrados = response.data.filter((livro: Livro) => livro.id_autor === authorId);
-        setLivros(livrosFiltrados);
-      } catch (error) {
-        console.error('Erro ao buscar livros do autor:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchBooks();
-  }, [authorId]);
+  const { livros, isLoading } = useAuthorBooks(authorId);
+  const autor = livros[0]?.autor;
 
   if (isLoading) {
     return (
@@ -64,23 +34,20 @@ export default function AuthorDetails() {
     );
   }
 
-  const autor = livros[0]?.autor;
-
   return (
     <View style={styles.container}>
-      <NavigationHeader iconArrow={true} title='LIVROS DO AUTOR' onBack={()=> navigation.navigate('Authors')}/>
+      <NavigationHeader
+        iconArrow={true}
+        title="LIVROS DO AUTOR"
+        onBack={() => navigation.navigate('Authors')}
+      />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {autor && (
-          <View style={styles.authorCard}>
-            <View style={{ alignItems: 'center' }}>
-              <Image source={{ uri: api.defaults.baseURL + autor.foto }} style={styles.authorImage} />
-              <Text style={styles.authorName}>{autor.nome}</Text>
-            </View>
-            <View style={styles.authorInfo}>
-                <Text style={styles.biographyTitle}>Biografia</Text>
-                <Text style={styles.authorBio}>{autor.biografia}</Text>
-            </View>
-          </View>
+          <AuthorInfoCard
+            nome={autor.nome}
+            biografia={autor.biografia}
+            foto={autor.foto}
+          />
         )}
 
         <Text style={styles.sectionTitle}>DESCUBRA SUAS CRIAÇÕES LITERÁRIAS:</Text>
@@ -88,22 +55,14 @@ export default function AuthorDetails() {
         {livros.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum livro encontrado para este autor.</Text>
         ) : (
-          livros.map(livro => (
-            <View key={livro.id} style={styles.bookCard}>
-              <Image
-                source={{ uri: api.defaults.baseURL + livro.foto }}
-                style={styles.bookImage}
-              />
-              <View style={styles.bookInfo}>
-                <Text style={styles.bookTitle}>{livro.titulo}</Text>
-                <Text style={styles.bookFormat}>Digital</Text>
-                <Text style={styles.bookPrice}>R$ {livro.preco.toFixed(2)}</Text>
-                <Text style={styles.bookFormats}>Outros formatos: capa dura, digital</Text>
-              </View>
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Book', { bookId: livro.id })}>
-                <Text style={styles.buttonText}>Saiba mais</Text>
-              </TouchableOpacity>
-            </View>
+          livros.map((livro) => (
+            <BookCard
+              key={livro.id}
+              id={livro.id}
+              titulo={livro.titulo}
+              foto={livro.foto}
+              preco={livro.preco}
+            />
           ))
         )}
       </ScrollView>

@@ -214,10 +214,6 @@ export default function Home() {
         setFilteredBooks(livrosFiltrados);
     }, [searchText, books]);
 
-    function handleToggleGenreSelection(genre: string) {
-        setSelectedGenres(prev => prev[0] === genre ? [] : [genre]);
-    }
-
     function handleToggleStateSelection(state: string) {
         const isSelected = selectedStates[0] === state;
         

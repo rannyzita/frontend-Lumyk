@@ -9,6 +9,7 @@ import FeedbackCardAdd from '../../components/feedbackButton/feedbackButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
+import { useAuthStorage } from '../../hooks/useAuthStorage';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -49,23 +50,12 @@ export default function Book() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedCover, setSelectedCover] = useState<string | null>(null);
     const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+    const { getTokenAndUserId } = useAuthStorage();
 
     const [showModal, setShowModal] = useState(false);
 
     const buttonRef = useRef(null);
     const [bookData, setBookData] = useState<BookData | null>(null);
-
-    const getTokenAndUserId = async () => {
-        try {
-            const token = await AsyncStorage.getItem('userToken');
-            const userId = await AsyncStorage.getItem('userId');
-    
-            return { token, userId };
-        } catch (error) {
-            console.error('Erro ao recuperar token e ID do usuário:', error);
-            return { token: null, userId: null };
-        }
-    };
 
     useEffect(() => {
         async function fetchBookData() {

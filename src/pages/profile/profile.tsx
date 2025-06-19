@@ -20,6 +20,7 @@ import ConfirmAlteration from '../../assets/profile/circle-check-solid.svg';
 import CalcelAlteration from '../../assets/profile/xmark-solid.svg';
 import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStorage } from '../../hooks/useAuthStorage';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -43,19 +44,6 @@ interface Estado {
     id: string;
     nome: string;
 }
-// aqui vai pegar o token que ta armazenado do async, pra poder 
-// filtrar as informações pro profile
-const getTokenAndUserId = async () => {
-    try {
-        const token = await AsyncStorage.getItem('userToken');
-        const userId = await AsyncStorage.getItem('userId');
-
-        return { token, userId };
-    } catch (error) {
-        console.error('Erro ao recuperar token e ID do usuário:', error);
-        return { token: null, userId: null };
-    }
-};  
 
 export default function Profile() {
 
@@ -66,10 +54,9 @@ export default function Profile() {
     const bairroRef = useRef<TextInput>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [estados, setEstados] = useState<Estado[]>([]);
+    const { getTokenAndUserId } = useAuthStorage();
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [selectedState, setSelectedState] = useState<string | null>(null);
-    const [estadoSearchText, setEstadoSearchText] = useState('');
-    const [buttonWidth, setButtonWidth] = useState(0);
 
     const [isEditable, setIsEditable] = useState({
         nome: false,

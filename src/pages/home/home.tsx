@@ -250,8 +250,8 @@ export default function Home() {
                         <ButtonFilter
                             title="Ver Autores"
                             onPress={() => navigation.navigate('Authors')}
-                            style={{ backgroundColor: '#fff', width: 115 }}
-                            textStyle={{ color: '#000', marginRight: 5 }}
+                            style={{ backgroundColor: themes.colors.primary, width: 115 }}
+                            textStyle={{ color: '#fff', marginRight: 5 }}
                         />
                     </View>
 

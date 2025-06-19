@@ -18,13 +18,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import ConfirmAlteration from '../../assets/profile/circle-check-solid.svg';
 import CalcelAlteration from '../../assets/profile/xmark-solid.svg';
-import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
-import { stylesDropDown } from "../../components/Dropdown/styles";
-
-import ArrowDownIcon from '../../assets/iconFilter.svg';
-import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
-import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
-
 import api from "../../../API";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import styles from './paymentStyles';
 import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
 import PlanCard from "../../../components/CardSubscription/cardSubscription";
-import { useRoute } from '@react-navigation/native';
-
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/types/navigation';
-import { useNavigation } from "@react-navigation/native";
-import { useBiometria } from '../../../hooks/useBiometria'
+import { useBiometria } from '../../../hooks/useBiometria';
+import api from "../../../../API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import IconMoney from '../../../assets/subscription/money.svg';
 import IconPix from '../../../assets/subscription/pix.svg';
 
 type RouteParams = {
-    id: string
-}
+    id: string;
+};
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -24,22 +23,102 @@ export default function PaymentSubscription() {
     const { id } = route.params as RouteParams;
     const price = id === '1' ? 'R$ 15,90/mês' : 'R$ 29,99/mês';
 
-    const [selectedMethod, setSelectedMethod] = useState<'dinheiro' | 'pix' | null>(null);
-    const [showCashModal, setShowCashModal] = useState(false);
-    const { autenticarBiometria } = useBiometria();
-
+    const [selectedMethod, setSelectedMethod] = useState<'pix' | 'dinheiro' | null>(null);
     const [paymentError, setPaymentError] = useState(false);
 
+    const { autenticarBiometria } = useBiometria();
     const navigation = useNavigation<NavigationProps>();
 
-    const handleFinalizarCompra = async () => {
-        const sucesso = await autenticarBiometria();
-    
-        if (!sucesso) {
-            return; // Cancelado ou falhou biometria
+    const [assinaturaAtiva, setAssinaturaAtiva] = useState<any>(null);
+
+    useEffect(() => {
+        verificarAssinatura();
+    }, []);
+
+    const verificarAssinatura = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+
+            if (!token) {
+                Alert.alert('Erro', 'Usuário não autenticado');
+                return;
+            }
+
+            const response = await api.get('/assinaturas/', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const assinaturas = response.data;
+
+            const ativa = assinaturas.find(
+                (a: any) => a.status === 'ativa'
+            );
+
+            if (ativa) {
+                setAssinaturaAtiva(ativa);
+            } else {
+                setAssinaturaAtiva(null);
+            }
+        } catch (error) {
+            console.error('Erro ao verificar assinatura:', error);
+            Alert.alert('Erro', 'Erro ao verificar assinatura');
         }
-    
-        navigation.navigate('QrCode')
+    };
+
+    const cancelarAssinatura = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+
+            if (!token) {
+                Alert.alert('Erro', 'Usuário não autenticado');
+                return;
+            }
+
+            await api.delete(`/assinaturas/${assinaturaAtiva.id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            Alert.alert('Cancelada', 'Sua assinatura foi cancelada com sucesso.');
+            setAssinaturaAtiva(null);
+        } catch (error) {
+            console.error('Erro ao cancelar assinatura:', error);
+            Alert.alert('Erro', 'Não foi possível cancelar a assinatura.');
+        }
+    };
+
+    const handleConfirmar = async () => {
+        const sucesso = await autenticarBiometria();
+
+        if (!sucesso) return;
+
+        if (assinaturaAtiva) {
+            await cancelarAssinatura();
+        } else {
+            navigation.navigate('QrCode', {id: id});
+        }
+    };
+
+    // Texto do botão dinâmico
+    const getBotaoTexto = () => {
+        if (assinaturaAtiva) {
+            if (assinaturaAtiva.tipo_assinatura === 'Básica') return 'CANCELAR PLANO 1';
+            if (assinaturaAtiva.tipo_assinatura === 'Premium') return 'CANCELAR PLANO 2';
+            return 'CANCELAR ASSINATURA';
+        }
+        return 'CONFIRMAR';
+    };
+
+    // Texto de alerta assinatura ativa
+    const getTextoAssinaturaAtiva = () => {
+        if (!assinaturaAtiva) return '';
+
+        if (assinaturaAtiva.tipo_assinatura === 'Básica') {
+            return 'Você já possui uma assinatura ativa no PLANO 1.';
+        }
+        if (assinaturaAtiva.tipo_assinatura === 'Premium') {
+            return 'Você já possui uma assinatura ativa no PLANO 2.';
+        }
+        return 'Você já possui uma assinatura ativa.';
     };
 
     return (
@@ -80,7 +159,19 @@ export default function PaymentSubscription() {
                     </TouchableOpacity>
 
                     <View style={styles.divider} />
-
+                    
+                    {/* Aviso de assinatura ativa */}
+                    {assinaturaAtiva && (
+                        <Text style={{ 
+                            color: 'red', 
+                            fontSize: 14, 
+                            marginBottom: 12,
+                            textAlign: 'center',
+                            fontWeight: 'bold'
+                        }}>
+                            {getTextoAssinaturaAtiva()}
+                        </Text>
+                    )}
                     <Text style={styles.totalText}>
                         Pagamento Total: <Text style={styles.price}>{price}</Text>
                     </Text> 
@@ -93,16 +184,25 @@ export default function PaymentSubscription() {
 
                     <View style={{alignItems: 'center'}}>
                         <TouchableOpacity style={styles.submitButton}
-                            onPress={() => {
-                                if (!selectedMethod) {
+                            onPress={async () => {
+                                // Se NÃO tiver assinatura ativa, obrigar selecionar método
+                                if (!assinaturaAtiva && !selectedMethod) {
                                     setPaymentError(true);
+                                    return;
+                                }
+                            
+                                setPaymentError(false);
+                            
+                                if (assinaturaAtiva) {
+                                    await cancelarAssinatura();
                                 } else {
-                                    setPaymentError(false);
-                                    handleFinalizarCompra();
+                                    await handleConfirmar();
                                 }
                             }}
                         >
-                            <Text style={styles.submitText}>FAZER PEDIDO</Text>
+                            <Text style={styles.submitText}>
+                                {getBotaoTexto()}
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>

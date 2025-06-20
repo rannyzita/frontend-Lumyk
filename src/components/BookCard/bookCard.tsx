@@ -1,16 +1,26 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { styles } from './styles';
 
 interface BookCardProps {
     title: string;
     author: string;
-    price: string;
+    originalPrice: string;
+    discountedPrice: string;
     freight: string;
     image: any;
-};
+    temAssinatura: boolean;
+}
 
-const BookCard: React.FC<BookCardProps> = ({ title, author, price, freight, image }) => {
+const BookCard: React.FC<BookCardProps> = ({
+    title,
+    author,
+    originalPrice,
+    discountedPrice,
+    freight,
+    image,
+    temAssinatura
+}) => {
     return (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
@@ -22,8 +32,24 @@ const BookCard: React.FC<BookCardProps> = ({ title, author, price, freight, imag
 
             <View style={styles.separator} />
 
-            <Text style={styles.price}>{price} <Text style={styles.bruto}>Preço Bruto</Text></Text>
-            <Text style={styles.freight}>Frete: {freight}</Text>
+            {temAssinatura ? (
+                <>
+                    <Text style={styles.originalPrice}>
+                        {originalPrice}
+                    </Text>
+                    <Text style={styles.discountedPrice}>
+                        {discountedPrice}
+                    </Text>
+                </>
+            ) : (
+                <Text style={styles.discountedPrice}>
+                    {originalPrice}
+                </Text>
+            )}
+
+            <Text style={freight === 'Frete Grátis' ? styles.freightGratis : styles.freight}>
+                {freight === 'Frete Grátis' ? 'Frete Grátis' : `Frete: ${freight}`}
+            </Text>
         </View>
     );
 };

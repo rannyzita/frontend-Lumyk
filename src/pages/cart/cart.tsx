@@ -191,13 +191,6 @@ export default function Cart() {
           contentContainerStyle={styles.listContent}
         />
       </View>
-
-      {/* <View style={styles.subtotalContainer}>
-        <Text style={styles.subtotalText}>Subtotal: R$ {subtotal.toFixed(2)}</Text>
-        <TouchableOpacity style={styles.checkoutButton}>
-          <Text style={styles.checkoutButtonText}>Finalizar Compra</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 }

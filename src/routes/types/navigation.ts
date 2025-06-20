@@ -12,6 +12,6 @@ export type RootStackParamList = {
     AccountDeleting: undefined;
     AccountDeleted: undefined;
     PaymentSubscription: { id: string};
-    QrCode: undefined;
+    QrCode: {id: string};
     PaymentConcluded: undefined;
 }; 

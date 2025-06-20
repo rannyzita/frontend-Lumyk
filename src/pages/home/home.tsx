@@ -18,6 +18,7 @@ import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
 import DropdownFilter from "../../components/Dropdown/dropdown";
 import TopBar from '../../components/TopBar/topBar';
 import BookCard from "../../components/BookCard/bookCard";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from '../../../API/index';
 
@@ -89,9 +90,11 @@ export default function Home() {
             <BookCard
                 title={item.title}
                 author={item.author}
-                price={item.price}
+                originalPrice={item.originalPrice}
+                discountedPrice={item.discountedPrice}
                 freight={item.freight}
                 image={item.image}
+                temAssinatura={item.temAssinatura}
             />
         </TouchableOpacity>
     );
@@ -106,22 +109,37 @@ export default function Home() {
                     api.get('/estados'),
                     api.get('/generos'),
                 ]);
-    
+                
+                const assinatura = await verificarAssinatura();
+                
                 const livros: BookFromAPI[] = embaralhar(livrosRes.data);
                 const estadosAPI: EstadoAPI[] = estadosRes.data;
                 setEstados(estadosAPI);
     
                 const estadoPadrao = estadosAPI.find(e => e.nome === selectedStates[0]);
                 const frete = estadoPadrao?.taxa_frete ?? 8;
-    
-                const livrosComDados = livros.map(book => ({
-                    id: book.id,
-                    title: book.titulo,
-                    author: book.autor?.nome ?? 'Autor desconhecido',
-                    price: `R$ ${parseFloat(book.preco).toFixed(2)}`,
-                    freight: `R$ ${frete.toFixed(2)}`,
-                    image: { uri: api.defaults.baseURL + book.foto }
-                }));
+                const temAssinaturaPremium = assinatura === 'Premium';
+                const temAssinaturaBasica = assinatura === 'Básica';
+
+                const livrosComDados = livros.map(book => {
+                    const precoOriginal = parseFloat(book.preco);
+                    const temAssinatura = assinatura === 'Premium';
+                
+                    const precoComDesconto = temAssinatura ? precoOriginal * 0.8 : precoOriginal;
+                
+                    return {
+                        id: book.id,
+                        title: book.titulo,
+                        author: book.autor?.nome ?? 'Autor desconhecido',
+                        originalPrice: `R$ ${precoOriginal.toFixed(2)}`,
+                        discountedPrice: `R$ ${precoComDesconto.toFixed(2)}`,
+                        freight: (temAssinaturaPremium || temAssinaturaBasica) 
+                            ? 'Frete Grátis' 
+                            : `R$ ${frete.toFixed(2)}`,
+                        image: { uri: api.defaults.baseURL + book.foto },
+                        temAssinatura: temAssinaturaPremium,
+                    };
+                });
                 
                 setGenerosAPI(generosRes.data)
                 setBooks(embaralhar(livrosComDados));
@@ -145,28 +163,37 @@ export default function Home() {
                 const response = await api.get('/livros');
                 const livros: BookFromAPI[] = response.data;
     
+                const assinatura = await verificarAssinatura();
+    
                 const estadoSelecionado = estados.find(e => e.nome === selectedStates[0]);
                 const frete = estadoSelecionado?.taxa_frete ?? 8;
-
     
                 let livrosFiltrados = livros;
-
+    
                 if (selectedGenres.length > 0) {
                     livrosFiltrados = livrosFiltrados.filter(book =>
                         book.genero?.nome === selectedGenres[0]
                     );
                 }
     
-                const livrosComDados = livrosFiltrados.map(book => ({
-                    id: book.id,
-                    title: book.titulo,
-                    author: book.autor?.nome ?? 'Autor desconhecido',
-                    price: `R$ ${parseFloat(book.preco).toFixed(2)}`,
-                    freight: `R$ ${frete.toFixed(2)}`,
-                    image: { uri: api.defaults.baseURL + book.foto }
-                }));
-                
-                setBooks(embaralhar(livrosComDados)); 
+                const livrosComDados = livrosFiltrados.map(book => {
+                    const precoOriginal = parseFloat(book.preco);
+                    const temAssinatura = assinatura === 'Premium';
+                    const precoComDesconto = temAssinatura ? precoOriginal * 0.8 : precoOriginal;
+    
+                    return {
+                        id: book.id,
+                        title: book.titulo,
+                        author: book.autor?.nome ?? 'Autor desconhecido',
+                        originalPrice: `R$ ${precoOriginal.toFixed(2)}`,
+                        discountedPrice: `R$ ${precoComDesconto.toFixed(2)}`,
+                        freight: temAssinatura ? 'Frete Grátis' : `R$ ${frete.toFixed(2)}`,
+                        image: { uri: api.defaults.baseURL + book.foto },
+                        temAssinatura,
+                    };
+                });
+    
+                setBooks(embaralhar(livrosComDados));
             } catch (error) {
                 console.error('Erro ao filtrar livros:', error);
             } finally {
@@ -177,7 +204,7 @@ export default function Home() {
         }
     
         fetchAndFilterBooks();
-    }, [selectedGenres, selectedStates]);    
+    }, [selectedGenres, selectedStates]);        
 
     useEffect(() => {
         const estadoSelecionado = selectedStates[0];
@@ -214,6 +241,25 @@ export default function Home() {
         setFilteredBooks(livrosFiltrados);
     }, [searchText, books]);
 
+    async function verificarAssinatura() {
+        const token = await AsyncStorage.getItem('userToken');
+    
+        try {
+            const { data } = await api.get('/assinaturas', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            if (data.length === 0) {
+                return null; 
+            }
+    
+            return data[0].tipo_assinatura; // 'Básica' ou 'Premium'
+        } catch (error) {
+            console.error('Erro ao verificar assinatura:', error);
+            return null;
+        }
+    }
+    
     function handleToggleStateSelection(state: string) {
         const isSelected = selectedStates[0] === state;
         

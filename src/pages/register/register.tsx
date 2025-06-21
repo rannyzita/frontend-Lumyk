@@ -1,17 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Alert,
+    View, Text, TouchableOpacity, KeyboardAvoidingView, Platform,
+    ScrollView, Alert,
 } from 'react-native';
 
 import styles from './styles';
-import { useBiometria } from '../../hooks/useBiometria';
-
 import Logo from '../../assets/logo.svg';
 import Google from '../../assets/google-37 1.svg';
 import Facebook from '../../assets/facebook.svg';
@@ -20,37 +13,150 @@ import { themes } from '../../global/themes';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button/button';
 
+import CustomDateTimePicker from '../../components/customDatePicker';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
-import { useNavigation } from "@react-navigation/native";
 
-import CustomDateTimePicker from '../../components/customDatePicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as GoogleAuth from 'expo-auth-session/providers/google';
+import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
+import * as FacebookAuth from 'expo-facebook';
 
-import api from '../../../API/index'; 
+import api from '../../../API/index';
+import { useBiometria } from '../../hooks/useBiometria';
+
+import { ID_CLIENT, ID_FACEBOOK } from '@env';
+
+WebBrowser.maybeCompleteAuthSession();
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function Register() {
+    const navigation = useNavigation<NavigationProps>();
+
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const { autenticarBiometria } = useBiometria();
 
-    const navigation = useNavigation<NavigationProps>();
-    
-    const formatDate = (date: Date | null) => {
-        if (!date) return '00/00/0000';
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
+    // Configurando o redirectUri corretamente
+    const redirectUri = AuthSession.makeRedirectUri({ 
+        scheme: 'lumyk' 
+    });
+
+    console.log('Redirect URI:', redirectUri); // Verifique se está correto
+
+    // Google Auth
+    const [googleRequest, googleResponse, googlePromptAsync] = GoogleAuth.useAuthRequest({
+        clientId: ID_CLIENT,
+        scopes: ['openid', 'profile', 'email'],
+        redirectUri: redirectUri,
+    });
+
+    useEffect(() => {
+        if (googleResponse) {
+            console.log('Google Response:', googleResponse);
+
+            if (googleResponse.type === 'success') {
+                const { authentication } = googleResponse;
+                console.log('AccessToken:', authentication?.accessToken);
+                handleGoogleLogin(authentication?.accessToken);
+            } else if (googleResponse.type === 'error') {
+                Alert.alert('Erro', 'Erro na autenticação com Google');
+            }
+        }
+    }, [googleResponse]);
+
+    const handleGoogleLogin = async (accessToken: string | undefined) => {
+        if (!accessToken) return;
+
+        try {
+            const res = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            const user = await res.json();
+
+            await handleSocialRegister({
+                nome: user.name,
+                email: user.email,
+            });
+
+        } catch (error) {
+            Alert.alert('Erro', 'Falha ao autenticar com Google');
+        }
+    };
+
+    // Facebook Auth
+    const handleFacebookLogin = async () => {
+        try {
+            await FacebookAuth.initializeAsync({
+                appId: ID_FACEBOOK,
+            });
+
+            const result = await FacebookAuth.logInWithReadPermissionsAsync({
+                permissions: ['public_profile', 'email'],
+            });
+
+            if (result.type === 'success') {
+                const res = await fetch(
+                    `https://graph.facebook.com/me?fields=id,name,email&access_token=${result.token}`
+                );
+                const user = await res.json();
+
+                await handleSocialRegister({
+                    nome: user.name,
+                    email: user.email,
+                });
+            } else {
+                Alert.alert('Cancelado', 'Login com Facebook foi cancelado');
+            }
+        } catch (error) {
+            Alert.alert('Erro', 'Falha ao autenticar com Facebook');
+        }
     };
 
     const getFormattedDateForBackend = (date: Date | null) => {
         if (!date) return '';
-        return date.toISOString().split('T')[0]; 
+        return date.toISOString().split('T')[0];
+    };
+
+    const generateRandomPassword = () => {
+        return Math.random().toString(36).slice(-10);
+    };
+
+    const handleSocialRegister = async (dados: { nome: string, email: string }) => {
+        if (!birthDate) {
+            Alert.alert('Preencha a data de nascimento antes!');
+            return;
+        }
+
+        const payload = {
+            nome: dados.nome,
+            email: dados.email,
+            senha: generateRandomPassword(),
+            data_nascimento: getFormattedDateForBackend(birthDate),
+        };
+
+        try {
+            const response = await api.post('/auth/registro', payload);
+
+            if (response.status === 200 || response.status === 201) {
+                await AsyncStorage.setItem('userToken', response.data.token);
+                await AsyncStorage.setItem('userId', response.data.usuario.id.toString());
+
+                Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+                navigation.navigate('Main');
+            } else {
+                Alert.alert('Erro', response.data.message || 'Erro ao cadastrar');
+            }
+        } catch (error) {
+            Alert.alert('Erro', 'Erro ao conectar com o servidor');
+        }
     };
 
     const handleRegister = async () => {
@@ -64,9 +170,8 @@ export default function Register() {
             Alert.alert('Erro', 'Digite um e-mail válido!');
             return;
         }
-    
-        const sucesso = await autenticarBiometria();
 
+        const sucesso = await autenticarBiometria();
         if (!sucesso) {
             Alert.alert('Erro', 'Biometria não foi autenticada!');
             return;
@@ -86,25 +191,20 @@ export default function Register() {
                 Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
                 navigation.navigate('Login');
             } else {
-                const data = response.data;
-                Alert.alert('Erro', data.message || 'Erro ao cadastrar');
+                Alert.alert('Erro', response.data.message || 'Erro ao cadastrar');
             }
-        } catch (error: any) {
-            if (error.response && error.response.data && error.response.data.mensagem) {
-                const msg = error.response.data.mensagem;
-    
-            if (msg === 'Usuário já existe.') {
-                Alert.alert('Erro', 'Este e-mail já está cadastrado!');
-            } else if (msg === 'A senha deve ter entre 6 e 8 caracteres.') {
-                Alert.alert('Erro', 'A senha precisa ter entre 6 e 8 caracteres!');
-            } else {
-                Alert.alert('Erro', msg);
-            }
-        } else {
+        } catch (error) {
             Alert.alert('Erro', 'Erro ao conectar com o servidor');
-            }
         }
-    };      
+    };
+
+    const formatDate = (date: Date | null) => {
+        if (!date) return '00/00/0000';
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
 
     return (
         <KeyboardAvoidingView
@@ -121,7 +221,10 @@ export default function Register() {
 
                     <View>
                         <View style={styles.buttonLogin}>
-                            <TouchableOpacity style={styles.socialButtonGoogle}>
+                            <TouchableOpacity
+                                style={styles.socialButtonGoogle}
+                                onPress={() => googlePromptAsync()}
+                            >
                                 <View style={styles.iconWrapper}>
                                     <Google />
                                 </View>
@@ -132,7 +235,10 @@ export default function Register() {
                                 </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.socialButtonFacebook}>
+                            <TouchableOpacity
+                                style={styles.socialButtonFacebook}
+                                onPress={handleFacebookLogin}
+                            >
                                 <View style={styles.iconWrapper}>
                                     <Facebook />
                                 </View>

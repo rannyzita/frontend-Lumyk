@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import { themes } from '../../global/themes';
-
 const styles = StyleSheet.create({
 container: {
     paddingTop: 40,
@@ -17,7 +16,7 @@ logo: {
     marginVertical: 10,
 },
 card: {
-    backgroundColor: '#A662FF',
+    backgroundColor: themes.colors.primary,
     borderRadius: 12,
     padding: 10,
     height: 90,
@@ -44,13 +43,6 @@ role: {
     fontWeight: '500',
     color: '#f0f0f0',
 },
-// footer: {
-//     marginTop: 30,
-//     textAlign: 'center',
-//     fontSize: 12,
-//     color: '#555',
-//     paddingHorizontal: 20,
-// },
 headerBox: {
     backgroundColor: '#fff',
     paddingVertical: 25,

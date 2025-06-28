@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Image, ScrollView, Text, UIManager, View, findNodeHandle } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import FeedbackCardAdd from '../../components/feedbackButton/feedbackButton';
 
-import { useAuthStorage } from '../../hooks/useAuthStorage';
 import { useBookData } from './hooks/useBookData';
 import { BookFormatOption } from './components/BookFormatOption';
 import { CoverSelectModal } from './components/CoverSelectModal';
@@ -32,7 +31,6 @@ export default function Book() {
     const { bookId } = route.params as RouteParams;
 
     const { bookData } = useBookData(bookId);
-    const { getTokenAndUserId } = useAuthStorage();
 
     const [selectedFormat, setSelectedFormat] = useState<'digital' | 'fisico'>('digital');
     const [selectedCover, setSelectedCover] = useState<string | null>(null);
@@ -40,7 +38,32 @@ export default function Book() {
     const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
     const [showModal, setShowModal] = useState(false);
 
+    const [assinatura, setAssinatura] = useState<'Básica' | 'Premium' | null>(null);
+
     const buttonRef = useRef(null);
+
+    useEffect(() => {
+        async function verificarAssinatura() {
+            const token = await AsyncStorage.getItem('userToken');
+            if (!token) return;
+
+            try {
+                const { data } = await api.get('/assinaturas/', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (data.length > 0) {
+                    setAssinatura(data[0].tipo_assinatura);
+                } else {
+                    setAssinatura(null);
+                }
+            } catch (error) {
+                console.error('Erro ao verificar assinatura:', error);
+            }
+        }
+
+        verificarAssinatura();
+    }, []);
 
     if (!bookData) return <Text>Carregando...</Text>;
 
@@ -58,98 +81,147 @@ export default function Book() {
 
     const handleSelectFormat = (format: 'digital' | 'fisico') => {
         setSelectedFormat(format);
-        if (format === 'fisico') openModal();
+        if (format === 'fisico') {
+            openModal();
+        } else {
+            setSelectedCover(null);
+        }
     };
 
-    const formatPrice = (price: string) =>
+    const formatPrice = (price: number) =>
         new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
-        }).format(parseFloat(price));
+        }).format(price);
 
-    const priceFisico = selectedCover
-        ? `${selectedCover} - ${
-                selectedCover === 'Capa Dura'
-                    ? formatPrice((parseFloat(bookData.preco) * 1.3).toFixed(2))
-                    : formatPrice((parseFloat(bookData.preco) * 1.15).toFixed(2))
-            }`
-        : 'Selecione a capa';
+    const calcularPrecoFisico = (): string => {
+        if (!selectedCover) return 'Selecione a capa';
 
-        const handleAdicionarCarrinho = async () => {
-            try {
-                const token = await AsyncStorage.getItem('userToken');
-                let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
+        const precoBase = parseFloat(bookData.preco);
+        let precoCapa = precoBase;
+
+        if (selectedCover === 'Capa Dura') {
+            precoCapa *= 1.3;
+        } else if (selectedCover === 'Capa Fina') {
+            precoCapa *= 1.15;
+        }
+
+        if (assinatura === 'Premium') precoCapa *= 0.8;
+
+        return `${selectedCover} - ${formatPrice(precoCapa)}`;
+    };
+
+    async function verificarAssinatura() {
+        const token = await AsyncStorage.getItem('userToken');
     
-                if (!token) {
-                    console.warn('Usuário não autenticado.');
-                    return;
-                }
-        
-              // Se não existir carrinho, cria um novo
-                if (!idCarrinho) {
-                    const response = await api.post('/carrinhos/',{},
-                        {
-                            headers: { Authorization: `Bearer ${token}` },
-                        }
-                    );
-                
-                const responseId = await api.get('/carrinhos/',
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }
-                );
-                const carrinho = responseId.data?.[0];
+        try {
+            const { data } = await api.get('/assinaturas/', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            if (data.length === 0) {
+                return null; 
+            }
+    
+            return data[0].tipo_assinatura; // 'Básica' ou 'Premium'
+        } catch (error) {
+            console.error('Erro ao verificar assinatura:', error);
+            return null;
+        }
+    }
+    
+    const calcularPrecoDigital = (): string => {
+        const precoBase = parseFloat(bookData.preco);
+        const precoFinal = assinatura === 'Premium' ? precoBase * 0.8 : precoBase;
+        return formatPrice(precoFinal);
+    };
 
+    const handleAdicionarCarrinho = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
+    
+            if (!token) {
+                console.warn('Usuário não autenticado.');
+                return;
+            }
+    
+            // Se não existir carrinho, cria um novo
+            if (!idCarrinho) {
+                const response = await api.post('/carrinhos/', {}, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            } else {
+                const response = await api.post('/carrinhos/', {}, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+    
+                const responseId = await api.get('/carrinhos/', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+    
+                const carrinho = responseId.data?.[0];
+    
                 if (carrinho?.id) {
                     idCarrinho = carrinho.id;
                     await AsyncStorage.setItem('idCarrinho', idCarrinho!);
                 } else {
                     console.warn('Carrinho não encontrado ou sem ID.');
-                return;
+                    return;
                 }
             }
-
-              // Agora que temos certeza que existe um idCarrinho, adiciona o item
-                await api.post('/item-carrinho/',
-                    {
-                        id_carrinho: idCarrinho,
-                        id_livro: bookId,
-                    },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
     
-              // Feedback visual
-                setShowModal(true);
-                setTimeout(() => setShowModal(false), 3000);
-            } catch (error:any) {
-                console.error('Erro ao adicionar ao carrinho:', error.response?.data || error.message);
-            }
-        };          
+            // Verifica o tipo de assinatura
+            const assinaturaRes = await api.get('/assinaturas/', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            const assinaturaTipo = assinaturaRes.data?.[0]?.tipo_assinatura ?? null;
+    
+            const precoOriginal = parseFloat(bookData.preco);
+            const preco_unitario = assinaturaTipo === 'Premium'
+                ? precoOriginal * 0.8
+                : precoOriginal;
+    
+            // Adiciona item ao carrinho com quantidade e preco_unitario
+            await api.post('/item-carrinho/', {
+                id_carrinho: idCarrinho,
+                id_livro: bookId,
+                quantidade: 1,
+                preco_unitario,
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            setShowModal(true);
+            setTimeout(() => setShowModal(false), 3000);
+        } catch (error: any) {
+            console.error('Erro ao adicionar ao carrinho:', error.response?.data || error.message);
+        }
+    };    
 
     return (
         <>
-            <NavigationHeader iconArrow={true} onBack={() => navigation.goBack()} />
+            <NavigationHeader iconArrow onBack={() => navigation.goBack()} />
             <ScrollView contentContainerStyle={styles.container}>
                 <Image source={bookData.foto} style={styles.image} />
                 <Text style={styles.title}>{bookData.titulo}</Text>
-
                 <Text style={styles.author}>{bookData.autor.nome}</Text>
                 <Text style={styles.stock}>{bookData.estoque} unidades</Text>
 
                 <View style={styles.formatContainer}>
                     <BookFormatOption
-                        title='Formato Digital'
-                        price={formatPrice(bookData.preco)}
+                        title="Formato Digital"
+                        price={calcularPrecoDigital()}
                         selected={selectedFormat === 'digital'}
                         onPress={() => handleSelectFormat('digital')}
                     />
                     <BookFormatOption
-                        title='Formato Físico'
-                        price={priceFisico}
+                        title="Formato Físico"
+                        price={calcularPrecoFisico()}
                         selected={selectedFormat === 'fisico'}
                         onPress={() => handleSelectFormat('fisico')}
+                        buttonRef={buttonRef}
                     />
                 </View>
 
@@ -162,7 +234,9 @@ export default function Book() {
                     description={bookData.sinopse}
                     authorName={bookData.autor.nome}
                     authorImage={bookData.autor.fotoAutor}
-                    onViewBooks={() => navigation.navigate('AuthorDetails', { authorId: bookData.autor.id })}
+                    onViewBooks={() =>
+                        navigation.navigate('AuthorDetails', { authorId: bookData.autor.id })
+                    }
                 />
             </ScrollView>
 
@@ -180,7 +254,7 @@ export default function Book() {
 
             {showModal && (
                 <FeedbackCardAdd
-                    title='Adicionado com sucesso!'
+                    title="Adicionado com sucesso!"
                     closeModal={() => setShowModal(false)}
                 />
             )}

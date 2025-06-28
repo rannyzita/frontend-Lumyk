@@ -7,11 +7,13 @@ interface Props {
     price: string;
     selected: boolean;
     onPress: () => void;
+    buttonRef?: any; 
 }
 
-export function BookFormatOption({ title, price, selected, onPress }: Props) {
+export function BookFormatOption({ title, price, selected, onPress, buttonRef }: Props) {
     return (
         <TouchableOpacity
+            ref={buttonRef}
             style={[styles.formatButton, selected && styles.selectedButton]}
             onPress={onPress}
             activeOpacity={0.8}
@@ -20,7 +22,7 @@ export function BookFormatOption({ title, price, selected, onPress }: Props) {
             <View style={styles.separator} />
             <View style={styles.formatContent}>
                 <View style={styles.circle}>
-                {selected && <View style={styles.filledCircle} />}
+                    {selected && <View style={styles.filledCircle} />}
                 </View>
                 <Text style={styles.priceText}>{price}</Text>
             </View>

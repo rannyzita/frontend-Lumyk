@@ -9,7 +9,7 @@ import IconeMoney from '../../../assets/subscription/money.svg';
 import IconePix from '../../../assets/subscription/pix.svg';
 
 import { Button } from '../../../components/Button/button';
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Pressable } from "react-native-gesture-handler";
 
 export default function About() {
     const imagensCarrinho = [
@@ -55,19 +55,28 @@ export default function About() {
             <View style={{paddingHorizontal:30}}>
                 <Text style={styles.tituloSecao}>Método de Pagamento:</Text>
                 <View style={styles.metodoContainer}>
-                    <TouchableOpacity style={styles.metodoOpcao}>
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.metodoOpcao,
+                            pressed && { opacity: 0.5 }, 
+                        ]}>
                         <Text style={styles.textoMetodo}>Dinheiro</Text>
                         <IconeMoney width={24} height={24} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.metodoOpcao}>
+                    </Pressable>
+
+                    <Pressable 
+                        style={({ pressed }) => [
+                            styles.metodoOpcao,
+                            pressed && { opacity: 0.5 }, 
+                        ]}>
                         <Text style={styles.textoMetodo}>Pix</Text>
                         <IconePix width={24} height={24} />
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
             
             <View style={styles.divider} />
-            
+
             {/* Detalhes do Pagamento */}
             <View style={styles.detalhesContainer}>
                 <Text style={styles.textMainDetalhes}>Detalhes do Pagamento:</Text>
@@ -76,7 +85,6 @@ export default function About() {
                     <Text style={styles.textoDetalhe}>Quantidade de Itens: <Text style={styles.bold}>4</Text></Text>
                     <Text style={styles.textoDetalhe}>Total do Frete: <Text style={styles.bold}>R$ 15,00</Text></Text>
                 </View>
-                
                 
                 <Text style={styles.textoDetalhe}>Subtotal: <Text style={styles.bold}>R$ 224,28</Text></Text>
 

@@ -28,6 +28,7 @@ import AccountDeleted from '../pages/accountDeleting/feedbackDeleted';
 import PaymentSubscription from '../pages/subscription/payment/paymentSubscription';
 import QrCode from '../pages/qrCode/qrcode';
 import PaymentConcluded from '../pages/qrCode/paymentConcluded';
+import DetailsHistory from '../pages/orderHistory/detailsHistory';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,7 +61,7 @@ function TabNavigator() {
             />
 
             <Tab.Screen                                                                                                                    
-                name="OrderHistory"
+                name='OrderHistory'
                 component={OrderHistory}
                 options={{
                     tabBarIcon: () => <OrderHistoryIcon/>,
@@ -68,7 +69,7 @@ function TabNavigator() {
             />
 
             <Tab.Screen
-                name="Subscription"
+                name='Subscription'
                 component={Subscription}
                 options={{
                     tabBarIcon: () => <SubscriptionIcon/>,
@@ -76,7 +77,7 @@ function TabNavigator() {
             />
 
             <Tab.Screen
-                name="Cart"
+                name='Cart'
                 component={Cart}
                 options={{
                     tabBarIcon: () => <CartIcon/>,
@@ -84,7 +85,7 @@ function TabNavigator() {
             />
 
             <Tab.Screen
-                name="About"
+                name='About'
                 component={About}
                 options={{
                     tabBarIcon: () => <AboutIcon/>,
@@ -97,7 +98,7 @@ function TabNavigator() {
 export default function Routes() {
     return (
         <Stack.Navigator
-            initialRouteName="Loading"
+            initialRouteName='Loading'
             screenOptions={{
                 headerShown: false,
                 cardStyle: {
@@ -107,37 +108,39 @@ export default function Routes() {
             }}
         >
 
-            <Stack.Screen name="Loading" component={Loading} />
-            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name='Loading' component={Loading} />
+            <Stack.Screen name='Login' component={Login} />
 
             {/* Aqui, o TabNavigator vai ser exibido entre Home e About */}
-            <Stack.Screen name="Main" component={TabNavigator} />
+            <Stack.Screen name='Main' component={TabNavigator} />
 
-            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name='Profile' component={Profile} />
 
-            <Stack.Screen name="Authors" component={Authors} />
+            <Stack.Screen name='Authors' component={Authors} />
 
-            <Stack.Screen name="AuthorDetails" component={AuthorDetails} />
+            <Stack.Screen name='AuthorDetails' component={AuthorDetails} />
 
-            <Stack.Screen name="Book" component={Book} />
+            <Stack.Screen name='Book' component={Book} />
 
-            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name='Register' component={Register} />
 
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
 
-            <Stack.Screen name="VerifyCode" component={VerifyCode} />
+            <Stack.Screen name='VerifyCode' component={VerifyCode} />
 
-            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen name='ResetPassword' component={ResetPassword} />
 
-            <Stack.Screen name="AccountDeleting" component={AccountDeleting} />
+            <Stack.Screen name='AccountDeleting' component={AccountDeleting} />
 
-            <Stack.Screen name="AccountDeleted" component={AccountDeleted} />
+            <Stack.Screen name='AccountDeleted' component={AccountDeleted} />
 
-            <Stack.Screen name="PaymentSubscription" component={PaymentSubscription} />
+            <Stack.Screen name='PaymentSubscription' component={PaymentSubscription} />
 
-            <Stack.Screen name="QrCode" component={QrCode} />
+            <Stack.Screen name='QrCode' component={QrCode} />
 
-            <Stack.Screen name="PaymentConcluded" component={PaymentConcluded} />
+            <Stack.Screen name='PaymentConcluded' component={PaymentConcluded} />
+
+            <Stack.Screen name='DetailsHistory' component={DetailsHistory} />
 
         </Stack.Navigator>
     );

@@ -13,4 +13,5 @@ declare module "*.png" {
 declare module '@env' {
     export const ID_CLIENT: string;
     export const ID_FACEBOOK: string;
+    export const redirectUri: string;
 }

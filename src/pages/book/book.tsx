@@ -15,6 +15,9 @@ import { BookDescription } from './components/BookDescription';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../../API';
+
 import styles from './styles';
 
 type RouteParams = {
@@ -46,8 +49,8 @@ export default function Book() {
             const handle = findNodeHandle(buttonRef.current);
             if (handle) {
                 UIManager.measureInWindow(handle, (x, y, _, height) => {
-                setModalPosition({ top: y + height + 8, left: x });
-                setIsModalVisible(true);
+                    setModalPosition({ top: y + height + 8, left: x });
+                    setIsModalVisible(true);
                 });
             }
         }
@@ -66,18 +69,64 @@ export default function Book() {
 
     const priceFisico = selectedCover
         ? `${selectedCover} - ${
-            selectedCover === 'Capa Dura'
-            ? formatPrice((parseFloat(bookData.preco) * 1.30).toFixed(2))
-            : formatPrice((parseFloat(bookData.preco) * 1.15).toFixed(2))
-        }`
+                selectedCover === 'Capa Dura'
+                    ? formatPrice((parseFloat(bookData.preco) * 1.3).toFixed(2))
+                    : formatPrice((parseFloat(bookData.preco) * 1.15).toFixed(2))
+            }`
         : 'Selecione a capa';
 
-    const handleAdicionarCarrinho = async () => {
-        const { token, userId } = await getTokenAndUserId();
-        if (!token || !userId) return;
-        setShowModal(true);
-        setTimeout(() => setShowModal(false), 3000);
-    };
+        const handleAdicionarCarrinho = async () => {
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
+    
+                if (!token) {
+                    console.warn('Usuário não autenticado.');
+                    return;
+                }
+        
+              // Se não existir carrinho, cria um novo
+                if (!idCarrinho) {
+                    const response = await api.post('/carrinhos/',{},
+                        {
+                            headers: { Authorization: `Bearer ${token}` },
+                        }
+                    );
+                
+                const responseId = await api.get('/carrinhos/',
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
+                const carrinho = responseId.data?.[0];
+
+                if (carrinho?.id) {
+                    idCarrinho = carrinho.id;
+                    await AsyncStorage.setItem('idCarrinho', idCarrinho!);
+                } else {
+                    console.warn('Carrinho não encontrado ou sem ID.');
+                return;
+                }
+            }
+
+              // Agora que temos certeza que existe um idCarrinho, adiciona o item
+                await api.post('/item-carrinho/',
+                    {
+                        id_carrinho: idCarrinho,
+                        id_livro: bookId,
+                    },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+    
+              // Feedback visual
+                setShowModal(true);
+                setTimeout(() => setShowModal(false), 3000);
+            } catch (error:any) {
+                console.error('Erro ao adicionar ao carrinho:', error.response?.data || error.message);
+            }
+        };          
 
     return (
         <>

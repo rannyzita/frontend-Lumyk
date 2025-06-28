@@ -27,7 +27,7 @@ import * as FacebookAuth from 'expo-facebook';
 import api from '../../../API/index';
 import { useBiometria } from '../../hooks/useBiometria';
 
-import { ID_CLIENT, ID_FACEBOOK } from '@env';
+import { ID_CLIENT, ID_FACEBOOK, redirectUri } from '@env';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -41,21 +41,15 @@ export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const { autenticarBiometria } = useBiometria();
 
-    // Configurando o redirectUri corretamente
-    const redirectUri = AuthSession.makeRedirectUri({ 
-        scheme: 'lumyk' 
-    });
-
-    console.log('Redirect URI:', redirectUri); // Verifique se está correto
+    console.log('Redirect URI vai:', redirectUri); 
 
     // Google Auth
     const [googleRequest, googleResponse, googlePromptAsync] = GoogleAuth.useAuthRequest({
         clientId: ID_CLIENT,
         scopes: ['openid', 'profile', 'email'],
-        redirectUri: redirectUri,
+        redirectUri,
     });
 
     useEffect(() => {
@@ -67,19 +61,27 @@ export default function Register() {
                 console.log('AccessToken:', authentication?.accessToken);
                 handleGoogleLogin(authentication?.accessToken);
             } else if (googleResponse.type === 'error') {
+                console.log('Erro no Google Auth:', googleResponse);
                 Alert.alert('Erro', 'Erro na autenticação com Google');
             }
         }
     }, [googleResponse]);
 
     const handleGoogleLogin = async (accessToken: string | undefined) => {
-        if (!accessToken) return;
+        if (!accessToken) {
+            console.log('handleGoogleLogin: accessToken indefinido');
+            return;
+        }
 
         try {
+            console.log('Buscando userinfo com accessToken:', accessToken);
             const res = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
+
+            console.log('Resposta userinfo status:', res.status);
             const user = await res.json();
+            console.log('Dados do usuário Google:', user);
 
             await handleSocialRegister({
                 nome: user.name,
@@ -87,6 +89,7 @@ export default function Register() {
             });
 
         } catch (error) {
+            console.error('Erro no handleGoogleLogin:', error);
             Alert.alert('Erro', 'Falha ao autenticar com Google');
         }
     };
@@ -131,7 +134,7 @@ export default function Register() {
 
     const handleSocialRegister = async (dados: { nome: string, email: string }) => {
         if (!birthDate) {
-            Alert.alert('Preencha a data de nascimento antes!');
+            Alert.alert('Preencha somente o campo de data de nascimento antes!');
             return;
         }
 
@@ -142,8 +145,12 @@ export default function Register() {
             data_nascimento: getFormattedDateForBackend(birthDate),
         };
 
+        console.log('Payload para registro social:', payload);
+
         try {
             const response = await api.post('/auth/registro', payload);
+
+            console.log('Resposta do backend registro social:', response.data);
 
             if (response.status === 200 || response.status === 201) {
                 await AsyncStorage.setItem('userToken', response.data.token);
@@ -154,7 +161,8 @@ export default function Register() {
             } else {
                 Alert.alert('Erro', response.data.message || 'Erro ao cadastrar');
             }
-        } catch (error) {
+        } catch (error:any) {
+            console.error('Erro no handleSocialRegister:', error.response || error.message || error);
             Alert.alert('Erro', 'Erro ao conectar com o servidor');
         }
     };

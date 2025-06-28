@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-} from "react-native";
-import styles from "./styles";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import styles from './styles';
+import { useNavigation } from '@react-navigation/native';
 
-import TrashIcon from "./assets/Trash.svg";
-import api from "../../../API/index";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import TrashIcon from './assets/Trash.svg';
+import api from '../../../API/index';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface LivroCarrinho {
   id: string;
@@ -35,13 +35,13 @@ export default function Cart() {
   useEffect(() => {
     const buscarItensCarrinho = async () => {
       try {
-        const token = await AsyncStorage.getItem("userToken");
-        const idCarrinho = await AsyncStorage.getItem("idCarrinho");
+        const token = await AsyncStorage.getItem('userToken');
+        const idCarrinho = await AsyncStorage.getItem('idCarrinho');
 
         if (!token || !idCarrinho) return;
 
         const { data: itensCarrinho } = await api.get(
-          `/item-carrinho/carrinho/${idCarrinho}`,
+          `/item-carrinho/${idCarrinho}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -77,7 +77,7 @@ export default function Cart() {
 
         setLivros(Object.values(livrosMap));
       } catch (error) {
-        console.error("Erro ao carregar itens do carrinho:", error);
+        console.error('Erro ao carregar itens do carrinho:', error);
       } finally {
         setLoading(false);
       }
@@ -109,7 +109,7 @@ export default function Cart() {
 
   const deletarItemDoCarrinho = async (idLivro: string) => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem('userToken');
       await api.delete(`/item-carrinho/${idLivro}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -117,7 +117,7 @@ export default function Cart() {
         prevLivros.filter((livro) => livro.id !== idLivro)
       );
     } catch (error) {
-      console.error("Erro ao deletar item do carrinho:", error);
+      console.error('Erro ao deletar item do carrinho:', error);
     }
   };
 
@@ -154,7 +154,7 @@ export default function Cart() {
         <Text style={styles.title}>{item.titulo}</Text>
         <Text style={styles.author}>por {item.autor}</Text>
         <Text style={styles.type}>
-          {item.tipo.toLowerCase() === "digital" ? item.formato : item.tipo}
+          {item.tipo.toLowerCase() === 'digital' ? item.formato : item.tipo}
         </Text>
         <Text style={styles.stock}>Em estoque</Text>
         <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
@@ -165,22 +165,22 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>CARRINHO DE COMPRAS</Text>
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: 'center' }}>
         <View style={styles.separator} />
       </View>
 
-      <View style={{ flex: 1, position: "relative" }}>
+      <View style={{ flex: 1, position: 'relative' }}>
         {loading && (
           <View
             style={{
-              position: "absolute",
-              top: "40%",
-              left: "50%",
+              position: 'absolute',
+              top: '40%',
+              left: '50%',
               transform: [{ translateX: -20 }, { translateY: 75 }],
               zIndex: 10,
             }}
           >
-            <ActivityIndicator size="large" color="#8000FF" />
+            <ActivityIndicator size='large' color='#8000FF' />
           </View>
         )}
 

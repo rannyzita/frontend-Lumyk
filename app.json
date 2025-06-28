@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "Lumyk",
+    "name": "lumyk",
     "slug": "lumyk",
     "scheme": "lumyk",
     "version": "1.0.0",
+    "owner": "rannyzita",
     "orientation": "portrait",
     "icon": "./src/assets/logo.png",
     "userInterfaceStyle": "light",

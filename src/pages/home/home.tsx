@@ -280,7 +280,7 @@ export default function Home() {
                     <View style={{ alignItems: 'center', marginRight: 4, marginLeft: 10 }}>
                         <ButtonFilter
                             title="Ver Autores"
-                            onPress={() => navigation.navigate('Authors')}
+                            onPress={() => navigation.navigate('PaymentBook')}
                             style={{ backgroundColor: themes.colors.primary, width: 115 }}
                             textStyle={{ color: '#fff', marginRight: 5 }}
                         />

@@ -13,7 +13,7 @@ import NavigationHeader from "../../components/NavigationHeader/navigationHeader
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteParams = { id: string };
 
-export default function detailsHistory() {
+export default function DetailsHistory() {
     const route = useRoute();
     const navigation = useNavigation<NavigationProps>();
     const { id } = route.params as RouteParams;

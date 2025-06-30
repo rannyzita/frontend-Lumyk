@@ -47,7 +47,7 @@ export default function Register() {
 
     // Google Auth
     const [googleRequest, googleResponse, googlePromptAsync] = GoogleAuth.useAuthRequest({
-        clientId: ID_CLIENT,
+        androidClientId: ID_CLIENT,
         scopes: ['openid', 'profile', 'email'],
         redirectUri,
     });

@@ -149,9 +149,11 @@ export default function PaymentSubscription() {
                             setSelectedMethod('pix');
                             setPaymentError(false);
                         }}
-                    >
-                        <IconPix width={24} height={24}/>
-                        <Text style={styles.paymentText}>Pix</Text>
+                    >   
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                            <IconPix width={24} height={24}/>
+                            <Text style={styles.paymentText}>Pix</Text>
+                        </View>
 
                         <View style={styles.radioCircle}>
                             {selectedMethod === 'pix' && <View style={styles.radioInner} />}
@@ -185,7 +187,6 @@ export default function PaymentSubscription() {
                     <View style={{alignItems: 'center'}}>
                         <TouchableOpacity style={styles.submitButton}
                             onPress={async () => {
-                                // Se NÃO tiver assinatura ativa, obrigar selecionar método
                                 if (!assinaturaAtiva && !selectedMethod) {
                                     setPaymentError(true);
                                     return;
@@ -206,7 +207,6 @@ export default function PaymentSubscription() {
                         </TouchableOpacity>
                     </View>
                 </View>
-
             </ScrollView>
         </View>
     );

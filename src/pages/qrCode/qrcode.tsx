@@ -37,6 +37,11 @@ export default function QrCode() {
     const criarAssinatura = async () => {
         const token = await AsyncStorage.getItem('userToken');
 
+        if (id === '3') {
+            navigation.navigate('PaymentConcluded');
+            return;
+        }
+        
         if (!token) {
             Alert.alert('Erro', 'Usuário não autenticado!');
             return;

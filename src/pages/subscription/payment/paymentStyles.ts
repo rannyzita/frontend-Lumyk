@@ -25,6 +25,7 @@ paymentOption: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
+    justifyContent: 'space-between', 
     padding: 15,
     borderRadius: 12,
     gap: 10,

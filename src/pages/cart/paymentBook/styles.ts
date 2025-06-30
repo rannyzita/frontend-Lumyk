@@ -92,6 +92,63 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 50,
     },
+    paymentOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between', 
+        backgroundColor: '#fff',
+        padding: 15,
+        borderRadius: 12,
+        gap: 10,
+        boxShadow: themes.colors.shadow
+    },
+    paymentText: {
+        fontSize: 16,
+        color: '#000',
+    },
+    radioCircle: {
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: themes.colors.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    radioInner: {
+        height: 10,
+        width: 10,
+        borderRadius: 5,
+        backgroundColor: themes.colors.primary,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 8,
+    },
+    boxModal: {
+        backgroundColor: '#fff',
+        width: '85%',
+        padding: 20,
+        borderRadius: 20,
+        alignItems: 'center',
+    },
+    titleModal: {
+        width: '100%',
+        backgroundColor: '#ddd',
+        padding: 10,
+        borderRadius: 12,
+        fontWeight: 'bold',
+        marginBottom: 15,
+    },
+    confirmButtonModal: {
+        backgroundColor: themes.colors.primary,
+        paddingVertical: 10,
+        paddingHorizontal: 30,
+        borderRadius: 12,
+        elevation: 4,
+    }
 });
 
 export default styles;

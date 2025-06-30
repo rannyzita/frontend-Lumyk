@@ -30,6 +30,7 @@ import QrCode from '../pages/qrCode/qrcode';
 import PaymentConcluded from '../pages/qrCode/paymentConcluded';
 import DetailsHistory from '../pages/orderHistory/detailsHistory';
 import PaymentBook from '../pages/cart/paymentBook/payment';
+import Address from '../pages/address/address';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -144,6 +145,8 @@ export default function Routes() {
             <Stack.Screen name='DetailsHistory' component={DetailsHistory} />
 
             <Stack.Screen name='PaymentBook' component={PaymentBook} />
+
+            <Stack.Screen name='Address' component={Address} />
         </Stack.Navigator>
     );
 };

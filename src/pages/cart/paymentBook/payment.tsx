@@ -39,17 +39,16 @@ export default function About() {
     const { autenticarBiometria } = useBiometria();
 
     const  handleFazerPedido = async () =>  {
-        const sucesso = await autenticarBiometria();
-        
-        if (!sucesso) return;
-
         if (!selectedMethod) {
             setPaymentError(true);
             return;   
         }
 
-        navigation.navigate('QrCode', {id: '3'})
+        const sucesso = await autenticarBiometria();
+        if (!sucesso) return;
+
         setPaymentError(false);
+        navigation.navigate('QrCode', {id: '3'})
     }
 
     return (

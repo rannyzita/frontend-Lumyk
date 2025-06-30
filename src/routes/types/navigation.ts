@@ -16,4 +16,5 @@ export type RootStackParamList = {
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };
     PaymentBook: undefined;
+    Address: undefined;
 }; 

@@ -94,7 +94,7 @@ export default function Book() {
             currency: 'BRL',
         }).format(price);
 
-    const calcularPrecoFisico = (): string => {
+    const  calcularPrecoFisico = (): string => {
         if (!selectedCover) return 'Selecione a capa';
 
         const precoBase = parseFloat(bookData.preco);
@@ -102,33 +102,14 @@ export default function Book() {
 
         if (selectedCover === 'Capa Dura') {
             precoCapa *= 1.3;
-        } else if (selectedCover === 'Capa Fina') {
+        } else if (selectedCover === 'Capa Comum') {
             precoCapa *= 1.15;
         }
 
         if (assinatura === 'Premium') precoCapa *= 0.8;
 
         return `${selectedCover} - ${formatPrice(precoCapa)}`;
-    };
-
-    async function verificarAssinatura() {
-        const token = await AsyncStorage.getItem('userToken');
-    
-        try {
-            const { data } = await api.get('/assinaturas/', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-    
-            if (data.length === 0) {
-                return null; 
-            }
-    
-            return data[0].tipo_assinatura; // 'Básica' ou 'Premium'
-        } catch (error) {
-            console.error('Erro ao verificar assinatura:', error);
-            return null;
-        }
-    }
+    };  
     
     const calcularPrecoDigital = (): string => {
         const precoBase = parseFloat(bookData.preco);
@@ -140,38 +121,32 @@ export default function Book() {
         try {
             const token = await AsyncStorage.getItem('userToken');
             let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
-    
+            
             if (!token) {
                 console.warn('Usuário não autenticado.');
                 return;
             }
     
-            // Se não existir carrinho, cria um novo
             if (!idCarrinho) {
-                const response = await api.post('/carrinhos/', {}, {
+                
+                await api.post('/carrinhos/', {}, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-            } else {
-                const response = await api.post('/carrinhos/', {}, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-    
+            
                 const responseId = await api.get('/carrinhos/', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-    
+            
                 const carrinho = responseId.data?.[0];
-    
                 if (carrinho?.id) {
                     idCarrinho = carrinho.id;
                     await AsyncStorage.setItem('idCarrinho', idCarrinho!);
                 } else {
-                    console.warn('Carrinho não encontrado ou sem ID.');
+                    console.warn('Carrinho criado, mas não encontrado com GET');
                     return;
                 }
-            }
+            }  
     
-            // Verifica o tipo de assinatura
             const assinaturaRes = await api.get('/assinaturas/', {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -179,16 +154,31 @@ export default function Book() {
             const assinaturaTipo = assinaturaRes.data?.[0]?.tipo_assinatura ?? null;
     
             const precoOriginal = parseFloat(bookData.preco);
-            const preco_unitario = assinaturaTipo === 'Premium'
-                ? precoOriginal * 0.8
-                : precoOriginal;
+            let preco_unitario = precoOriginal;
+
+            if (selectedFormat === 'fisico') {
+                if (selectedCover === 'Capa Dura') {
+                    preco_unitario *= 1.3;
+                } else if (selectedCover === 'Capa Comum') {
+                    preco_unitario *= 1.15;
+                }
+
+                if (assinaturaTipo === 'Premium') {
+                    preco_unitario *= 0.8;
+                }
+            } else {
+                if (assinaturaTipo === 'Premium') {
+                    preco_unitario *= 0.8;
+                }
+            }
     
-            // Adiciona item ao carrinho com quantidade e preco_unitario
             await api.post('/item-carrinho/', {
                 id_carrinho: idCarrinho,
                 id_livro: bookId,
                 quantidade: 1,
-                preco_unitario,
+                preco_unitario: parseFloat(preco_unitario.toFixed(2)),
+                formato: selectedFormat,
+                tipo: selectedFormat === 'fisico' ? selectedCover : null
             }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -218,7 +208,7 @@ export default function Book() {
                     />
                     <BookFormatOption
                         title="Formato Físico"
-                        price={calcularPrecoFisico()}
+                        price={selectedFormat === 'fisico' && selectedCover ? calcularPrecoFisico() : 'Selecione a capa'}
                         selected={selectedFormat === 'fisico'}
                         onPress={() => handleSelectFormat('fisico')}
                         buttonRef={buttonRef}

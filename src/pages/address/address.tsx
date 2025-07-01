@@ -17,7 +17,7 @@ import NavigationHeader from '../../components/NavigationHeader/navigationHeader
 import Trash from './assets/Trash.svg';
 import ArrowDown from './assets/arrowdown.svg';
 import Close from './assets/Close.svg';
-import { themes } from '../../global/themes';
+import { themes } from '../../global/themes';   
 
 export default function Address() {
   const [modalVisible, setModalVisible] = useState(false);

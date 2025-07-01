@@ -94,27 +94,29 @@ export default function Book() {
             currency: 'BRL',
         }).format(price);
 
-    const  calcularPrecoFisico = (): string => {
+    const calcularPrecoFisico = (): string => {
         if (!selectedCover) return 'Selecione a capa';
-
+    
         const precoBase = parseFloat(bookData.preco);
-        let precoCapa = precoBase;
-
+        let precoFinal = precoBase;
+    
         if (selectedCover === 'Capa Dura') {
-            precoCapa *= 1.3;
+            precoFinal *= 1.3;
         } else if (selectedCover === 'Capa Comum') {
-            precoCapa *= 1.15;
+            precoFinal *= 1.15;
         }
-
-        if (assinatura === 'Premium') precoCapa *= 0.8;
-
-        return `${selectedCover} - ${formatPrice(precoCapa)}`;
-    };  
+    
+        if (assinatura === 'Premium') {
+            precoFinal *= 0.8;
+        }
+    
+        return `${selectedCover} - ${formatPrice(parseFloat(precoFinal.toFixed(2)))}`;
+    };
     
     const calcularPrecoDigital = (): string => {
         const precoBase = parseFloat(bookData.preco);
         const precoFinal = assinatura === 'Premium' ? precoBase * 0.8 : precoBase;
-        return formatPrice(precoFinal);
+        return formatPrice(parseFloat(precoFinal.toFixed(2)));
     };
 
     const handleAdicionarCarrinho = async () => {

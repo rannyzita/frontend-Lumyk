@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Image,
@@ -8,14 +8,20 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import styles from './styles';
-import { useNavigation } from '@react-navigation/native';
-
-import TrashIcon from './assets/Trash.svg';
 import api from '../../../API/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/types/navigation';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+type NavigationProps = StackNavigationProp<RootStackParamList>;
+
+import TrashIcon from './assets/Trash.svg';
+
 interface LivroCarrinho {
   id: string;
+  idLivro: string;
   titulo: string;
   autor: string;
   tipo: string;
@@ -24,98 +30,154 @@ interface LivroCarrinho {
   quantidade: number;
   estoque: number;
   formato: string;
-  idLivro: string;
-  checked?: boolean;
+  checked: boolean;
 }
 
 export default function Cart() {
+  const navigation = useNavigation<NavigationProps>();
   const [livros, setLivros] = useState<LivroCarrinho[]>([]);
   const [loading, setLoading] = useState(true);
+  const [assinatura, setAssinatura] = useState<'Básica' | 'Premium' | null>(null);
 
-  useEffect(() => {
-    const buscarItensCarrinho = async () => {
-      try {
-        const token = await AsyncStorage.getItem('userToken');
-        const idCarrinho = await AsyncStorage.getItem('idCarrinho');
+  useFocusEffect(
+    useCallback(() => {
+      const buscarItensCarrinho = async () => {
+        try {
+          setLoading(true);
+          const token = await AsyncStorage.getItem('userToken');
+          const idCarrinho = await AsyncStorage.getItem('idCarrinho');
+          if (!token || !idCarrinho) return;
 
-        if (!token || !idCarrinho) return;
+          const { data: itensCarrinho } = await api.get(
+            `/item-carrinho/carrinho/${idCarrinho}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
 
-        const { data: itensCarrinho } = await api.get(
-          `/item-carrinho/${idCarrinho}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        const livrosMap: Record<string, LivroCarrinho> = {};
-
-        for (const item of itensCarrinho) {
-          const { data: livro } = await api.get(`/livros/${item.id_livro}`, {
+          const { data: assinaturaData } = await api.get('/assinaturas/', {
             headers: { Authorization: `Bearer ${token}` },
           });
 
-          const bookImage = { uri: api.defaults.baseURL + livro.foto };
-
-          if (livrosMap[livro.id]) {
-            livrosMap[livro.id].quantidade += 1;
-          } else {
-            livrosMap[livro.id] = {
-              id: item.id,
-              idLivro: livro.id,
-              titulo: livro.titulo,
-              autor: livro.autor.nome,
-              tipo: livro.tipo,
-              preco: livro.preco,
-              foto: bookImage,
-              formato: livro.formato,
-              quantidade: 1,
-              estoque: livro.estoque,
-              // checked: false,
-            };
+          if (assinaturaData.length > 0) {
+            setAssinatura(assinaturaData[0].tipo_assinatura);
           }
+
+          const livrosMap: Record<string, LivroCarrinho> = {};
+
+          for (const item of itensCarrinho) {
+            const { data: livro } = await api.get(`/livros/${item.id_livro}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const bookImage = { uri: api.defaults.baseURL + livro.foto };
+            const uniqueKey = `${livro.id}_${item.formato}_${item.tipo}`;
+
+            const precoComDesconto =
+              assinaturaData[0]?.tipo_assinatura === 'Premium'
+                ? item.preco_unitario * 0.8
+                : item.preco_unitario;
+
+            if (livrosMap[uniqueKey]) {
+              livrosMap[uniqueKey].quantidade += item.quantidade;
+            } else {
+              livrosMap[uniqueKey] = {
+                id: item.id,
+                idLivro: livro.id,
+                titulo: livro.titulo,
+                autor: livro.autor.nome,
+                tipo: item.tipo,
+                preco: precoComDesconto,
+                foto: bookImage,
+                formato: item.formato,
+                quantidade: item.quantidade,
+                estoque: livro.estoque,
+                checked: false,
+              };
+            }
+          }
+
+          setLivros(Object.values(livrosMap));
+        } catch (error) {
+          console.error('Erro ao carregar itens do carrinho:', error);
+        } finally {
+          setLoading(false);
         }
+      };
 
-        setLivros(Object.values(livrosMap));
-      } catch (error) {
-        console.error('Erro ao carregar itens do carrinho:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      buscarItensCarrinho();
+    }, [])
+  );
 
-    buscarItensCarrinho();
-  }, []);
-
-  const aumentarQuantidade = (id: string) => {
-    setLivros((prevLivros) =>
-      prevLivros.map((livro) => {
-        if (livro.id === id && livro.quantidade < livro.estoque) {
-          return { ...livro, quantidade: livro.quantidade + 1 };
-        }
-        return livro;
-      })
-    );
-  };
-
-  const diminuirQuantidade = (id: string) => {
+  const toggleCheck = (id: string) => {
     setLivros((prevLivros) =>
       prevLivros.map((livro) =>
-        livro.id === id && livro.quantidade > 1
-          ? { ...livro, quantidade: livro.quantidade - 1 }
-          : livro
+        livro.id === id ? { ...livro, checked: !livro.checked } : livro
       )
     );
   };
 
-  const deletarItemDoCarrinho = async (idLivro: string) => {
+  const aumentarQuantidade = async (id: string) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await api.delete(`/item-carrinho/${idLivro}`, {
+      if (!token) return;
+
+      const livroAtual = livros.find((livro) => livro.id === id);
+      if (!livroAtual) return;
+
+      if (livroAtual.quantidade >= livroAtual.estoque) return;
+
+      const novaQuantidade = livroAtual.quantidade + 1;
+
+      await api.put(
+        `/item-carrinho/${id}`,
+        { quantidade: novaQuantidade },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setLivros((prevLivros) =>
+        prevLivros.map((livro) =>
+          livro.id === id ? { ...livro, quantidade: novaQuantidade } : livro
+        )
+      );
+    } catch (error) {
+      console.error('Erro ao aumentar quantidade:', error);
+    }
+  };
+
+  const diminuirQuantidade = async (id: string) => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) return;
+
+      const livroAtual = livros.find((livro) => livro.id === id);
+      if (!livroAtual) return;
+
+      if (livroAtual.quantidade <= 1) return;
+
+      const novaQuantidade = livroAtual.quantidade - 1;
+
+      await api.put(
+        `/item-carrinho/${id}`,
+        { quantidade: novaQuantidade },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setLivros((prevLivros) =>
+        prevLivros.map((livro) =>
+          livro.id === id ? { ...livro, quantidade: novaQuantidade } : livro
+        )
+      );
+    } catch (error) {
+      console.error('Erro ao diminuir quantidade:', error);
+    }
+  };
+
+  const deletarItemDoCarrinho = async (idItem: string) => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await api.delete(`/item-carrinho/${idItem}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setLivros((prevLivros) =>
-        prevLivros.filter((livro) => livro.id !== idLivro)
-      );
+      setLivros((prevLivros) => prevLivros.filter((livro) => livro.id !== idItem));
     } catch (error) {
       console.error('Erro ao deletar item do carrinho:', error);
     }
@@ -143,23 +205,42 @@ export default function Cart() {
       </View>
 
       <View style={styles.infoContainer}>
-        <TouchableOpacity
-          style={styles.trashButton}
-          onPress={() => deletarItemDoCarrinho(item.id)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <TrashIcon width={24} height={24} />
-        </TouchableOpacity>
-
-        <Text style={styles.title}>{item.titulo}</Text>
+        <View style={styles.topInfo}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <TouchableOpacity onPress={() => deletarItemDoCarrinho(item.id)}>
+            <TrashIcon width={24} height={24} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.author}>por {item.autor}</Text>
-        <Text style={styles.type}>
-          {item.tipo.toLowerCase() === 'digital' ? item.formato : item.tipo}
-        </Text>
-        <Text style={styles.stock}>Em estoque</Text>
+        <Text style={styles.type}>{item.tipo}</Text>
+        {item.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
         <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
+
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => toggleCheck(item.id)}
+          activeOpacity={0.7}
+        >
+          <View
+            style={[
+              styles.checkbox,
+              item.checked && styles.checkboxChecked,
+            ]}
+          >
+            {item.checked && <View style={styles.checkboxTick} />}
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
+  );
+
+  const subtotal = livros.reduce((total, item) => {
+    return item.checked ? total + item.preco * item.quantidade : total;
+  }, 0);
+
+  const totalItensSelecionados = livros.reduce(
+    (sum, item) => (item.checked ? sum + item.quantidade : sum),
+    0
   );
 
   return (
@@ -170,26 +251,40 @@ export default function Cart() {
       </View>
 
       <View style={{ flex: 1, position: 'relative' }}>
-        {loading && (
-          <View
-            style={{
-              position: 'absolute',
-              top: '40%',
-              left: '50%',
-              transform: [{ translateX: -20 }, { translateY: 75 }],
-              zIndex: 10,
-            }}
-          >
-            <ActivityIndicator size='large' color='#8000FF' />
+        {loading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#8000FF" />
           </View>
+        ) : (
+          <FlatList
+            data={livros}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            contentContainerStyle={styles.listContent}
+          />
         )}
+      </View>
 
-        <FlatList
-          data={livros}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
-        />
+      <View style={styles.totalBox}>
+        <View style={styles.totalInfo}>
+          <Text style={styles.totalLabel}>Subtotal:</Text>
+          <Text style={styles.totalValue}>R$ {subtotal.toFixed(2)}</Text>
+        </View>
+        <Text style={styles.semFrete}>Sem o frete incluído</Text>
+        <TouchableOpacity
+          style={styles.checkoutButton}
+          onPress={() => {
+            const selecionados = livros
+              .filter((livro) => livro.checked)
+              .map((livro) => livro.id);
+            navigation.navigate('PaymentBook', { selectedBookIds: selecionados });
+          }}
+          disabled={totalItensSelecionados === 0}
+        >
+          <Text style={styles.checkoutText}>
+            Fechar pedido ({totalItensSelecionados} {totalItensSelecionados === 1 ? 'item' : 'itens'})
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

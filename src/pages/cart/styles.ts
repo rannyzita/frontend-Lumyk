@@ -129,12 +129,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginBottom:10
 },
-checkboxContainer: {
-    position: 'absolute',
-    top: 38,
-    right: 10,
-  },
-  
   subtotalContainer: {
     padding: 16,
     borderTopWidth: 1,
@@ -142,24 +136,102 @@ checkboxContainer: {
     backgroundColor: '#fff',
     alignItems: 'center',
   },
-  
   subtotalText: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  
-  checkoutButton: {
-    backgroundColor: themes.colors.purpleDark,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+  inStock: {
+    color: 'green',
+    marginBottom: 4,
+  },
+  topInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  totalBox: {
+    backgroundColor: '#F5F1FF',
+    padding: 16,
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 12,
+    margin: 16,
   },
   
-  checkoutButtonText: {
-    color: '#fff',
+  totalInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  
+  totalLabel: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  
+  totalValue: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
+  },
+  
+  semFrete: {
+    color: 'orange',
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  
+  checkoutButton: {
+    backgroundColor: '#9D4EDD',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  
+  checkoutText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  
+  loading: {
+    position: 'absolute',
+    top: '40%',
+    left: '50%',
+    transform: [{ translateX: -20 }, { translateY: 75 }],
+    zIndex: 10,
+  },  
+  checkboxContainer: {
+    position: 'absolute',
+    top: 80,
+    right: 10,
+  },
+  
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#9D4EDD',  // roxo forte da sua paleta
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  
+  checkboxChecked: {
+    backgroundColor: '#9D4EDD',
+  },
+  
+  checkboxTick: {
+    width: 10,
+    height: 6,
+    borderLeftWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: '#fff',
+    transform: [{ rotate: '-45deg' }],
   },
   
 });

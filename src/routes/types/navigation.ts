@@ -15,6 +15,6 @@ export type RootStackParamList = {
     QrCode: {id: string};
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };
-    PaymentBook: undefined;
+    PaymentBook: { selectedBookIds: string[] };
     Address: undefined;
 }; 

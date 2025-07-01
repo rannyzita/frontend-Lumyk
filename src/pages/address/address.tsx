@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import styles from './styles';
@@ -18,45 +19,99 @@ import Trash from './assets/Trash.svg';
 import ArrowDown from './assets/arrowdown.svg';
 import Close from './assets/Close.svg';
 import { themes } from '../../global/themes';   
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../../API';
+
+interface Estado {
+  id: string;
+  nome: string;
+}
+
+interface Endereco {
+  id: string;
+  rua: string;
+  bairro: string;
+  numero: string;
+  id_estado: string;
+}
 
 export default function Address() {
   const [modalVisible, setModalVisible] = useState(false);
   const [estadoDropdownVisible, setEstadoDropdownVisible] = useState(false);
+  const [loadingEstados, setLoadingEstados] = useState(false);
 
   const [bairro, setBairro] = useState('');
   const [rua, setRua] = useState('');
   const [numero, setNumero] = useState('');
-  const [estado, setEstado] = useState('');
   const [estadoSearch, setEstadoSearch] = useState('');
-  const [enderecos, setEnderecos] = useState<string[]>([]);
+  const [estadoSelecionado, setEstadoSelecionado] = useState<Estado | null>(null);
 
-  const estados = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará'];
+  const [enderecos, setEnderecos] = useState<Endereco[]>([]);
+  const [estados, setEstados] = useState<Estado[]>([]);
 
   const dropdownButtonRef = useRef<View>(null);
   const [dropdownTop, setDropdownTop] = useState(0);
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
-  const abrirDropdown = () => {
-    dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
-      setDropdownTop(y + height);
-      setDropdownLeft(x);
-      setDropdownWidth(width);
-      setEstadoDropdownVisible(true);
-    });
+  useEffect(() => {
+    const fetchEstados = async () => {
+      try {
+        setLoadingEstados(true);
+        const token = await AsyncStorage.getItem('userToken');
+        const headers = { Authorization: `Bearer ${token}` };
+        const { data } = await api.get('/estados/', { headers });
+        setEstados(data);
+      } catch (error) {
+        console.error('Erro ao buscar estados:', error);
+      } finally {
+        setLoadingEstados(false);
+      }
+    };
+
+    fetchEstados();
+  }, []);
+
+  const alternarDropdown = () => {
+    if (estadoDropdownVisible) {
+      setEstadoDropdownVisible(false);
+    } else {
+      dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
+        setDropdownTop(y + height);
+        setDropdownLeft(x);
+        setDropdownWidth(width);
+        setEstadoDropdownVisible(true);
+      });
+    }
   };
 
-  const adicionarEndereco = () => {
-    if (!bairro || !rua || !numero || !estado) return;
+  const adicionarEndereco = async () => {
+    if (!bairro || !rua || !numero || !estadoSelecionado) return;
 
-    const novo = `${rua}, ${numero}, ${bairro}, ${estado}`;
-    setEnderecos([...enderecos, novo]);
-    setModalVisible(false);
-    setBairro('');
-    setRua('');
-    setNumero('');
-    setEstado('');
-    setEstadoSearch('');
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const payload = {
+        rua,
+        numero: Number(numero),
+        bairro,
+        id_estado: estadoSelecionado.id,
+      };
+
+      const { data } = await api.post('/enderecos/', payload, { headers });
+
+      setEnderecos(prev => [...prev, data]);
+
+      setModalVisible(false);
+      setBairro('');
+      setRua('');
+      setNumero('');
+      setEstadoSearch('');
+      setEstadoSelecionado(null);
+    } catch (error) {
+      console.error('Erro ao adicionar endereço:', error);
+    }
   };
 
   const removerEndereco = (index: number) => {
@@ -74,7 +129,9 @@ export default function Address() {
           {enderecos.map((end, index) => (
             <View key={index} style={styles.enderecoItem}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.enderecoText}>{end}</Text>
+                <Text style={styles.enderecoText}>
+                  {end.rua}, {end.numero}, {end.bairro}, {estados.find(e => e.id === end.id_estado)?.nome}
+                </Text>
               </View>
               <TouchableOpacity onPress={() => removerEndereco(index)}>
                 <Trash width={20} height={20} />
@@ -93,11 +150,7 @@ export default function Address() {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.modalOverlay}>
             <KeyboardAvoidingView behavior="padding" style={styles.modalContent}>
-              {/* Botão de fechar */}
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setModalVisible(false)}
-              >
+              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                 <Close width={20} height={20} />
               </TouchableOpacity>
 
@@ -118,7 +171,7 @@ export default function Address() {
                   onChangeText={setRua}
                 />
                 <TextInput
-                  placeholder="XXX"
+                  placeholder="Nº"
                   style={[styles.input, { flex: 1, marginLeft: 10 }]}
                   value={numero}
                   onChangeText={setNumero}
@@ -129,14 +182,14 @@ export default function Address() {
               <TouchableOpacity
                 ref={dropdownButtonRef}
                 style={styles.dropdownButton}
-                onPress={abrirDropdown}
+                onPress={alternarDropdown}
                 activeOpacity={0.8}
               >
-                <Text style={styles.dropdownText}>{estado || 'Estado'}</Text>
+                <Text style={styles.dropdownText}>
+                  {estadoSelecionado?.nome || 'Estado'}
+                </Text>
                 <ArrowDown
-                  style={{
-                    transform: [{ rotate: estadoDropdownVisible ? '180deg' : '0deg' }],
-                  }}
+                  style={{ transform: [{ rotate: estadoDropdownVisible ? '180deg' : '0deg' }] }}
                   width={16}
                   height={16}
                 />
@@ -150,9 +203,9 @@ export default function Address() {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* Dropdown modal separado */}
+      {/* Dropdown de estados */}
       <Modal visible={estadoDropdownVisible} transparent animationType="fade">
-        <TouchableWithoutFeedback onPress={() => setEstadoDropdownVisible(false)}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.dropdownModalOverlay}>
             <View
               style={[
@@ -164,37 +217,50 @@ export default function Address() {
                 },
               ]}
             >
-              <TextInput
-                style={styles.dropdownSearchInput}
-                placeholder="UF de envio..."
-                placeholderTextColor={themes.colors.textInput}
-                value={estadoSearch}
-                onChangeText={setEstadoSearch}
-                autoFocus
-              />
-              <FlatList
-                data={estados.filter((nome) =>
-                  nome.toLowerCase().includes(estadoSearch.toLowerCase())
-                )}
-                keyExtractor={(item) => item}
-                keyboardShouldPersistTaps="handled"
-                renderItem={({ item }) => (
+              {loadingEstados ? (
+                <ActivityIndicator color={themes.colors.primary} />
+              ) : (
+                <>
+                  <TextInput
+                    style={styles.dropdownSearchInput}
+                    placeholder="UF de envio..."
+                    placeholderTextColor={themes.colors.textInput}
+                    value={estadoSearch}
+                    onChangeText={setEstadoSearch}
+                    autoFocus
+                  />
+                  <FlatList
+                    data={estados.filter((e) =>
+                      e.nome.toLowerCase().includes(estadoSearch.toLowerCase())
+                    )}
+                    keyExtractor={(item) => item.id}
+                    keyboardShouldPersistTaps="handled"
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setEstadoSelecionado(item);
+                          setEstadoDropdownVisible(false); // fecha ao selecionar
+                        }}
+                        style={styles.dropdownItem}
+                      >
+                        <Text style={{ flex: 1 }}>{item.nome}</Text>
+                        <View
+                          style={[
+                            styles.checkbox,
+                            estadoSelecionado?.id === item.id && styles.checkboxSelected,
+                          ]}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  />
                   <TouchableOpacity
-                    onPress={() => {
-                      setEstado(item); // apenas seta, não fecha o modal
-                    }}
-                    style={styles.dropdownItem}
+                    style={[styles.salvarButton, { marginTop: 12 }]}
+                    onPress={() => setEstadoDropdownVisible(false)}
                   >
-                    <Text style={{ flex: 1 }}>{item}</Text>
-                    <View
-                      style={[
-                        styles.checkbox,
-                        estado === item && styles.checkboxSelected,
-                      ]}
-                    />
+                    <Text style={styles.salvarButtonText}>Selecionar</Text>
                   </TouchableOpacity>
-                )}
-              />
+                </>
+              )}
             </View>
           </View>
         </TouchableWithoutFeedback>

@@ -20,13 +20,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.rannyzita.lumyk"
     },
     "web": {
       "favicon": "./src/assets/logo.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "36ff73c6-1e49-4808-a51a-c4e38077297c"
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
   Keyboard,
   FlatList,
   ActivityIndicator,
+  InteractionManager
 } from 'react-native';
 
 import styles from './styles';
@@ -76,11 +77,13 @@ export default function Address() {
     if (estadoDropdownVisible) {
       setEstadoDropdownVisible(false);
     } else {
-      dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
-        setDropdownTop(y + height);
-        setDropdownLeft(x);
-        setDropdownWidth(width);
-        setEstadoDropdownVisible(true);
+      setEstadoDropdownVisible(true);
+      InteractionManager.runAfterInteractions(() => {
+        dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
+          setDropdownTop(y + height);
+          setDropdownLeft(x);
+          setDropdownWidth(width);
+        });
       });
     }
   };
@@ -114,10 +117,34 @@ export default function Address() {
     }
   };
 
-  const removerEndereco = (index: number) => {
-    const copia = [...enderecos];
-    copia.splice(index, 1);
-    setEnderecos(copia);
+  const removerEndereco = async (index: number) => {
+    const enderecoParaRemover = enderecos[index];
+    if (!enderecoParaRemover) return;
+
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      await api.delete(`/enderecos/${enderecoParaRemover.id}`, { headers });
+
+      const copia = [...enderecos];
+      copia.splice(index, 1);
+      setEnderecos(copia);
+    } catch (error) {
+      console.error('Erro ao remover endereço:', error);
+    }
+  };
+
+  // Formata o endereço sem vírgulas extras
+  const formatarEndereco = (end: Endereco) => {
+    const partes = [
+      end.rua?.trim(),
+      end.numero?.toString(),
+      end.bairro?.trim(),
+      estados.find(e => e.id === end.id_estado)?.nome,
+    ].filter(Boolean); // Remove valores falsy (undefined, '', null)
+
+    return partes.join(', ');
   };
 
   return (
@@ -130,7 +157,7 @@ export default function Address() {
             <View key={index} style={styles.enderecoItem}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.enderecoText}>
-                  {end.rua}, {end.numero}, {end.bairro}, {estados.find(e => e.id === end.id_estado)?.nome}
+                  {formatarEndereco(end)}
                 </Text>
               </View>
               <TouchableOpacity onPress={() => removerEndereco(index)}>

@@ -37,7 +37,6 @@ const Tab = createBottomTabNavigator();
 
 import {themes} from '../global/themes';
 
-
 function TabNavigator() {
     return (
         <Tab.Navigator

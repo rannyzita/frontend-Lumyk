@@ -59,7 +59,9 @@ export default function About() {
             <View style={styles.enderecoContainer}>
                 <IconeLocal width={25} height={25} />
                 <Text style={styles.enderecoTexto}>Rua Machado de Assis, 189, Amanhecer</Text>
-                <ArrowLocal width={16} height={16} />
+                <TouchableOpacity>
+                    <ArrowLocal width={20} height={20} onPress={() => navigation.navigate('Address')}/>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.divider} />

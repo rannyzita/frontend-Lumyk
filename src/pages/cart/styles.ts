@@ -152,12 +152,20 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   totalBox: {
-    backgroundColor: '#F5F1FF',
+    position: 'absolute',
+    bottom: -15,
+    left: 10,
+    right: 10,
+    backgroundColor: '#fff',
     padding: 16,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginTop: 40,
+    marginHorizontal: -20,
     borderTopWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 12,
     margin: 16,
+    boxShadow: themes.colors.shadow,
   },
   
   totalInfo: {

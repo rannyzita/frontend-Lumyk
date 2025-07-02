@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import styles from './styles';
 import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
@@ -29,12 +30,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'PaymentBook'>;
+
 interface LivroSelecionado {
   id: string;
   titulo: string;
   foto: string; // url
   quantidade: number;
-  preco: number;
+  preco: number; // preço com desconto se premium
+  precoOriginal?: number; // preço original para cálculo
 }
 
 export default function PaymentBook() {
@@ -48,36 +51,56 @@ export default function PaymentBook() {
   const [paymentError, setPaymentError] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [troco, setTroco] = useState('');
+  const [assinatura, setAssinatura] = useState<'Básica' | 'Premium' | null>(null);
+
   const { autenticarBiometria } = useBiometria();
 
   useEffect(() => {
-
-    const fetchLivros = async () => {
+    const fetchLivrosEAssinatura = async () => {
       try {
         setLoading(true);
-  
+
         const token = await AsyncStorage.getItem('userToken');
         if (!token) {
           console.warn('Token não encontrado');
+          setLoading(false);
           return;
         }
-  
+
         const headers = { Authorization: `Bearer ${token}` };
+
+        // Buscar assinatura
+        const { data: assinaturaData } = await api.get('/assinaturas/', { headers });
+        if (assinaturaData.length > 0) {
+          setAssinatura(assinaturaData[0].tipo_assinatura);
+        } else {
+          setAssinatura(null);
+        }
+
         const livrosData: LivroSelecionado[] = [];
-  
+
         for (const id of selectedBookIds) {
           const { data: itemCarrinho } = await api.get(`/item-carrinho/${id}`, { headers });
           const { data: livro } = await api.get(`/livros/${itemCarrinho.id_livro}`, { headers });
-  
+
+          const precoOriginal = itemCarrinho.preco_unitario;
+          let precoComDesconto = precoOriginal;
+
+          // Aplica desconto 20% só para assinantes Premium
+          if (assinaturaData.length > 0 && assinaturaData[0].tipo_assinatura === 'Premium') {
+            precoComDesconto = +(precoOriginal * 0.8).toFixed(2);
+          }
+
           livrosData.push({
             id: itemCarrinho.id,
             titulo: livro.titulo,
             foto: api.defaults.baseURL + livro.foto,
             quantidade: itemCarrinho.quantidade,
-            preco: itemCarrinho.preco_unitario,
+            preco: precoComDesconto,
+            precoOriginal: precoOriginal,
           });
         }
-  
+
         setLivrosSelecionados(livrosData);
       } catch (error) {
         console.error('Erro ao carregar livros:', JSON.stringify(error, null, 2));
@@ -85,18 +108,34 @@ export default function PaymentBook() {
         setLoading(false);
       }
     };
-  
+
     if (selectedBookIds.length > 0) {
-      fetchLivros();
+      fetchLivrosEAssinatura();
     } else {
       setLivrosSelecionados([]);
       setLoading(false);
     }
   }, [selectedBookIds]);
-  
 
+  // Calcular totais baseado na assinatura
+
+  // Total itens (quantidade somada)
   const totalItens = livrosSelecionados.reduce((acc, livro) => acc + livro.quantidade, 0);
-  const subtotal = livrosSelecionados.reduce((acc, livro) => acc + livro.preco * livro.quantidade, 0);
+
+  // Subtotal sem desconto
+  const subtotalOriginal = livrosSelecionados.reduce(
+    (acc, livro) => acc + (livro.precoOriginal ?? livro.preco) * livro.quantidade,
+    0
+  );
+
+  // Subtotal com desconto (se Premium)
+  const subtotalComDesconto = livrosSelecionados.reduce(
+    (acc, livro) => acc + livro.preco * livro.quantidade,
+    0
+  );
+
+  // Definir frete grátis se assinatura Básica ou Premium
+  const frete = assinatura === 'Básica' || assinatura === 'Premium' ? 0 : 15;
 
   const handleFazerPedido = async () => {
     if (!selectedMethod) {
@@ -113,7 +152,7 @@ export default function PaymentBook() {
 
   if (loading) {
     return (
-      <View style={[styles.container, {justifyContent: 'center', alignItems: 'center'}]}>
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#8000FF" />
       </View>
     );
@@ -121,6 +160,8 @@ export default function PaymentBook() {
 
   return (
     <View style={styles.container}>
+      {/* Mantive seu código UI intacto abaixo */}
+
       <NavigationHeader title="PAGAMENTO" iconArrow={true} />
 
       {/* Endereço */}
@@ -219,18 +260,27 @@ export default function PaymentBook() {
             Quantidade de Itens: <Text style={styles.bold}>{totalItens}</Text>
           </Text>
           <Text style={styles.textoDetalhe}>
-            Total do Frete: <Text style={styles.bold}>R$ 15,00</Text>
+            Total do Frete:{' '}
+            <Text style={styles.bold}>{frete === 0 ? 'Frete grátis' : `R$ ${frete.toFixed(2)}`}</Text>
           </Text>
         </View>
 
         <Text style={styles.textoDetalhe}>
-          Subtotal: <Text style={styles.bold}>R$ {subtotal.toFixed(2)}</Text>
+          Subtotal:{' '}
+          <Text style={styles.bold}>
+            {assinatura === 'Premium'
+              ? subtotalComDesconto.toFixed(2)
+              : subtotalOriginal.toFixed(2)}
+          </Text>
         </Text>
 
         <View style={styles.divider} />
 
         <Text style={styles.totalTexto}>
-          Pagamento Total: <Text style={styles.totalValor}>R$ {(subtotal + 15).toFixed(2)}</Text>
+          Pagamento Total:{' '}
+          <Text style={styles.totalValor}>
+            R$ {(subtotalComDesconto + frete).toFixed(2)}
+          </Text>
         </Text>
 
         {paymentError && (

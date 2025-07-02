@@ -71,10 +71,10 @@ export default function Cart() {
             const bookImage = { uri: api.defaults.baseURL + livro.foto };
             const uniqueKey = `${livro.id}_${item.formato}_${item.tipo}`;
 
-            const precoComDesconto =
-              assinaturaData[0]?.tipo_assinatura === 'Premium'
-                ? item.preco_unitario * 0.8
-                : item.preco_unitario;
+            let precoFinal = item.preco_unitario;
+            if (assinaturaData[0]?.tipo_assinatura === 'Premium') {
+              precoFinal *= 0.8;
+            }
 
             if (livrosMap[uniqueKey]) {
               livrosMap[uniqueKey].quantidade += item.quantidade;
@@ -85,7 +85,7 @@ export default function Cart() {
                 titulo: livro.titulo,
                 autor: livro.autor.nome,
                 tipo: item.tipo,
-                preco: precoComDesconto,
+                preco: precoFinal,
                 foto: bookImage,
                 formato: item.formato,
                 quantidade: item.quantidade,
@@ -183,56 +183,73 @@ export default function Cart() {
     }
   };
 
-  const renderItem = ({ item }: any) => (
-    <View style={styles.card}>
-      <View style={styles.leftColumn}>
-        <Image source={item.foto} style={styles.image} />
-        <View style={styles.qtdContainer}>
-          <TouchableOpacity
-            style={styles.qtdButton}
-            onPress={() => diminuirQuantidade(item.id)}
-          >
-            <Text style={styles.qtdText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.qtdText}>{item.quantidade}</Text>
-          <TouchableOpacity
-            style={styles.qtdButton}
-            onPress={() => aumentarQuantidade(item.id)}
-          >
-            <Text style={styles.qtdText}>+</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.infoContainer}>
-        <View style={styles.topInfo}>
-          <Text style={styles.title}>{item.titulo}</Text>
-          <TouchableOpacity onPress={() => deletarItemDoCarrinho(item.id)}>
-            <TrashIcon width={24} height={24} />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.author}>por {item.autor}</Text>
-        <Text style={styles.type}>{item.tipo}</Text>
-        {item.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
-        <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
-
-        <TouchableOpacity
-          style={styles.checkboxContainer}
-          onPress={() => toggleCheck(item.id)}
-          activeOpacity={0.7}
-        >
-          <View
-            style={[
-              styles.checkbox,
-              item.checked && styles.checkboxChecked,
-            ]}
-          >
-            {item.checked && <View style={styles.checkboxTick} />}
+  const renderItem = ({ item }: any) => {
+    const possuiDesconto = assinatura === 'Premium';
+    const precoOriginal = item.preco / 0.8; // desfaz o desconto
+  
+    return (
+      <View style={styles.card}>
+        <View style={styles.leftColumn}>
+          <Image source={item.foto} style={styles.image} />
+          <View style={styles.qtdContainer}>
+            <TouchableOpacity
+              style={styles.qtdButton}
+              onPress={() => diminuirQuantidade(item.id)}
+            >
+              <Text style={styles.qtdText}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.qtdText}>{item.quantidade}</Text>
+            <TouchableOpacity
+              style={styles.qtdButton}
+              onPress={() => aumentarQuantidade(item.id)}
+            >
+              <Text style={styles.qtdText}>+</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
+  
+        <View style={styles.infoContainer}>
+          <View style={styles.topInfo}>
+            <Text style={styles.title}>{item.titulo}</Text>
+            <TouchableOpacity onPress={() => deletarItemDoCarrinho(item.id)}>
+              <TrashIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.author}>por {item.autor}</Text>
+          <Text style={styles.type}>{item.tipo}</Text>
+          {item.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
+  
+          {possuiDesconto ? (
+            <View style={{ marginTop: 4 }}>
+              <Text style={{ fontSize: 12, color: 'red', textDecorationLine: 'line-through' }}>
+                R$ {precoOriginal.toFixed(2)}
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+                R$ {item.preco.toFixed(2)}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
+          )}
+  
+          <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={() => toggleCheck(item.id)}
+            activeOpacity={0.7}
+          >
+            <View
+              style={[
+                styles.checkbox,
+                item.checked && styles.checkboxChecked,
+              ]}
+            >
+              {item.checked && <View style={styles.checkboxTick} />}
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };  
 
   const subtotal = livros.reduce((total, item) => {
     return item.checked ? total + item.preco * item.quantidade : total;
@@ -242,6 +259,13 @@ export default function Cart() {
     (sum, item) => (item.checked ? sum + item.quantidade : sum),
     0
   );
+
+  const mensagemFrete =
+    assinatura === 'Premium'
+      ? 'Frete grátis e 20% de desconto aplicado!'
+      : assinatura === 'Básica'
+      ? 'Frete grátis para assinantes!'
+      : 'Sem o frete incluído';
 
   return (
     <View style={styles.container}>
@@ -260,31 +284,32 @@ export default function Cart() {
             data={livros}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
-            contentContainerStyle={styles.listContent}
+            contentContainerStyle={{ ...styles.listContent, paddingBottom: 120 }}
           />
         )}
-      </View>
 
-      <View style={styles.totalBox}>
-        <View style={styles.totalInfo}>
-          <Text style={styles.totalLabel}>Subtotal:</Text>
-          <Text style={styles.totalValue}>R$ {subtotal.toFixed(2)}</Text>
+        <View style={styles.totalBox}>
+          <View style={styles.totalInfo}>
+            <Text style={styles.totalLabel}>Subtotal:</Text>
+            <Text style={styles.totalValue}>R$ {subtotal.toFixed(2)}</Text>
+          </View>
+          <Text style={styles.semFrete}>{mensagemFrete}</Text>
+          <TouchableOpacity
+            style={styles.checkoutButton}
+            onPress={() => {
+              const selecionados = livros
+                .filter((livro) => livro.checked)
+                .map((livro) => livro.id);
+              navigation.navigate('PaymentBook', { selectedBookIds: selecionados });
+            }}
+            disabled={totalItensSelecionados === 0}
+          >
+            <Text style={styles.checkoutText}>
+              Fechar pedido ({totalItensSelecionados}{' '}
+              {totalItensSelecionados === 1 ? 'item' : 'itens'})
+            </Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.semFrete}>Sem o frete incluído</Text>
-        <TouchableOpacity
-          style={styles.checkoutButton}
-          onPress={() => {
-            const selecionados = livros
-              .filter((livro) => livro.checked)
-              .map((livro) => livro.id);
-            navigation.navigate('PaymentBook', { selectedBookIds: selecionados });
-          }}
-          disabled={totalItensSelecionados === 0}
-        >
-          <Text style={styles.checkoutText}>
-            Fechar pedido ({totalItensSelecionados} {totalItensSelecionados === 1 ? 'item' : 'itens'})
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

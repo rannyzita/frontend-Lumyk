@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     image: {
-        width: 150,
-        height: 220,
+        width: 130,
+        height: 200,
         resizeMode: 'contain',
         marginVertical: 20,
         borderRadius: 10,

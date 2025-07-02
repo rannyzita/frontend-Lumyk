@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,6 @@ import {
 import styles from './styles';
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import Trash from './assets/Trash.svg';
-import ArrowDown from './assets/arrowdown.svg';
 import Close from './assets/Close.svg';
 import { themes } from '../../global/themes';   
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,7 +37,7 @@ interface Endereco {
 
 export default function Address() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [estadoDropdownVisible, setEstadoDropdownVisible] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [loadingEstados, setLoadingEstados] = useState(false);
 
   const [bairro, setBairro] = useState('');
@@ -73,19 +72,15 @@ export default function Address() {
     fetchEstados();
   }, []);
 
-  const alternarDropdown = () => {
-    if (estadoDropdownVisible) {
-      setEstadoDropdownVisible(false);
-    } else {
-      setEstadoDropdownVisible(true);
-      InteractionManager.runAfterInteractions(() => {
-        dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
-          setDropdownTop(y + height);
-          setDropdownLeft(x);
-          setDropdownWidth(width);
-        });
+  const abrirDropdown = () => {
+    setDropdownVisible(true);
+    InteractionManager.runAfterInteractions(() => {
+      dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
+        setDropdownTop(y + height);
+        setDropdownLeft(x);
+        setDropdownWidth(width);
       });
-    }
+    });
   };
 
   const adicionarEndereco = async () => {
@@ -121,6 +116,7 @@ export default function Address() {
     const enderecoParaRemover = enderecos[index];
     if (!enderecoParaRemover) return;
 
+    console.log(enderecoParaRemover.id)
     try {
       const token = await AsyncStorage.getItem('userToken');
       const headers = { Authorization: `Bearer ${token}` };
@@ -135,14 +131,13 @@ export default function Address() {
     }
   };
 
-  // Formata o endereço sem vírgulas extras
   const formatarEndereco = (end: Endereco) => {
     const partes = [
       end.rua?.trim(),
       end.numero?.toString(),
       end.bairro?.trim(),
       estados.find(e => e.id === end.id_estado)?.nome,
-    ].filter(Boolean); // Remove valores falsy (undefined, '', null)
+    ].filter(Boolean);
 
     return partes.join(', ');
   };
@@ -150,7 +145,7 @@ export default function Address() {
   return (
     <>
       <ScrollView contentContainerStyle={{ ...styles.container, flexGrow: 1 }}>
-        <NavigationHeader title="MEU ENDEREÇO E ESTADO" iconArrow={true} />
+        <NavigationHeader title="ENDEREÇOS" iconArrow={true} />
 
         <View style={{ width: '90%', marginTop: 20 }}>
           {enderecos.map((end, index) => (
@@ -174,9 +169,9 @@ export default function Address() {
 
       {/* Modal principal */}
       <Modal visible={modalVisible} transparent animationType="fade">
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={styles.modalOverlay}>
-            <KeyboardAvoidingView behavior="padding" style={styles.modalContent}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView behavior="padding" style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
               <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                 <Close width={20} height={20} />
               </TouchableOpacity>
@@ -209,32 +204,27 @@ export default function Address() {
               <TouchableOpacity
                 ref={dropdownButtonRef}
                 style={styles.dropdownButton}
-                onPress={alternarDropdown}
+                onPress={abrirDropdown}
                 activeOpacity={0.8}
               >
                 <Text style={styles.dropdownText}>
                   {estadoSelecionado?.nome || 'Estado'}
                 </Text>
-                <ArrowDown
-                  style={{ transform: [{ rotate: estadoDropdownVisible ? '180deg' : '0deg' }] }}
-                  width={16}
-                  height={16}
-                />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.salvarButton} onPress={adicionarEndereco}>
                 <Text style={styles.salvarButtonText}>Salvar</Text>
               </TouchableOpacity>
-            </KeyboardAvoidingView>
-          </View>
+            </View>
+          </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* Dropdown de estados */}
-      <Modal visible={estadoDropdownVisible} transparent animationType="fade">
+      {/* Modal para o Dropdown de estados */}
+      <Modal visible={dropdownVisible} transparent animationType="fade">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.dropdownModalOverlay}>
-            <View
+            <View 
               style={[
                 styles.dropdownModalContent,
                 {
@@ -244,6 +234,13 @@ export default function Address() {
                 },
               ]}
             >
+              {/* Botão de fechar (X) no topo */}
+              <View style={{ alignItems: 'flex-end' }}>
+                <TouchableOpacity onPress={() => setDropdownVisible(false)}>
+                  <Text style={{ fontSize: 16, color: '#999', marginBottom: 5 }}>X</Text>
+                </TouchableOpacity>
+              </View>
+
               {loadingEstados ? (
                 <ActivityIndicator color={themes.colors.primary} />
               ) : (
@@ -253,7 +250,10 @@ export default function Address() {
                     placeholder="UF de envio..."
                     placeholderTextColor={themes.colors.textInput}
                     value={estadoSearch}
-                    onChangeText={setEstadoSearch}
+                    onChangeText={(text) => {
+                      setEstadoSearch(text);
+                      setEstadoSelecionado(null);
+                    }}
                     autoFocus
                   />
                   <FlatList
@@ -266,7 +266,8 @@ export default function Address() {
                       <TouchableOpacity
                         onPress={() => {
                           setEstadoSelecionado(item);
-                          setEstadoDropdownVisible(false); // fecha ao selecionar
+                          setEstadoSearch(item.nome);
+                          setDropdownVisible(false);
                         }}
                         style={styles.dropdownItem}
                       >
@@ -282,7 +283,7 @@ export default function Address() {
                   />
                   <TouchableOpacity
                     style={[styles.salvarButton, { marginTop: 12 }]}
-                    onPress={() => setEstadoDropdownVisible(false)}
+                    onPress={() => setDropdownVisible(false)}
                   >
                     <Text style={styles.salvarButtonText}>Selecionar</Text>
                   </TouchableOpacity>

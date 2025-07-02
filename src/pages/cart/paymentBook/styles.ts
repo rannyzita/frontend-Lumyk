@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
     botaoContainer: {
         alignItems: 'center',
-        marginTop: 50,
+        marginTop: 20,
     },
     paymentOption: {
         flexDirection: 'row',

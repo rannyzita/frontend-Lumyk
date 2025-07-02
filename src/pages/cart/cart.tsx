@@ -45,8 +45,23 @@ export default function Cart() {
         try {
           setLoading(true);
           const token = await AsyncStorage.getItem('userToken');
-          const idCarrinho = await AsyncStorage.getItem('idCarrinho');
-          if (!token || !idCarrinho) return;
+          let idCarrinho = await AsyncStorage.getItem('idCarrinho');
+
+          if (!idCarrinho) {
+            const { data: carrinhoData } = await api.get('/carrinhos', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          
+            if (carrinhoData.length > 0) {
+              idCarrinho = carrinhoData[0].id;
+              await AsyncStorage.setItem('idCarrinho', idCarrinho!);
+            } else {
+              console.warn('Nenhum carrinho encontrado para este usuário.');
+              return;
+            }
+          }
+
+          if (!token) return;
 
           const { data: itensCarrinho } = await api.get(
             `/item-carrinho/carrinho/${idCarrinho}`,

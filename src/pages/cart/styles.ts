@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   
   loading: {
     position: 'absolute',
-    top: '40%',
+    top: '30%',
     left: '50%',
     transform: [{ translateX: -20 }, { translateY: 75 }],
     zIndex: 10,

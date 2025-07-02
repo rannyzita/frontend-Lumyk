@@ -4,7 +4,7 @@
     "slug": "lumyk-app-v2",
     "scheme": "lumyk",
     "version": "1.0.0",
-    "owner": "rannyzita",
+    "owner": "clarazita",
     "orientation": "portrait",
     "sdkVersion": "53.0.0",
     "icon": "./src/assets/logo.png",
@@ -34,16 +34,17 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "buildToolsVersion": "34.0.0"
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "minSdkVersion": 24
           }
         }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "a6ecced5-ae98-46cd-a178-d0999fea09f0"
+        "projectId": "310c9482-73d7-4111-93dc-93c29ef9833b"
       }
     }
   }

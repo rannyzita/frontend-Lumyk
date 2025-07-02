@@ -11,8 +11,9 @@ const styles = StyleSheet.create({
   adicionarTexto: {
     color: '#A45EFF',
     fontWeight: '600',
-    marginTop: 20,
     textAlign: 'center',
+    marginTop: -15,
+    textDecorationLine: 'underline',
   },
   enderecoItem: {
     flexDirection: 'row',
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     color: '#333',
     flexWrap: 'wrap',
     flex: 1,
+    marginTop: 5,
     marginRight: 12,
   },
   modalOverlay: {
@@ -125,8 +127,14 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   checkboxSelected: {
-    backgroundColor: themes.colors.primary,
     borderColor: themes.colors.primary,
+    backgroundColor: themes.colors.primary
+  },
+  checkboxSelectedInner: {
+    width: 8,
+    height: 8,
+    borderRadius: 999,
+    backgroundColor: themes.colors.primary,
   },
   salvarButton: {
     backgroundColor: themes.colors.primary,
@@ -138,6 +146,18 @@ const styles = StyleSheet.create({
   salvarButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  line: {
+    flex:1,
+    height: 2,
+    backgroundColor: themes.colors.purpleDark,
+  },
+  separatorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical:5,
+      marginTop: 10,
+      marginBottom: 20,
   },
 });
 

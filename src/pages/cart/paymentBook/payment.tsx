@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
-
+import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -40,6 +40,19 @@ interface LivroSelecionado {
   precoOriginal?: number; // preço original para cálculo
 }
 
+interface Endereco {
+  id: string;
+  rua: string;
+  bairro: string;
+  numero: string;
+  id_estado: string;
+}
+
+interface Estado {
+  id: string;
+  nome: string;
+}
+
 export default function PaymentBook() {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
@@ -53,7 +66,66 @@ export default function PaymentBook() {
   const [troco, setTroco] = useState('');
   const [assinatura, setAssinatura] = useState<'Básica' | 'Premium' | null>(null);
 
+  const [enderecoSelecionado, setEnderecoSelecionado] = useState<Endereco | null>(null);
+  const [estados, setEstados] = useState<Estado[]>([]);
+
   const { autenticarBiometria } = useBiometria();
+
+  useEffect(() => {
+    const fetchEstados = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        const headers = { Authorization: `Bearer ${token}` };
+        const { data } = await api.get('/estados/', { headers });
+        setEstados(data);
+      } catch (error) {
+        console.error('Erro ao buscar estados:', error);
+      }
+    };
+
+    fetchEstados();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const carregarEnderecoSelecionado = async () => {
+        try {
+          const idSalvo = await AsyncStorage.getItem('enderecoSelecionadoId');
+          if (!idSalvo) {
+            setEnderecoSelecionado(null);
+            return;
+          }
+  
+          const token = await AsyncStorage.getItem('userToken');
+          if (!token) {
+            setEnderecoSelecionado(null);
+            return;
+          }
+  
+          const headers = { Authorization: `Bearer ${token}` };
+          const { data } = await api.get(`/enderecos/${idSalvo}`, { headers });
+  
+          setEnderecoSelecionado(data);
+        } catch (error) {
+          console.error('Erro ao carregar endereço selecionado:', error);
+        }
+      };
+  
+      carregarEnderecoSelecionado();
+    }, [])
+  );
+
+  const formatarEndereco = (end: Endereco) => {
+    if (!end) return '';
+    const nomeEstado = estados.find((e) => e.id === end.id_estado)?.nome || '';
+    const partes = [
+      end.rua?.trim(),
+      end.numero?.toString(),
+      end.bairro?.trim(),
+      nomeEstado,
+    ].filter(Boolean);
+    return partes.join(', ');
+  };
 
   useEffect(() => {
     const fetchLivrosEAssinatura = async () => {
@@ -193,7 +265,9 @@ export default function PaymentBook() {
       {/* Endereço */}
       <View style={styles.enderecoContainer}>
         <IconeLocal width={25} height={25} />
-        <Text style={styles.enderecoTexto}>Rua Machado de Assis, 189, Amanhecer</Text>
+        <Text style={styles.enderecoTexto}>{enderecoSelecionado
+            ? formatarEndereco(enderecoSelecionado)
+            : 'Selecione um endereço padrão'}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Address')}>
           <ArrowLocal width={20} height={20} />
         </TouchableOpacity>

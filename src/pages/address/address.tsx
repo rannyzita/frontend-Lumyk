@@ -98,6 +98,21 @@ export default function Address() {
     fetchEnderecos();
   }, []);
 
+  useEffect(() => {
+    const carregarEnderecoSelecionadoId = async () => {
+      try {
+        const idSalvo = await AsyncStorage.getItem('enderecoSelecionadoId');
+        if (idSalvo) {
+          setEnderecoPrioritarioId(idSalvo);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar endereço selecionado:', error);
+      }
+    };
+  
+    carregarEnderecoSelecionadoId();
+  }, []);
+
   const abrirDropdown = () => {
     setDropdownVisible(true);
     InteractionManager.runAfterInteractions(() => {
@@ -171,31 +186,29 @@ export default function Address() {
     return partes.join(', ');
   };
 
-  const selecionarEnderecoPrioritario = (id: string) => {
+  const selecionarEnderecoPrioritario = async (id: string) => {
     setEnderecoPrioritarioId(id);
-  };
-
-  // quando voltar, envia o endereço selecionado
-  const handleVoltar = () => {
-    if (enderecoPrioritarioId) {
-      const enderecoPrioritario = enderecos.find((e) => e.id === enderecoPrioritarioId);
-      if (route.params?.onEnderecoSelecionado && enderecoPrioritario) {
-        route.params.onEnderecoSelecionado(enderecoPrioritario);
-      }
+    try {
+      await AsyncStorage.setItem('enderecoSelecionadoId', id);
+    } catch (error) {
+      console.error('Erro ao salvar endereço selecionado:', error);
     }
-    navigation.goBack();
-  };
+  };  
 
   return (
     <>
       <ScrollView contentContainerStyle={{ ...styles.container, flexGrow: 1 }}>
-        <NavigationHeader title="ENDEREÇOS" iconArrow={true} onBack={handleVoltar} />
+        <NavigationHeader title="ENDEREÇOS" iconArrow={true} />
 
         <View style={{ width: '90%', marginTop: 20 }}>
           {loadingEnderecos ? (
             <ActivityIndicator color={themes.colors.primary} />
           ) : (
             <>
+            <Text style={{color: themes.colors.purpleDark}}>Selecione um endereço padrão:</Text>
+            <View style={styles.separatorContainer}>
+                <View style={styles.line} />
+            </View>
               {enderecos.length === 0 ? (
                 <Text style={{ color: '#999', fontStyle: 'italic' }}>Nenhum endereço cadastrado.</Text>
               ) : (
@@ -219,6 +232,9 @@ export default function Address() {
                   </View>
                 ))
               )}
+              <View style={styles.separatorContainer}>
+                <View style={styles.line} />
+              </View>
               <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginTop: 15 }}>
                 <Text style={styles.adicionarTexto}>Adicionar Endereço</Text>
               </TouchableOpacity>
@@ -332,12 +348,9 @@ export default function Address() {
                         style={styles.dropdownItem}
                       >
                         <Text style={{ flex: 1 }}>{item.nome}</Text>
-                        <View
-                          style={[
-                            styles.checkbox,
-                            estadoSelecionado?.id === item.id && styles.checkboxSelected,
-                          ]}
-                        />
+                        <View style={styles.checkbox}>
+                          {estadoSelecionado?.id === item.id && <View style={styles.checkboxSelectedInner} />}
+                        </View>
                       </TouchableOpacity>
                     )}
                   />

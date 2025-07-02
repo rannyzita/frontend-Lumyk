@@ -129,12 +129,6 @@ export default function LoginScreen() {
                                     <Text style={styles.textBottomClickHere}> Clique aqui</Text>
                                 </TouchableOpacity>
                             </View>
-
-                            <View style={styles.separatorContainer}>
-                                <View style={styles.line} />
-                                <Text style={styles.separatorText}>     Ou     </Text>
-                                <View style={styles.line} />
-                            </View>
                         </View>
                     </View>
 

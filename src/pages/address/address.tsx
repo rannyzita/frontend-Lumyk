@@ -11,16 +11,18 @@ import {
   Keyboard,
   FlatList,
   ActivityIndicator,
-  InteractionManager
+  InteractionManager,
 } from 'react-native';
 
 import styles from './styles';
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import Trash from './assets/Trash.svg';
 import Close from './assets/Close.svg';
-import { themes } from '../../global/themes';   
+import { themes } from '../../global/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
+
+import { useNavigation } from '@react-navigation/native';
 
 interface Estado {
   id: string;
@@ -36,9 +38,12 @@ interface Endereco {
 }
 
 export default function Address() {
+  const navigation = useNavigation();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [loadingEstados, setLoadingEstados] = useState(false);
+  const [loadingEnderecos, setLoadingEnderecos] = useState(false);
 
   const [bairro, setBairro] = useState('');
   const [rua, setRua] = useState('');
@@ -49,11 +54,15 @@ export default function Address() {
   const [enderecos, setEnderecos] = useState<Endereco[]>([]);
   const [estados, setEstados] = useState<Estado[]>([]);
 
+  // Endereço prioritário (id do endereço)
+  const [enderecoPrioritarioId, setEnderecoPrioritarioId] = useState<string | null>(null);
+
   const dropdownButtonRef = useRef<View>(null);
   const [dropdownTop, setDropdownTop] = useState(0);
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
+  // Buscar estados (UFs)
   useEffect(() => {
     const fetchEstados = async () => {
       try {
@@ -72,6 +81,31 @@ export default function Address() {
     fetchEstados();
   }, []);
 
+  // Buscar endereços cadastrados ao abrir a tela
+  useEffect(() => {
+    const fetchEnderecos = async () => {
+      try {
+        setLoadingEnderecos(true);
+        const token = await AsyncStorage.getItem('userToken');
+        const headers = { Authorization: `Bearer ${token}` };
+        const { data } = await api.get('/enderecos/', { headers });
+
+        setEnderecos(data);
+
+        // Caso queira setar algum endereço como prioritário por padrão (opcional):
+        // Se algum endereço tem flag prioritário, setEnderecoprioritarioId com o id dele
+        // Aqui, como não tem essa informação, deixo null.
+      } catch (error) {
+        console.error('Erro ao buscar endereços:', error);
+      } finally {
+        setLoadingEnderecos(false);
+      }
+    };
+
+    fetchEnderecos();
+  }, []);
+
+  // Ao abrir dropdown, medir posição para posicionar modal
   const abrirDropdown = () => {
     setDropdownVisible(true);
     InteractionManager.runAfterInteractions(() => {
@@ -83,6 +117,7 @@ export default function Address() {
     });
   };
 
+  // Adicionar novo endereço
   const adicionarEndereco = async () => {
     if (!bairro || !rua || !numero || !estadoSelecionado) return;
 
@@ -99,7 +134,7 @@ export default function Address() {
 
       const { data } = await api.post('/enderecos/', payload, { headers });
 
-      setEnderecos(prev => [...prev, data]);
+      setEnderecos((prev) => [...prev, data]);
 
       setModalVisible(false);
       setBairro('');
@@ -112,11 +147,11 @@ export default function Address() {
     }
   };
 
+  // Remover endereço
   const removerEndereco = async (index: number) => {
     const enderecoParaRemover = enderecos[index];
     if (!enderecoParaRemover) return;
 
-    console.log(enderecoParaRemover.id)
     try {
       const token = await AsyncStorage.getItem('userToken');
       const headers = { Authorization: `Bearer ${token}` };
@@ -126,20 +161,44 @@ export default function Address() {
       const copia = [...enderecos];
       copia.splice(index, 1);
       setEnderecos(copia);
+
+      // Se o endereço removido era o prioritário, resetar o prioritário
+      if (enderecoPrioritarioId === enderecoParaRemover.id) {
+        setEnderecoPrioritarioId(null);
+      }
     } catch (error) {
       console.error('Erro ao remover endereço:', error);
     }
   };
 
+  // Formatar endereço para exibição
   const formatarEndereco = (end: Endereco) => {
     const partes = [
       end.rua?.trim(),
       end.numero?.toString(),
       end.bairro?.trim(),
-      estados.find(e => e.id === end.id_estado)?.nome,
+      estados.find((e) => e.id === end.id_estado)?.nome,
     ].filter(Boolean);
 
     return partes.join(', ');
+  };
+
+  // Marcar endereço como prioritário
+  const selecionarEnderecoPrioritario = (id: string) => {
+    setEnderecoPrioritarioId(id);
+  };
+
+  // Enviar endereço prioritário para outra tela (exemplo)
+  const irParaOutraTelaComEndereco = () => {
+    if (!enderecoPrioritarioId) {
+      alert('Selecione um endereço prioritário antes.');
+      return;
+    }
+
+    const enderecoPrioritario = enderecos.find((e) => e.id === enderecoPrioritarioId);
+    if (!enderecoPrioritario) return;
+
+    // navigation.navigate('OutraTela', { enderecoPrioritario });
   };
 
   return (
@@ -148,27 +207,58 @@ export default function Address() {
         <NavigationHeader title="ENDEREÇOS" iconArrow={true} />
 
         <View style={{ width: '90%', marginTop: 20 }}>
-          {enderecos.map((end, index) => (
-            <View key={index} style={styles.enderecoItem}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.enderecoText}>
-                  {formatarEndereco(end)}
-                </Text>
-              </View>
-              <TouchableOpacity onPress={() => removerEndereco(index)}>
-                <Trash width={20} height={20} />
-              </TouchableOpacity>
-            </View>
-          ))}
+          {loadingEnderecos ? (
+            <ActivityIndicator color={themes.colors.primary} />
+          ) : (
+            <>
+              {enderecos.length === 0 ? (
+                <Text style={{ color: '#999', fontStyle: 'italic' }}>Nenhum endereço cadastrado.</Text>
+              ) : (
+                enderecos.map((end, index) => (
+                  <View key={end.id} style={styles.enderecoItem}>
+                    {/* Checkbox para selecionar prioritário */}
+                    <TouchableOpacity
+                      onPress={() => selecionarEnderecoPrioritario(end.id)}
+                      style={[
+                        styles.checkbox,
+                        enderecoPrioritarioId === end.id && styles.checkboxSelected,
+                      ]}
+                    />
+                    <View style={{ flex: 1, marginLeft: 10 }}>
+                      <Text style={styles.enderecoText}>{formatarEndereco(end)}</Text>
+                    </View>
 
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text style={styles.adicionarTexto}>Adicionar Endereço</Text>
-          </TouchableOpacity>
+                    {/* Botão para enviar endereço prioritário para outra tela */}
+                    <TouchableOpacity
+                      onPress={irParaOutraTelaComEndereco}
+                      style={{
+                        paddingHorizontal: 8,
+                        paddingVertical: 4,
+                        backgroundColor: themes.colors.primary,
+                        borderRadius: 4,
+                        marginRight: 10,
+                      }}
+                    >
+                      <Text style={{ color: 'white' }}>→</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => removerEndereco(index)}>
+                      <Trash width={20} height={20} />
+                    </TouchableOpacity>
+                  </View>
+                ))
+              )}
+
+              <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginTop: 15 }}>
+                <Text style={styles.adicionarTexto}>Adicionar Endereço</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </ScrollView>
 
-      {/* Modal principal */}
-      <Modal visible={modalVisible} transparent animationType="fade">
+      {/* Modal principal para adicionar endereço */}
+      <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView behavior="padding" style={styles.modalOverlay}>
             <View style={styles.modalContent}>
@@ -221,10 +311,10 @@ export default function Address() {
       </Modal>
 
       {/* Modal para o Dropdown de estados */}
-      <Modal visible={dropdownVisible} transparent animationType="fade">
+      <Modal visible={dropdownVisible} transparent animationType="fade" onRequestClose={() => setDropdownVisible(false)}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.dropdownModalOverlay}>
-            <View 
+            <View
               style={[
                 styles.dropdownModalContent,
                 {
@@ -234,10 +324,10 @@ export default function Address() {
                 },
               ]}
             >
-              {/* Botão de fechar (X) no topo */}
+              {/* Botão de fechar (X) preto no topo, padronizado */}
               <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity onPress={() => setDropdownVisible(false)}>
-                  <Text style={{ fontSize: 16, color: '#999', marginBottom: 5 }}>X</Text>
+                  <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', marginBottom: 5 }}>X</Text>
                 </TouchableOpacity>
               </View>
 

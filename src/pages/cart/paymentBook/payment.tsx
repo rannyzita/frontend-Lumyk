@@ -142,21 +142,47 @@ export default function PaymentBook() {
       setPaymentError(true);
       return;
     }
-
+  
     const sucesso = await autenticarBiometria();
     if (!sucesso) return;
-
-    setPaymentError(false);
-    navigation.navigate('QrCode', { id: '3' });
-  };
-
-  if (loading) {
-    return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#8000FF" />
-      </View>
-    );
-  }
+  
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        console.warn('Token não encontrado');
+        return;
+      }
+  
+      const headers = { Authorization: `Bearer ${token}` };
+  
+      // Criar pedido (POST /pedidos)
+      const { data: pedidoCriado } = await api.post('/pedidos', {}, { headers });
+      const idPedido = pedidoCriado.id;
+  
+      // Para cada livro, adicionar item ao pedido
+      for (const livro of livrosSelecionados) {
+        const payloadItemPedido = {
+          id_pedido: idPedido,
+          id_livro: livro.id,
+          preco_unitario: livro.preco,
+          quantidade: livro.quantidade,
+          formato: "físico", 
+          tipo: "compra"
+        };
+  
+        await api.post('/item-pedido', payloadItemPedido, { headers });
+  
+        // Remover item do carrinho
+        await api.delete(`/item-carrinho/${livro.id}`, { headers });
+      }
+  
+      setPaymentError(false);
+      navigation.navigate('QrCode', { id: idPedido });
+  
+    } catch (error) {
+      console.error('Erro ao finalizar pedido:', error);
+    }
+  };  
 
   return (
     <View style={styles.container}>

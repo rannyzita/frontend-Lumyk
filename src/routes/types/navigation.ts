@@ -1,3 +1,11 @@
+interface Endereco {
+    id: string;
+    rua: string;
+    bairro: string;
+    numero: string;
+    id_estado: string;
+}
+
 export type RootStackParamList = {
     Login: undefined;
     Main: undefined;
@@ -12,7 +20,12 @@ export type RootStackParamList = {
     AccountDeleting: undefined;
     AccountDeleted: undefined;
     PaymentSubscription: { id: string};
-    QrCode: {id: string};
+    QrCode: {
+        selectedBookIds: string[];
+        formaPagamento: 'pix' | 'dinheiro';
+        enderecoSelecionado: Endereco;
+        valorTotal: number;
+    };
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };
     PaymentBook: { selectedBookIds: string[] };

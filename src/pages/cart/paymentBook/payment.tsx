@@ -217,42 +217,22 @@ export default function PaymentBook() {
   
     const sucesso = await autenticarBiometria();
     if (!sucesso) return;
-  
+    
+    if (!enderecoSelecionado) {
+      // Mostre uma mensagem de erro ou bloqueie a navegação
+      console.warn('Endereço não selecionado!');
+      return;
+    }
+    console.log(selectedBookIds)
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      if (!token) {
-        console.warn('Token não encontrado');
-        return;
-      }
-  
-      const headers = { Authorization: `Bearer ${token}` };
-  
-      // Criar pedido (POST /pedidos)
-      const { data: pedidoCriado } = await api.post('/pedidos', {}, { headers });
-      const idPedido = pedidoCriado.id;
-  
-      // Para cada livro, adicionar item ao pedido
-      for (const livro of livrosSelecionados) {
-        const payloadItemPedido = {
-          id_pedido: idPedido,
-          id_livro: livro.id,
-          preco_unitario: livro.preco,
-          quantidade: livro.quantidade,
-          formato: "físico", 
-          tipo: "compra"
-        };
-  
-        await api.post('/item-pedido', payloadItemPedido, { headers });
-  
-        // Remover item do carrinho
-        await api.delete(`/item-carrinho/${livro.id}`, { headers });
-      }
-  
-      setPaymentError(false);
-      navigation.navigate('QrCode', { id: idPedido });
-  
+      navigation.navigate('QrCode', {
+        selectedBookIds,
+        formaPagamento: selectedMethod,
+        enderecoSelecionado,
+        valorTotal: subtotalComDesconto + frete,
+      });
     } catch (error) {
-      console.error('Erro ao finalizar pedido:', error);
+      console.error('Erro ao iniciar pagamento:', error);
     }
   };  
 

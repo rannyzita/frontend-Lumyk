@@ -11,8 +11,6 @@ import {
 
 import styles from './styles';
 import Logo from '../../assets/logo.svg';
-import Google from '../../assets/google-37 1.svg';
-import Facebook from '../../assets/facebook.svg';
 import { themes } from '../../global/themes';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button/button';
@@ -136,32 +134,6 @@ export default function LoginScreen() {
                                 <View style={styles.line} />
                                 <Text style={styles.separatorText}>     Ou     </Text>
                                 <View style={styles.line} />
-                            </View>
-
-                            <View style={styles.buttonLogin}>
-                                <TouchableOpacity style={styles.socialButtonGoogle}>
-                                    <View style={styles.iconWrapper}>
-                                        <Google />
-                                    </View>
-
-                                    <View style={styles.textWrapper}>
-                                        <Text style={[styles.socialText, { color: '#000' }]}>
-                                            Entrar com o Google
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.socialButtonFacebook}>
-                                    <View style={styles.iconWrapper}>
-                                        <Facebook />
-                                    </View>
-
-                                    <View style={styles.textWrapper}>
-                                        <Text style={[styles.socialText, { color: '#fff' }]}>
-                                            Entrar com o Facebook
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>

@@ -241,6 +241,18 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     transform: [{ rotate: '-45deg' }],
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: themes.colors.purpleDark,
+    textAlign: 'center',
+    marginTop: -60
+  },
   
 });
 

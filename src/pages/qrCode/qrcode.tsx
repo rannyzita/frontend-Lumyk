@@ -18,37 +18,37 @@ import api from '../../../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RouteParamsAssinatura = {
-  id: string;
+    id: string;
 };
 
 type RouteParamsLivro = {
-  selectedBookIds: string[];
-  formaPagamento: 'pix' | 'dinheiro';
-  enderecoSelecionado: {
-    id: string;
-    rua: string;
-    bairro: string;
-    numero: string;
-    id_estado: string;
-  };
-  valorTotal: number;
+    selectedBookIds: string[];
+    formaPagamento: 'pix' | 'dinheiro';
+    enderecoSelecionado: {
+        id: string;
+        rua: string;
+        bairro: string;
+        numero: string;
+        id_estado: string;
+    };
+    valorTotal: number;
 };
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export default function QrCode() {
-  const pixCode = 'b6f8e2c1-1234-4f9a-b234-9a9c1df...';
-  const [showModal, setShowModal] = useState(false);
-    const { getTokenAndUserId } = useAuthStorage();
-  const route = useRoute();
-  const navigation = useNavigation<NavigationProps>();
+    const pixCode = 'b6f8e2c1-1234-4f9a-b234-9a9c1df...';
+    const [showModal, setShowModal] = useState(false);
+        const { getTokenAndUserId } = useAuthStorage();
+    const route = useRoute();
+    const navigation = useNavigation<NavigationProps>();
 
-  const idAssinatura = (route.params as RouteParamsAssinatura)?.id;
+    const idAssinatura = (route.params as RouteParamsAssinatura)?.id;
 
-  const isAssinatura = ['1', '2', '3'].includes(idAssinatura ?? '');
+    const isAssinatura = ['1', '2', '3'].includes(idAssinatura ?? '');
 
-  const tipoAssinatura = idAssinatura === '1' ? 'Básica' : 'Premium';
-  const precoAssinatura = idAssinatura === '1' ? 15.90 : 29.99;
+    const tipoAssinatura = idAssinatura === '1' ? 'Básica' : 'Premium';
+    const precoAssinatura = idAssinatura === '1' ? 15.90 : 29.99;
 
   // 📲 Criar assinatura
   const criarAssinatura = async () => {

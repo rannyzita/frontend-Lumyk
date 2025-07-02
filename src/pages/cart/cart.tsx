@@ -290,18 +290,23 @@ export default function Cart() {
       </View>
 
       <View style={{ flex: 1, position: 'relative' }}>
-        {loading ? (
-          <View style={styles.loading}>
-            <ActivityIndicator size="large" color="#8000FF" />
-          </View>
-        ) : (
-          <FlatList
-            data={livros}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            contentContainerStyle={{ ...styles.listContent, paddingBottom: 120 }}
-          />
-        )}
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#8000FF" />
+        </View>
+      ) : livros.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Seu carrinho está vazio.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={livros}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={{ ...styles.listContent, paddingBottom: 120 }}
+        />
+      )}
+
 
         <View style={styles.totalBox}>
           <View style={styles.totalInfo}>

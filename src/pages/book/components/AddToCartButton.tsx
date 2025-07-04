@@ -4,7 +4,7 @@ import styles from '../styles';
 
 interface Props {
     disabled: boolean;
-    onPress: () => void;
+    onPress?: () => void;
 }
 
 export function AddToCartButton({ disabled, onPress }: Props) {

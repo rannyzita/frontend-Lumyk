@@ -17,6 +17,8 @@ import { RootStackParamList } from '../../routes/types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
 
+import { handleAdicionarCarrinho } from './logic/handleAdicionarCarrinho';
+
 import styles from './styles';
 
 type RouteParams = {
@@ -132,77 +134,77 @@ export default function Book() {
         return formatPrice(parseFloat(precoFinal.toFixed(2)));
     };
 
-    const handleAdicionarCarrinho = async () => {
-        try {
-            const token = await AsyncStorage.getItem('userToken');
-            let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
+//     const handleAdicionarCarrinho = async () => {
+//         try {
+//             const token = await AsyncStorage.getItem('userToken');
+//             let idCarrinho: string | null = await AsyncStorage.getItem('idCarrinho');
 
-            if (!token) {
-                console.warn('Usuário não autenticado.');
-                return;
-            }
+//             if (!token) {
+//                 console.warn('Usuário não autenticado.');
+//                 return;
+//             }
 
-            if (!idCarrinho) {
-                await api.post('/carrinhos/', {}, {
-                    headers: { Authorization: `Bearer ${token}` },
-            });
+//             if (!idCarrinho) {
+//                 await api.post('/carrinhos/', {}, {
+//                     headers: { Authorization: `Bearer ${token}` },
+//             });
 
-            const responseId = await api.get('/carrinhos/', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+//             const responseId = await api.get('/carrinhos/', {
+//                 headers: { Authorization: `Bearer ${token}` },
+//             });
 
-            const carrinho = responseId.data?.[0];
-            if (carrinho?.id) {
-                idCarrinho = carrinho.id;
-                await AsyncStorage.setItem('idCarrinho', idCarrinho!);
-            } else {
-                console.warn('Carrinho criado, mas não encontrado com GET');
-            return;
-            }
-        }
+//             const carrinho = responseId.data?.[0];
+//             if (carrinho?.id) {
+//                 idCarrinho = carrinho.id;
+//                 await AsyncStorage.setItem('idCarrinho', idCarrinho!);
+//             } else {
+//                 console.warn('Carrinho criado, mas não encontrado com GET');
+//             return;
+//             }
+//         }
 
-        const assinaturaRes = await api.get('/assinaturas/', {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+//         const assinaturaRes = await api.get('/assinaturas/', {
+//             headers: { Authorization: `Bearer ${token}` },
+//         });
 
-        const assinaturaTipo = assinaturaRes.data?.[0]?.tipo_assinatura ?? null;
+//         const assinaturaTipo = assinaturaRes.data?.[0]?.tipo_assinatura ?? null;
 
-        const precoOriginal = parseFloat(bookData.preco);
-        let preco_unitario = precoOriginal;
+//         const precoOriginal = parseFloat(bookData.preco);
+//         let preco_unitario = precoOriginal;
 
-        if (selectedFormat === 'fisico') {
-            if (selectedCover === 'Capa Dura') {
-                preco_unitario *= 1.3;
-            } else if (selectedCover === 'Capa Comum') {
-                preco_unitario *= 1.15;
-            }
+//         if (selectedFormat === 'fisico') {
+//             if (selectedCover === 'Capa Dura') {
+//                 preco_unitario *= 1.3;
+//             } else if (selectedCover === 'Capa Comum') {
+//                 preco_unitario *= 1.15;
+//             }
 
-            if (assinaturaTipo === 'Premium') {
-                preco_unitario *= 0.8;
-            }
-        } else {
-            if (assinaturaTipo === 'Premium') {
-                preco_unitario *= 0.8;
-            }
-        }
+//             if (assinaturaTipo === 'Premium') {
+//                 preco_unitario *= 0.8;
+//             }
+//         } else {
+//             if (assinaturaTipo === 'Premium') {
+//                 preco_unitario *= 0.8;
+//             }
+//         }
 
-        await api.post('/item-carrinho/', {
-            id_carrinho: idCarrinho,
-            id_livro: bookId,
-            quantidade: 1,
-            preco_unitario: parseFloat(preco_unitario.toFixed(2)),
-            formato: selectedFormat,
-            tipo: selectedFormat === 'fisico' ? selectedCover : null
-        }, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+//         await api.post('/item-carrinho/', {
+//             id_carrinho: idCarrinho,
+//             id_livro: bookId,
+//             quantidade: 1,
+//             preco_unitario: parseFloat(preco_unitario.toFixed(2)),
+//             formato: selectedFormat,
+//             tipo: selectedFormat === 'fisico' ? selectedCover : null
+//         }, {
+//             headers: { Authorization: `Bearer ${token}` },
+//         });
 
-        setShowModal(true);
-        setTimeout(() => setShowModal(false), 3000);
-    } catch (error: any) {
-        console.error('Erro ao adicionar ao carrinho:', error.response?.data || error.message);
-    }
-};
+//         setShowModal(true);
+//         setTimeout(() => setShowModal(false), 3000);
+//     } catch (error: any) {
+//         console.error('Erro ao adicionar ao carrinho:', error.response?.data || error.message);
+//     }
+// };
 
     return (
         <>
@@ -231,7 +233,13 @@ export default function Book() {
 
                 <AddToCartButton
                     disabled={bookData.estoque === 0}
-                    onPress={handleAdicionarCarrinho}
+                    onPress={() => handleAdicionarCarrinho({
+                        bookId,
+                        bookPreco: parseFloat(bookData.preco),
+                        selectedFormat,
+                        selectedCover,
+                        setShowModal,
+                    })}
                 />
 
                 <BookDescription

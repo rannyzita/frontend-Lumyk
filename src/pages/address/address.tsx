@@ -16,14 +16,21 @@ import {
 
 import styles from './styles';
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
-import Trash from './assets/Trash.svg';
-import Close from './assets/Close.svg';
 import { themes } from '../../global/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import EnderecoItem from './components/EnderecoItem';
+
 import ModalNovoEndereco from './components/ModalNovoEndereco';
+import EnderecoItem from './components/EnderecoItem';
+import DropdownEstados from './components/DropdownEstados';
+
+import {
+  fetchEstados,
+  fetchEnderecos,
+  adicionarEndereco,
+  removerEnderecoPorId,
+} from '../../services/EnderecoService'; 
 
 interface Estado {
   id: string;
@@ -64,12 +71,10 @@ export default function Address() {
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
   useEffect(() => {
-    const fetchEstados = async () => {
+    const carregarEstados = async () => {
       try {
         setLoadingEstados(true);
-        const token = await AsyncStorage.getItem('userToken');
-        const headers = { Authorization: `Bearer ${token}` };
-        const { data } = await api.get('/estados/', { headers });
+        const data = await fetchEstados();
         setEstados(data);
       } catch (error) {
         console.error('Erro ao buscar estados:', error);
@@ -77,18 +82,15 @@ export default function Address() {
         setLoadingEstados(false);
       }
     };
-
-    fetchEstados();
+  
+    carregarEstados();
   }, []);
 
   useEffect(() => {
-    const fetchEnderecos = async () => {
+    const carregarEnderecos = async () => {
       try {
         setLoadingEnderecos(true);
-        const token = await AsyncStorage.getItem('userToken');
-        const headers = { Authorization: `Bearer ${token}` };
-        const { data } = await api.get('/enderecos/', { headers });
-
+        const data = await fetchEnderecos();
         setEnderecos(data);
       } catch (error) {
         console.error('Erro ao buscar endereços:', error);
@@ -96,8 +98,8 @@ export default function Address() {
         setLoadingEnderecos(false);
       }
     };
-
-    fetchEnderecos();
+  
+    carregarEnderecos();
   }, []);
 
   useEffect(() => {
@@ -126,24 +128,18 @@ export default function Address() {
     });
   };
 
-  const adicionarEndereco = async () => {
+  const adicionarEnderecoHandler = async () => {
     if (!bairro || !rua || !numero || !estadoSelecionado) return;
-
+  
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const headers = { Authorization: `Bearer ${token}` };
-
-      const payload = {
+      const novoEndereco = await adicionarEndereco({
         rua,
         numero: Number(numero),
         bairro,
         id_estado: estadoSelecionado.id,
-      };
-
-      const { data } = await api.post('/enderecos/', payload, { headers });
-
-      setEnderecos((prev) => [...prev, data]);
-
+      });
+  
+      setEnderecos((prev) => [...prev, novoEndereco]);
       setModalVisible(false);
       setBairro('');
       setRua('');
@@ -158,17 +154,14 @@ export default function Address() {
   const removerEndereco = async (index: number) => {
     const enderecoParaRemover = enderecos[index];
     if (!enderecoParaRemover) return;
-
+  
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const headers = { Authorization: `Bearer ${token}` };
-
-      await api.delete(`/enderecos/${enderecoParaRemover.id}`, { headers });
-
+      await removerEnderecoPorId(enderecoParaRemover.id);
+  
       const copia = [...enderecos];
       copia.splice(index, 1);
       setEnderecos(copia);
-
+  
       if (enderecoPrioritarioId === enderecoParaRemover.id) {
         setEnderecoPrioritarioId(null);
       }
@@ -247,80 +240,28 @@ export default function Address() {
         onChangeRua={setRua}
         onChangeNumero={setNumero}
         onOpenDropdown={abrirDropdown}
-        onSalvar={adicionarEndereco}
+        onSalvar={adicionarEnderecoHandler}
         dropdownButtonRef={dropdownButtonRef}
       />
 
-      {/* Modal de estados */}
-      <Modal visible={dropdownVisible} transparent animationType='fade'>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.dropdownModalOverlay}>
-            <View
-              style={[
-                styles.dropdownModalContent,
-                {
-                  top: dropdownTop,
-                  left: dropdownLeft,
-                  width: dropdownWidth,
-                },
-              ]}
-            >
-              {/* X preto */}
-              <View style={{ alignItems: 'flex-end' }}>
-                <TouchableOpacity onPress={() => setDropdownVisible(false)}>
-                  <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', marginBottom: 5 }}>X</Text>
-                </TouchableOpacity>
-              </View>
-
-              {loadingEstados ? (
-                <ActivityIndicator color={themes.colors.primary} />
-              ) : (
-                <>
-                  <TextInput
-                    style={styles.dropdownSearchInput}
-                    placeholder='UF de envio...'
-                    placeholderTextColor={themes.colors.textInput}
-                    value={estadoSearch}
-                    onChangeText={(text) => {
-                      setEstadoSearch(text);
-                      setEstadoSelecionado(null);
-                    }}
-                    autoFocus
-                  />
-                  <FlatList
-                    data={estados.filter((e) =>
-                      e.nome.toLowerCase().includes(estadoSearch.toLowerCase())
-                    )}
-                    keyExtractor={(item) => item.id}
-                    keyboardShouldPersistTaps='handled'
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setEstadoSelecionado(item);
-                          setEstadoSearch(item.nome);
-                          setDropdownVisible(false);
-                        }}
-                        style={styles.dropdownItem}
-                      >
-                        <Text style={{ flex: 1 }}>{item.nome}</Text>
-                        <View style={styles.checkbox}>
-                          {estadoSelecionado?.id === item.id && <View style={styles.checkboxSelectedInner} />}
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                  />
-                  <TouchableOpacity
-                    style={[styles.salvarButton, { marginTop: 12 }]}
-                    onPress={() => setDropdownVisible(false)}
-                  >
-                    <Text style={styles.salvarButtonText}>Selecionar</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+      <DropdownEstados
+        visible={dropdownVisible}
+        onClose={() => setDropdownVisible(false)}
+        estados={estados}
+        loading={loadingEstados}
+        search={estadoSearch}
+        onChangeSearch={(text) => {
+          setEstadoSearch(text);
+          setEstadoSelecionado(null);
+        }}
+        estadoSelecionado={estadoSelecionado}
+        onSelecionar={(estado) => {
+          setEstadoSelecionado(estado);
+          setEstadoSearch(estado.nome);
+          setDropdownVisible(false);
+        }}
+        position={{ top: dropdownTop, left: dropdownLeft, width: dropdownWidth }}
+      />
     </>
   );
 }

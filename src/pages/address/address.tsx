@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EnderecoItem from './components/EnderecoItem';
+import ModalNovoEndereco from './components/ModalNovoEndereco';
 
 interface Estado {
   id: string;
@@ -199,7 +200,7 @@ export default function Address() {
   return (
     <>
       <ScrollView contentContainerStyle={{ ...styles.container, flexGrow: 1 }}>
-        <NavigationHeader title="ENDEREÇOS" iconArrow={true} />
+        <NavigationHeader title='ENDEREÇOS' iconArrow={true} />
 
         <View style={{ width: '90%', marginTop: 20 }}>
           {loadingEnderecos ? (
@@ -235,61 +236,23 @@ export default function Address() {
         </View>
       </ScrollView>
 
-      {/* Modal principal */}
-      <Modal visible={modalVisible} transparent animationType="fade">
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView behavior="padding" style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                <Close width={20} height={20} />
-              </TouchableOpacity>
-
-              <Text style={styles.modalTitle}>Criando Novo Endereço</Text>
-
-              <TextInput
-                placeholder="Seu bairro"
-                style={styles.input}
-                value={bairro}
-                onChangeText={setBairro}
-              />
-
-              <View style={styles.row}>
-                <TextInput
-                  placeholder="Sua rua"
-                  style={[styles.input, { flex: 2 }]}
-                  value={rua}
-                  onChangeText={setRua}
-                />
-                <TextInput
-                  placeholder="Nº"
-                  style={[styles.input, { flex: 1, marginLeft: 10 }]}
-                  value={numero}
-                  onChangeText={setNumero}
-                  keyboardType="numeric"
-                />
-              </View>
-
-              <TouchableOpacity
-                ref={dropdownButtonRef}
-                style={styles.dropdownButton}
-                onPress={abrirDropdown}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.dropdownText}>
-                  {estadoSelecionado?.nome || 'Estado'}
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.salvarButton} onPress={adicionarEndereco}>
-                <Text style={styles.salvarButtonText}>Salvar</Text>
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </Modal>
+      <ModalNovoEndereco
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        bairro={bairro}
+        rua={rua}
+        numero={numero}
+        estadoSelecionadoNome={estadoSelecionado?.nome}
+        onChangeBairro={setBairro}
+        onChangeRua={setRua}
+        onChangeNumero={setNumero}
+        onOpenDropdown={abrirDropdown}
+        onSalvar={adicionarEndereco}
+        dropdownButtonRef={dropdownButtonRef}
+      />
 
       {/* Modal de estados */}
-      <Modal visible={dropdownVisible} transparent animationType="fade">
+      <Modal visible={dropdownVisible} transparent animationType='fade'>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.dropdownModalOverlay}>
             <View
@@ -315,7 +278,7 @@ export default function Address() {
                 <>
                   <TextInput
                     style={styles.dropdownSearchInput}
-                    placeholder="UF de envio..."
+                    placeholder='UF de envio...'
                     placeholderTextColor={themes.colors.textInput}
                     value={estadoSearch}
                     onChangeText={(text) => {
@@ -329,7 +292,7 @@ export default function Address() {
                       e.nome.toLowerCase().includes(estadoSearch.toLowerCase())
                     )}
                     keyExtractor={(item) => item.id}
-                    keyboardShouldPersistTaps="handled"
+                    keyboardShouldPersistTaps='handled'
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() => {

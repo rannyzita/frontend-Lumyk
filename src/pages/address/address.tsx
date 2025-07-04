@@ -22,6 +22,7 @@ import { themes } from '../../global/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import EnderecoItem from './components/EnderecoItem';
 
 interface Estado {
   id: string;
@@ -213,23 +214,14 @@ export default function Address() {
                 <Text style={{ color: '#999', fontStyle: 'italic' }}>Nenhum endereço cadastrado.</Text>
               ) : (
                 enderecos.map((end, index) => (
-                  <View key={end.id} style={styles.enderecoItem}>
-                    {/* Checkbox ampliado */}
-                    <TouchableOpacity
-                      onPress={() => selecionarEnderecoPrioritario(end.id)}
-                      style={[
-                        styles.checkbox,
-                        { width: 28, height: 28, marginRight: 10 },
-                        enderecoPrioritarioId === end.id && styles.checkboxSelected,
-                      ]}
-                    />
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.enderecoText}>{formatarEndereco(end)}</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => removerEndereco(index)}>
-                      <Trash width={20} height={20} />
-                    </TouchableOpacity>
-                  </View>
+                  <EnderecoItem
+                    key={end.id}
+                    id={end.id}
+                    texto={formatarEndereco(end)}
+                    selecionado={enderecoPrioritarioId === end.id}
+                    onSelecionar={() => selecionarEnderecoPrioritario(end.id)}
+                    onRemover={() => removerEndereco(index)}
+                  />
                 ))
               )}
               <View style={styles.separatorContainer}>

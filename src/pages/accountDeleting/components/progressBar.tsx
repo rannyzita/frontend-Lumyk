@@ -1,4 +1,3 @@
-// components/ProgressBar.tsx
 import React from 'react';
 import { Animated, ViewStyle } from 'react-native';
 

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import styles from './stylesDeleted';
 import Logo from '../../assets/logo.svg';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
-import { themes } from "../../global/themes";
+import { themes } from '../../global/themes';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -30,11 +30,11 @@ export default function AccountDeleted() {
             </View>
 
             <Text style={styles.text}>
-                Conta excluída com sucesso.{"\n"}Sentiremos sua falta!
+                Conta excluída com sucesso.{'\n'}Sentiremos sua falta!
             </Text>
 
             <ActivityIndicator 
-                size="large" 
+                size='large' 
                 color={themes.colors.primary} 
                 style={styles.loadingSpinner} 
             />

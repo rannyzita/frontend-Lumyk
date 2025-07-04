@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated } from 'react-native';
 import styles from './styles';
 import Logo from '../../assets/logo.svg';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,7 +43,7 @@ export default function Loading() {
             </View>
 
             <Text style={styles.text}>
-                Estamos processando a exclusão da sua conta.{"\n"}Isso pode levar alguns instantes...
+                Estamos processando a exclusão da sua conta.{'\n'}Isso pode levar alguns instantes...
             </Text>
 
             <ProgressBar

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import styles from './styles';
 
@@ -21,8 +21,8 @@ export default function About() {
 
             <View style={styles.footerContainer}>
                 <Text style={styles.footer}>
-                    © 2025 Lumyk. Versão 1.0. Todos os direitos reservados.{"\n"}
-                    Prado, Alameda José Quintino, sem número/CE{"\n"}
+                    © 2025 Lumyk. Versão 1.0. Todos os direitos reservados.{'\n'}
+                    Prado, Alameda José Quintino, sem número/CE{'\n'}
                     CEP 63400-000
                 </Text>
             </View>

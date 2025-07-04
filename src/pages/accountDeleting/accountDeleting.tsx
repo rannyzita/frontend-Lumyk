@@ -3,10 +3,10 @@ import { View, Text, Animated } from 'react-native';
 import styles from './styles';
 import Logo from '../../assets/logo.svg';
 import { useNavigation } from "@react-navigation/native";
-import { themes } from '../../global/themes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProgressBar from './components/progressBar';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -36,11 +36,6 @@ export default function Loading() {
         checkLogin();
     }, [navigation]);
 
-    const progressWidth = progress.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0%', '100%']
-    });
-
     return (
         <View style={styles.components}>
             <View style={styles.logoContainer}>
@@ -51,9 +46,11 @@ export default function Loading() {
                 Estamos processando a exclusão da sua conta.{"\n"}Isso pode levar alguns instantes...
             </Text>
 
-            <View style={styles.progressBarBackground}>
-                <Animated.View style={[styles.progressBarFill, { width: progressWidth }]} />
-            </View>
+            <ProgressBar
+                progress={progress}
+                containerStyle={styles.progressBarBackground}
+                fillStyle={styles.progressBarFill}
+            />
         </View>
     );
 }

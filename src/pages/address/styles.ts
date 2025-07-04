@@ -96,10 +96,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 10,
     elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: themes.colors.shadow,
   },
   dropdownSearchInput: {
     fontSize: 14,
@@ -121,7 +118,7 @@ const styles = StyleSheet.create({
   checkbox: {
     width: 14,
     height: 14,
-    borderRadius: 999, // circular
+    borderRadius: 999, 
     borderWidth: 2,
     borderColor: '#ccc',
     marginLeft: 12,

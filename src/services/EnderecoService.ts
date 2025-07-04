@@ -32,3 +32,11 @@ export async function removerEnderecoPorId(id: string) {
     const headers = { Authorization: `Bearer ${token}` };
     await api.delete(`/enderecos/${id}`, { headers });
 }
+
+export async function salvarEnderecoPrioritario(id: string) {
+    await AsyncStorage.setItem('enderecoSelecionadoId', id);
+}
+
+export async function carregarEnderecoPrioritario() {
+    return await AsyncStorage.getItem('enderecoSelecionadoId');
+}

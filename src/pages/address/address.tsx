@@ -3,13 +3,7 @@ import {
   View,
   Text,
   ScrollView,
-  TextInput,
   TouchableOpacity,
-  Modal,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Keyboard,
-  FlatList,
   ActivityIndicator,
   InteractionManager,
 } from 'react-native';
@@ -17,13 +11,12 @@ import {
 import styles from './styles';
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import { themes } from '../../global/themes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import api from '../../../API';
-import { useNavigation, useRoute } from '@react-navigation/native';
 
 import ModalNovoEndereco from './components/ModalNovoEndereco';
 import EnderecoItem from './components/EnderecoItem';
 import DropdownEstados from './components/DropdownEstados';
+
+import { formatarEndereco } from '../../utils/formatarEndereco';
 
 import {
   fetchEstados,
@@ -31,6 +24,9 @@ import {
   adicionarEndereco,
   removerEnderecoPorId,
 } from '../../services/EnderecoService'; 
+
+import { carregarEnderecoPrioritario } from '../../services/EnderecoService';
+import { salvarEnderecoPrioritario } from '../../services/EnderecoService'
 
 interface Estado {
   id: string;
@@ -46,8 +42,6 @@ interface Endereco {
 }
 
 export default function Address() {
-  const navigation = useNavigation();
-  const route = useRoute<any>(); // tipar corretamente se quiser mais seguro
 
   const [modalVisible, setModalVisible] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -103,18 +97,12 @@ export default function Address() {
   }, []);
 
   useEffect(() => {
-    const carregarEnderecoSelecionadoId = async () => {
-      try {
-        const idSalvo = await AsyncStorage.getItem('enderecoSelecionadoId');
-        if (idSalvo) {
-          setEnderecoPrioritarioId(idSalvo);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar endereço selecionado:', error);
-      }
+    const carregarPrioritario = async () => {
+      const id = await carregarEnderecoPrioritario();
+      if (id) setEnderecoPrioritarioId(id);
     };
   
-    carregarEnderecoSelecionadoId();
+    carregarPrioritario();
   }, []);
 
   const abrirDropdown = () => {
@@ -170,25 +158,14 @@ export default function Address() {
     }
   };
 
-  const formatarEndereco = (end: Endereco) => {
-    const partes = [
-      end.rua?.trim(),
-      end.numero?.toString(),
-      end.bairro?.trim(),
-      estados.find((e) => e.id === end.id_estado)?.nome,
-    ].filter(Boolean);
-
-    return partes.join(', ');
-  };
-
   const selecionarEnderecoPrioritario = async (id: string) => {
     setEnderecoPrioritarioId(id);
     try {
-      await AsyncStorage.setItem('enderecoSelecionadoId', id);
+      await salvarEnderecoPrioritario(id);
     } catch (error) {
       console.error('Erro ao salvar endereço selecionado:', error);
     }
-  };  
+  };
 
   return (
     <>
@@ -211,7 +188,7 @@ export default function Address() {
                   <EnderecoItem
                     key={end.id}
                     id={end.id}
-                    texto={formatarEndereco(end)}
+                    texto={formatarEndereco(end, estados)}
                     selecionado={enderecoPrioritarioId === end.id}
                     onSelecionar={() => selecionarEnderecoPrioritario(end.id)}
                     onRemover={() => removerEndereco(index)}

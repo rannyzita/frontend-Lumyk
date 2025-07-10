@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
 } from 'react-native';
-import Close from './assets/Close.svg'; 
+import Close from '../assets/Close.svg'; 
 import styles from '../styles';
 
 interface Props {

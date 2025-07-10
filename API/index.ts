@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://lumyk-backend.onrender.com', // endereço da API Python
+  baseURL: 'http://192.168.0.8:5000', // endereço da API Python
   timeout: 10000,
 });
 
 export default api;
+
+// https://lumyk-backend.onrender.com

@@ -1,6 +1,6 @@
 // ignore esse moi de codigo, eu vou modularizar dps ainda :3
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, StatusBar } from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 import { themes } from '../../global/themes';
@@ -268,139 +268,143 @@ export default function Home() {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
-            <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
-                <TopBar 
-                    navigation={navigation} 
-                    title='Digite o titulo do livro aqui...'
-                    onSearchTextChange={setSearchText}
-                />
+        <SafeAreaView  style={{ flex: 1, backgroundColor: '#A855F7' }}>
+            <StatusBar barStyle="light-content" backgroundColor="#A855F7" />
 
-                <View style={[styles.filters]}>
-                    <View style={{ alignItems: 'center', marginRight: 4, marginLeft: 10 }}>
-                        <ButtonFilter
-                            title="Ver Autores"
-                            onPress={() => navigation.navigate('Authors')}
-                            style={{ backgroundColor: themes.colors.primary, width: 115 }}
-                            textStyle={{ color: '#fff', marginRight: 5 }}
-                        />
-                    </View>
+            <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
+                <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
+                    <TopBar 
+                        navigation={navigation} 
+                        title='Digite o titulo do livro aqui...'
+                        onSearchTextChange={setSearchText}
+                    />
 
-                    {/* Gênero */}
-                    <View style={{ alignItems: 'center' }}>
-                        <ButtonFilter
-                            title="Gênero"
-                            onPress={() => {
-                                setGenreDropdownVisible(!isGenreDropdownVisible);
-                                setStateDropdownVisible(false);
-                            }}
-                            onLayout={(event) => setGenreButtonWidth(event.nativeEvent.layout.width)}
-                            style={{}}
-                            contentStyle={{ width: 45 }}
-                            textStyle={{ marginLeft: -6 }}
-                            icon={
-                                <ArrowDownIcon
-                                    style={{ transform: [{ rotate: isGenreDropdownVisible ? '180deg' : '0deg' }] }}
-                                    width={14}
-                                    height={14}
-                                />
-                            }
-                        />
-                        {isGenreDropdownVisible && (
-                            <DropdownFilter
-                                isVisible={isGenreDropdownVisible}
-                                buttonWidth={genreButtonWidth}
-                                items={generosAPI.map(g => g.nome).filter(nome => nome.toLowerCase().includes(generoSearchText.toLowerCase()))}
-                                selectedItems={selectedGenres}
-                                onToggleItem={(nomeSelecionado) => setSelectedGenres((prev) => prev[0] === nomeSelecionado ? [] : [nomeSelecionado])}
+                    <View style={[styles.filters]}>
+                        <View style={{ alignItems: 'center', marginRight: 4, marginLeft: 10 }}>
+                            <ButtonFilter
+                                title="Ver Autores"
+                                onPress={() => navigation.navigate('Authors')}
+                                style={{ backgroundColor: themes.colors.primary, width: 115 }}
+                                textStyle={{ color: '#fff', marginRight: 5 }}
                             />
-                        )}
-                    </View>
+                        </View>
 
-                    {/* Estado */}
-                    <View style={{ alignItems: 'center' }}>
-                        <ButtonFilter
-                            title="Calcular Frete"
-                            onPress={() => {
-                                setStateDropdownVisible(!isStateDropdownVisible);
-                                setGenreDropdownVisible(false);
-                            }}
-                            onLayout={(event) => setStateButtonWidth(event.nativeEvent.layout.width)}
-                            textStyle={{ marginLeft: -6 }}
-                            icon={
-                                <ArrowDownIcon
-                                    style={{ transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }] }}
-                                    width={14}
-                                    height={14}
+                        {/* Gênero */}
+                        <View style={{ alignItems: 'center' }}>
+                            <ButtonFilter
+                                title="Gênero"
+                                onPress={() => {
+                                    setGenreDropdownVisible(!isGenreDropdownVisible);
+                                    setStateDropdownVisible(false);
+                                }}
+                                onLayout={(event) => setGenreButtonWidth(event.nativeEvent.layout.width)}
+                                style={{}}
+                                contentStyle={{ width: 45 }}
+                                textStyle={{ marginLeft: -6 }}
+                                icon={
+                                    <ArrowDownIcon
+                                        style={{ transform: [{ rotate: isGenreDropdownVisible ? '180deg' : '0deg' }] }}
+                                        width={14}
+                                        height={14}
+                                    />
+                                }
+                            />
+                            {isGenreDropdownVisible && (
+                                <DropdownFilter
+                                    isVisible={isGenreDropdownVisible}
+                                    buttonWidth={genreButtonWidth}
+                                    items={generosAPI.map(g => g.nome).filter(nome => nome.toLowerCase().includes(generoSearchText.toLowerCase()))}
+                                    selectedItems={selectedGenres}
+                                    onToggleItem={(nomeSelecionado) => setSelectedGenres((prev) => prev[0] === nomeSelecionado ? [] : [nomeSelecionado])}
                                 />
-                            }
-                        />
-                        {isStateDropdownVisible && (
-                            <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}> 
-                                <View style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    backgroundColor: 'white',
-                                    borderRadius: 10,
-                                    paddingHorizontal: 8,
-                                    height: 30,
-                                    marginHorizontal: 8,
-                                    marginTop: 10,
-                                    gap: 1,
-                                }}>
-                                    <SearchIcon width={15} height={15} />
-                                    <TextInput
-                                        style={{
-                                            flex: 1,
-                                            fontSize: 12,
-                                            color: themes.colors.textInput,
-                                            paddingVertical: 0,
-                                        }}
-                                        placeholder="UF de envio..."
-                                        placeholderTextColor={themes.colors.textInput}
-                                        value={estadoSearchText}
-                                        onChangeText={setEstadoSearchText}
+                            )}
+                        </View>
+
+                        {/* Estado */}
+                        <View style={{ alignItems: 'center' }}>
+                            <ButtonFilter
+                                title="Calcular Frete"
+                                onPress={() => {
+                                    setStateDropdownVisible(!isStateDropdownVisible);
+                                    setGenreDropdownVisible(false);
+                                }}
+                                onLayout={(event) => setStateButtonWidth(event.nativeEvent.layout.width)}
+                                textStyle={{ marginLeft: -6 }}
+                                icon={
+                                    <ArrowDownIcon
+                                        style={{ transform: [{ rotate: isStateDropdownVisible ? '180deg' : '0deg' }] }}
+                                        width={14}
+                                        height={14}
+                                    />
+                                }
+                            />
+                            {isStateDropdownVisible && (
+                                <View style={[stylesDropDown.dropdownContent, { width: stateButtonWidth }]}> 
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        backgroundColor: 'white',
+                                        borderRadius: 10,
+                                        paddingHorizontal: 8,
+                                        height: 30,
+                                        marginHorizontal: 8,
+                                        marginTop: 10,
+                                        gap: 1,
+                                    }}>
+                                        <SearchIcon width={15} height={15} />
+                                        <TextInput
+                                            style={{
+                                                flex: 1,
+                                                fontSize: 12,
+                                                color: themes.colors.textInput,
+                                                paddingVertical: 0,
+                                            }}
+                                            placeholder="UF de envio..."
+                                            placeholderTextColor={themes.colors.textInput}
+                                            value={estadoSearchText}
+                                            onChangeText={setEstadoSearchText}
+                                        />
+                                    </View>
+
+                                    <FlatList
+                                        data={estados.map(e => e.nome).filter(nome => nome.toLowerCase().includes(estadoSearchText.toLowerCase()))}
+                                        keyExtractor={(item) => item}
+                                        style={stylesDropDown.scrollableList}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity onPress={() => handleToggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
+                                                <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
+                                                <CustomCheckbox
+                                                    checked={selectedStates.includes(item)}
+                                                    onPress={() => handleToggleStateSelection(item)}
+                                                />
+                                            </TouchableOpacity>
+                                        )}
+                                        showsVerticalScrollIndicator={true}
                                     />
                                 </View>
-
-                                <FlatList
-                                    data={estados.map(e => e.nome).filter(nome => nome.toLowerCase().includes(estadoSearchText.toLowerCase()))}
-                                    keyExtractor={(item) => item}
-                                    style={stylesDropDown.scrollableList}
-                                    renderItem={({ item }) => (
-                                        <TouchableOpacity onPress={() => handleToggleStateSelection(item)} style={stylesDropDown.dropdownItem}>
-                                            <Text style={stylesDropDown.dropdownItemText}>{item}</Text>
-                                            <CustomCheckbox
-                                                checked={selectedStates.includes(item)}
-                                                onPress={() => handleToggleStateSelection(item)}
-                                            />
-                                        </TouchableOpacity>
-                                    )}
-                                    showsVerticalScrollIndicator={true}
-                                />
-                            </View>
-                        )}
+                            )}
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.separator}></View>
+                    <View style={styles.separator}></View>
 
-                {isLoadingBooks ? (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
-                        <ActivityIndicator size={40} color={themes.colors.primary} />
-                        <Text style={{ marginTop: 10 }}>Carregando livros...</Text>
-                    </View>
-                ) : (
-                    <FlatList
-                        data={filteredBooks}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderBookItem}
-                        numColumns={2}
-                        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
-                        contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}
-                    />
-                )}
-            </View> 
-        </TouchableWithoutFeedback>
+                    {isLoadingBooks ? (
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
+                            <ActivityIndicator size={40} color={themes.colors.primary} />
+                            <Text style={{ marginTop: 10 }}>Carregando livros...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={filteredBooks}
+                            keyExtractor={(item) => item.id}
+                            renderItem={renderBookItem}
+                            numColumns={2}
+                            columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
+                            contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}
+                        />
+                    )}
+                </View> 
+            </TouchableWithoutFeedback>
+        </SafeAreaView>
     );
 }

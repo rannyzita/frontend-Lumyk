@@ -11,7 +11,7 @@ interface TopBarProps {
     navigation?: any;
     title?: string;
     onSearchTextChange?: (text: string) => void;
-};
+};  
 
 const TopBar: React.FC<TopBarProps> = ({ navigation, title, onSearchTextChange }) => {
     return (

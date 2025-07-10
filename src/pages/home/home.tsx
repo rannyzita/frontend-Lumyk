@@ -270,7 +270,7 @@ export default function Home() {
     return (
         <SafeAreaView  style={{ flex: 1, backgroundColor: themes.colors.primary }}>
             <StatusBar barStyle="light-content" backgroundColor={themes.colors.primary} />
-
+            {/* <View style={{ height: themes.colors.LayoutTopBar, backgroundColor: themes.colors.primary }} /> */}
             <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
                 <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                     <TopBar 

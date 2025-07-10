@@ -67,15 +67,17 @@ export default function Register() {
         };
 
         try {
+            console.log('Enviando para o backend:', payload);
             const response = await api.post('/auth/registro', payload);
-
+            console.log('oie')
             if (response.status === 200 || response.status === 201) {
                 Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
                 navigation.navigate('Login');
             } else {
                 Alert.alert('Erro', response.data.message || 'Erro ao cadastrar');
             }
-        } catch (error) {
+        } catch (error:any) {
+            console.log('Erro no registro:', error?.response?.data || error.message || error);
             Alert.alert('Erro', 'Erro ao conectar com o servidor');
         }
     };

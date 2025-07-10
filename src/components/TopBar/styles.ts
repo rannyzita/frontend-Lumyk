@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     topBar: {
         backgroundColor: themes.colors.primary, 
         padding: 10,
-        paddingTop: 55,
+        paddingTop: themes.colors.LayoutTopBar,
     },
     topBarContent: {
         flexDirection: 'row',

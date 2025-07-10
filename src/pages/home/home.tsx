@@ -268,8 +268,8 @@ export default function Home() {
     }
 
     return (
-        <SafeAreaView  style={{ flex: 1, backgroundColor: '#A855F7' }}>
-            <StatusBar barStyle="light-content" backgroundColor="#A855F7" />
+        <SafeAreaView  style={{ flex: 1, backgroundColor: themes.colors.primary }}>
+            <StatusBar barStyle="light-content" backgroundColor={themes.colors.primary} />
 
             <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
                 <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>

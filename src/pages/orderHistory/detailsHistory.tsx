@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ActivityIndicator, ScrollView } from 'react-native';
 import stylesDetails from './stylesDetails';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -61,9 +61,13 @@ export default function DetailsHistory() {
       try {
         setLoading(true);
         const token = await AsyncStorage.getItem('userToken');
+        const userId = await AsyncStorage.getItem('userId');
         if (!token) return;
 
         const headers = { Authorization: `Bearer ${token}` };
+
+        const { data: usuarioData } = await api.get<Usuario>(`/usuarios/${userId}`, { headers });
+        setUsuarioNome(usuarioData.nome);
 
         const { data: singleItem } = await api.get<ItemPedido>(`/item-pedido/${orderId}`, { headers });
 
@@ -101,75 +105,111 @@ export default function DetailsHistory() {
   const totalPedido = item.pedido.total != null ? item.pedido.total : 0;
   const taxaFrete = item.pedido.taxa_frete != null ? item.pedido.taxa_frete : 0;
 
-  const mostrarFreteGratis = assinatura === 'Premium';
   const precoOriginal = precoTotal + taxaFrete;
 
   return (
     <View style={stylesDetails.container}>
       <NavigationHeader title='INFORMAÇÕES DA COMPRA' iconArrow={true} />
 
-      <Image source={{ uri: imageUrl }} style={stylesDetails.banner} resizeMode='contain' />
+      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+        <Image source={{ uri: imageUrl }} style={stylesDetails.banner} resizeMode='contain' />
 
-      <View style={stylesDetails.card}>
-        <Text style={stylesDetails.cardTitle}>Detalhes da Compra:</Text>
-        <Text style={stylesDetails.orderNumber}>Item ID: #{item.id}</Text>
+        <View style={stylesDetails.card}>
+          <Text style={stylesDetails.cardTitle}>Detalhes da Compra:</Text>
+          <Text style={stylesDetails.orderNumber}>Item ID: #{item.id}</Text>
 
-        <View style={[stylesDetails.row, { marginTop: 8 }]}>
-          <LivroIcon width={24} height={24} />
-          <View style={stylesDetails.textContainer}>
-            <Text style={stylesDetails.bookTitle}>{bookData.titulo}</Text>
-            <Text style={stylesDetails.author}>{bookData.autor.nome}</Text>
-          </View>
-          <Text style={stylesDetails.price}>
-            R$ {item.preco_unitario.toFixed(2).replace('.', ',')}
-          </Text>
-        </View>
-
-        <View style={[stylesDetails.row, { marginTop: 10, alignItems: 'flex-start' }]}>
-          <View style={stylesDetails.iconAndInfo}>
-            <LogoPacote width={24} height={24} />
-            <View style={stylesDetails.purchaseInfo}>
-              <Text style={stylesDetails.dateLabel}>Data da compra:</Text>
-              <Text style={stylesDetails.date}>
-                {new Date(item.pedido.data_compra).toLocaleDateString('pt-BR')}
-              </Text>
-              <Text style={stylesDetails.customer}>Comprado por: {usuarioNome ?? '...'}</Text>
-              <Text style={stylesDetails.customer}>Quantidade: {item.quantidade}</Text>
+          <View style={[stylesDetails.row, { marginTop: 8 }]}>
+            <LivroIcon width={24} height={24} />
+            <View style={stylesDetails.textContainer}>
+              <Text style={stylesDetails.bookTitle}>{bookData.titulo}</Text>
+              <Text style={stylesDetails.author}>{bookData.autor.nome}</Text>
             </View>
-          </View>
-        </View>
-
-        <View style={stylesDetails.separator} />
-
-        <View style={stylesDetails.priceInfoContainer}>
-          <Text style={stylesDetails.originalPrice}>R$ {precoOriginal.toFixed(2).replace('.', ',')}</Text>
-          <Text style={stylesDetails.discountedPrice}>R$ {totalPedido.toFixed(2).replace('.', ',')}</Text>
-          {mostrarFreteGratis ? (
-            <Text style={stylesDetails.freteGratis}>Frete grátis</Text>
-          ) : (
-            <Text style={stylesDetails.freteValor}>Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}</Text>
-          )}
-        </View>
-      </View>
-
-      <View style={stylesDetails.card}>
-        <Text style={stylesDetails.cardTitle}>Informações da Compra:</Text>
-        <View style={stylesDetails.infoRow}>
-          <View style={stylesDetails.infoBox}>
-            <Text style={stylesDetails.infoLabel}>Total Pago</Text>
-            <Text style={stylesDetails.infoValue}>
-              R$ {totalPedido.toFixed(2).replace('.', ',')}
+            <Text style={stylesDetails.price}>
+              R$ {item.preco_unitario.toFixed(2).replace('.', ',')}
             </Text>
           </View>
-          <View style={stylesDetails.infoBox}>
-            <Text style={stylesDetails.infoLabel}>Envio</Text>
-            <View style={stylesDetails.statusRow}>
-              <Text style={stylesDetails.infoValue}>Entregue</Text>
-              <PacoteEntregue width={25} height={25} style={{ marginLeft: 10 }} />
+
+          <View style={[stylesDetails.row, { marginTop: 10, alignItems: 'flex-start' }]}>
+            <View style={stylesDetails.iconAndInfo}>
+              <LogoPacote width={24} height={24} />
+              <View style={stylesDetails.purchaseInfo}>
+                <Text style={stylesDetails.dateLabel}>Data da compra:</Text>
+                <Text style={stylesDetails.date}>
+                  {new Date(item.pedido.data_compra).toLocaleDateString('pt-BR')}
+                </Text>
+                <Text style={stylesDetails.customer}>Comprado por: {usuarioNome ?? '...'}</Text>
+                <Text style={stylesDetails.customer}>Quantidade: {item.quantidade}</Text>
+              </View>
             </View>
           </View>
+
+          <View style={stylesDetails.separator} />
+
+          <View style={stylesDetails.priceInfoContainer}>
+            {assinatura === 'Premium' ? (
+              <>
+                <Text style={stylesDetails.originalPrice}>R$ {precoOriginal.toFixed(2).replace('.', ',')}</Text>
+                <Text style={stylesDetails.discountedPrice}>R$ {totalPedido.toFixed(2).replace('.', ',')}</Text>
+                <Text style={stylesDetails.freteGratis}>Frete grátis</Text>
+              </>
+            ) : assinatura === 'Básica' ? (
+              <>
+                <Text style={stylesDetails.discountedPrice}>R$ {precoOriginal.toFixed(2).replace('.', ',')}</Text>
+                <Text style={stylesDetails.freteGratis}>Frete grátis</Text>
+              </>
+            ) : (
+              <>
+                <Text style={stylesDetails.discountedPrice}>R$ {precoOriginal.toFixed(2).replace('.', ',')}</Text>
+                {taxaFrete > 0 && (
+                  <Text style={stylesDetails.freteValor}>Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}</Text>
+                )}
+              </>
+            )}
+          </View>
         </View>
-      </View>
+
+        <View style={stylesDetails.card}>
+          <Text style={stylesDetails.cardTitle}>Informações da Compra:</Text>
+          <View style={stylesDetails.infoRow}>
+            <View style={stylesDetails.infoBox}>
+              <Text style={stylesDetails.infoLabel}>Total Pago</Text>
+
+              {assinatura === 'Premium' ? (
+                <>
+                  <Text style={stylesDetails.infoValue}>
+                    R$ {totalPedido.toFixed(2).replace('.', ',')}
+                  </Text>
+                </>
+              ) : assinatura === 'Básica' ? (
+                <>
+                  <Text style={stylesDetails.infoValue}>
+                    R$ {precoOriginal.toFixed(2).replace('.', ',')}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text style={stylesDetails.infoValue}>
+                    R$ {precoOriginal.toFixed(2).replace('.', ',')}
+                  </Text>
+                  {taxaFrete > 0 && (
+                    <Text style={[stylesDetails.freteValor, { textAlign: 'center', marginTop: 2 }]}>
+                      Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}
+                    </Text>
+                  )}
+                </>
+              )}
+
+            </View>
+            <View style={stylesDetails.infoBox}>
+              <Text style={stylesDetails.infoLabel}>Envio</Text>
+              <View style={stylesDetails.statusRow}>
+                <Text style={stylesDetails.infoValue}>Entregue</Text>
+                <PacoteEntregue width={25} height={25} style={{ marginLeft: 10 }} />
+              </View>
+            </View>
+          </View> 
+        </View>
+      </ScrollView>
     </View>
   );
 }

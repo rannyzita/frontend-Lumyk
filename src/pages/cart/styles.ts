@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: themes.colors.backgroundLumyk,
     paddingTop: 60,
-    // paddingHorizontal: 12,
   },
   header: {
     fontSize: 22,
@@ -35,8 +34,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   checkbox: {
-    width: 22,
-    height: 22,
+    width: 28,
+    height: 28,
     borderRadius: 4,
     borderWidth: 2,
     borderColor: '#9D4EDD',
@@ -181,16 +180,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: -60,
   },
-  // checkboxContainerItem: {
-  //   marginLeft: 10,
-  //   marginRight: 10,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // trashButtonItem: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   separator: {
     height: 1,
     backgroundColor: '#ccc',
@@ -212,7 +201,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+  separatorPurple: {
+    height: 2,
+    backgroundColor: themes.colors.purpleDark,
+    width: '90%',
+    marginVertical: 12,
+    borderRadius: 4,
+    alignSelf: 'center',
+  },
 });
 
 export default styles;

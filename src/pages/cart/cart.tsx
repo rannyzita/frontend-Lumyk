@@ -208,7 +208,7 @@ export default function Cart() {
             </Text>
             <TrashIcon width={24} height={24} />
           </TouchableOpacity>
-          
+
           <View style={styles.separator} />
         </View>
       )}
@@ -293,6 +293,7 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>CARRINHO DE COMPRAS</Text>
+      <View style={styles.separatorPurple} />
 
       <View style={{ flex: 1, position: 'relative' }}>
         {loading ? (

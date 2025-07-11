@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         height: 2,
         backgroundColor: themes.colors.purpleDark,
         alignSelf: 'center',
-        marginBottom: 12,
     },
     cardWrapper: {
         width: '100%',

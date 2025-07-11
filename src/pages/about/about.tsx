@@ -20,12 +20,10 @@ export default function About() {
                 <View style={styles.line} />
             </View>
 
-            
             {team.map((member, index) => (
                 <TeamCard key={index} member={member} />
                 
             ))}
-
 
             <View style={styles.footerContainer}>
                 <Text style={styles.footer}>

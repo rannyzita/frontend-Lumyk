@@ -1,7 +1,7 @@
-import Kariny from '../../../assets/photos.us/Kariny.png';
-import Laura from '../../../assets/photos.us/Laura.png';
-import Ranny from '../../../assets/photos.us/Ranny.png';
-import Yarlla from '../../../assets/photos.us/Yarlla.png';
+import Kariny from '../assets/Kariny.png';
+import Laura from '../assets/Laura.png';
+import Ranny from '../assets/Ranny.png';
+import Yarlla from '../assets/Yarlla.png';
 
 export interface TeamMember {
     name: string;

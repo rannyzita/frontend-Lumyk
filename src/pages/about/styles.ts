@@ -16,34 +16,6 @@ const styles = StyleSheet.create({
     logo: {
         marginVertical: 10,
     },
-    card: {
-        backgroundColor: themes.colors.primary,
-        borderRadius: 12,
-        padding: 10,
-        height: 90,
-        marginVertical: 6,
-        width: '90%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-        elevation: 3,
-    },
-    image: {
-        width: 55,
-        height: 55,
-        borderRadius: 50,
-        marginRight: 10,
-    },
-    name: {
-        fontWeight: '600',
-        fontSize: 14,
-        color: 'white',
-    },
-    role: {
-        fontSize: 13,
-        fontWeight: '500',
-        color: '#f0f0f0',
-    },
     headerBox: {
         backgroundColor: '#fff',
         paddingVertical: 25,
@@ -62,8 +34,76 @@ const styles = StyleSheet.create({
     footer: {
         textAlign: 'center',
         fontSize: 12,
-        color: '#555',
+        color: themes.colors.purpleDark,
     },  
+    madeByContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+
+    madeBy: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: themes.colors.purpleDark,
+        marginBottom: 6,
+        textAlign: 'center',
+    },
+    
+    line: {
+        width: '70%', 
+        height: 2,
+        backgroundColor: themes.colors.purpleDark,
+        alignSelf: 'center',
+        marginBottom: 12,
+    },
+    cardWrapper: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 12,
+    },
+    
+    card: {
+        backgroundColor: '#fff',
+        paddingVertical: 6,
+        paddingHorizontal: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: '85%', 
+        maxWidth: 300, 
+        gap: 10,
+    },
+    
+    image: {
+        width: 55,
+        height: 55,
+        borderRadius: 50,
+        marginRight: 10,
+    },
+    
+    name: {
+        fontSize: 14,
+        color: themes.colors.purpleDark, 
+    },
+    
+    role: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: themes.colors.purpleDark, 
+    },
+    
+    divider: {
+        height: 2,
+        backgroundColor: themes.colors.purpleDark,
+        width: '70%',
+        alignSelf: 'center', 
+        marginTop: 10,
+    },
+    
 });
 
 export default styles;

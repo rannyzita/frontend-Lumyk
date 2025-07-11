@@ -9,12 +9,15 @@ interface Props {
 
 export function TeamCard({ member }: Props) {
     return (
-        <View style={styles.card}>
-            <Image source={member.photo} style={styles.image} />
-            <View>
-                <Text style={styles.name}>{member.name}</Text>
-                <Text style={styles.role}>{member.role}</Text>
+        <View style={styles.cardWrapper}>
+            <View style={styles.card}>
+                <Image source={member.photo} style={styles.image} />
+                <View>
+                    <Text style={styles.name}>{member.name}</Text>
+                    <Text style={styles.role}>{member.role}</Text>
+                </View>
             </View>
+            <View style={styles.divider} />
         </View>
     );
 }

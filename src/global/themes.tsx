@@ -14,7 +14,7 @@ export const themes = {
         facebook: '#1877F2',
         textInput: '#969696',
         backgroundLumyk: '#D4BFFF',
-        shadow: "0 5px 10px  rgba(0, 0, 0, 0.25)",
+        shadow: "0 5px 10px  rgba(0, 0, 0, 0.14)",
         LayoutTopBar: Platform.OS === 'android' ? StatusBar.currentHeight : 10
     }
 };

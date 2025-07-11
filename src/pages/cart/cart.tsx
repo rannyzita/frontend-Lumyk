@@ -307,7 +307,6 @@ export default function Cart() {
         />
       )}
 
-
         <View style={styles.totalBox}>
           <View style={styles.totalInfo}>
             <Text style={styles.totalLabel}>Subtotal:</Text>

@@ -61,13 +61,26 @@ const stylesDetails = StyleSheet.create({
     color: themes.colors.greenDark,
     fontSize: 14,
   },
+  dateLabel: {
+    fontSize: 13,
+    color: '#555',
+    fontWeight: 'bold',
+  },
   date: {
     fontSize: 13,
     color: '#333',
+    marginBottom: 2,
   },
   customer: {
     fontSize: 12,
     color: '#777',
+  },
+  iconAndInfo: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  purchaseInfo: {
+    marginLeft: 8,
   },
   infoRow: {
     flexDirection: 'row',
@@ -96,6 +109,41 @@ const stylesDetails = StyleSheet.create({
     alignItems: 'center',
     marginTop: 4,
   },
+  separator: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginTop: 10,
+    marginBottom: 8,
+    alignSelf: 'stretch',
+  },
+  priceInfoContainer: {
+    alignItems: 'flex-end',
+    width: '100%',
+    marginTop: 4,
+  },
+  originalPrice: {
+    fontSize: 12,
+    color: '#999',
+    textDecorationLine: 'line-through',
+    textAlign: 'right',
+  },
+  discountedPrice: {
+    fontSize: 13,
+    color: '#666',
+    fontWeight: 'bold',
+    textAlign: 'right',
+  },
+  freteGratis: {
+    fontSize: 12,
+    color: 'green',
+    fontWeight: 'bold',
+    textAlign: 'right',
+  },
+  freteValor: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'right',
+  },
 });
 
-export default stylesDetails;   
+export default stylesDetails;

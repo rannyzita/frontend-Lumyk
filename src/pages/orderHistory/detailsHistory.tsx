@@ -14,6 +14,7 @@ import NavigationHeader from '../../components/NavigationHeader/navigationHeader
 
 import { useBookData } from '../book/hooks/useBookData';
 import { useAuthStorage } from '../../hooks/useAuthStorage';
+import { useAssinatura } from '../../hooks/useAssinatura';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteParams = { orderId: string };
@@ -50,6 +51,7 @@ export default function DetailsHistory() {
   const [loading, setLoading] = useState(true);
 
   const { getTokenAndUserId } = useAuthStorage();
+  const assinatura = useAssinatura();
 
   const bookId = item?.id_livro ?? '';
   const { bookData } = useBookData(bookId);
@@ -63,16 +65,11 @@ export default function DetailsHistory() {
 
         const headers = { Authorization: `Bearer ${token}` };
 
-        // Primeiro, busca um item qualquer para obter o id_pedido
         const { data: singleItem } = await api.get<ItemPedido>(`/item-pedido/${orderId}`, { headers });
-
-        console.log('singleItem recebido:', singleItem);
-        console.dir(singleItem.pedido, { depth: null }); // mostra tudo do pedido, para checar taxa_frete e total
 
         const pedidoId = singleItem.pedido.id;
         const { data: itensPedido } = await api.get<ItemPedido[]>(`/item-pedido/pedido/${pedidoId}`, { headers });
 
-        // Procurar o item com id igual a orderId, se não encontrar pega o primeiro
         const itemData = itensPedido.find(i => i.id === orderId) || itensPedido[0];
         setItem(itemData);
 
@@ -101,10 +98,11 @@ export default function DetailsHistory() {
 
   const precoTotal = item.quantidade * item.preco_unitario;
   const imageUrl = bookData.foto?.uri ?? '';
-
-  // Tratamento seguro para total e frete, evitando erro de toFixed em null ou undefined
   const totalPedido = item.pedido.total != null ? item.pedido.total : 0;
   const taxaFrete = item.pedido.taxa_frete != null ? item.pedido.taxa_frete : 0;
+
+  const mostrarFreteGratis = assinatura === 'Premium';
+  const precoOriginal = precoTotal + taxaFrete;
 
   return (
     <View style={stylesDetails.container}>
@@ -127,24 +125,30 @@ export default function DetailsHistory() {
           </Text>
         </View>
 
-        <View style={[stylesDetails.row, { marginTop: 10 }]}>
-          <LogoPacote width={24} height={24} />
-          <View style={stylesDetails.textContainer}>
-            <Text style={stylesDetails.date}>
-              {new Date(item.pedido.data_compra).toLocaleDateString('pt-BR')}
-            </Text>
-            <Text style={stylesDetails.customer}>Comprado por: {usuarioNome ?? '...'}</Text>
-            <Text style={stylesDetails.customer}>Quantidade: {item.quantidade}</Text>
+        <View style={[stylesDetails.row, { marginTop: 10, alignItems: 'flex-start' }]}>
+          <View style={stylesDetails.iconAndInfo}>
+            <LogoPacote width={24} height={24} />
+            <View style={stylesDetails.purchaseInfo}>
+              <Text style={stylesDetails.dateLabel}>Data da compra:</Text>
+              <Text style={stylesDetails.date}>
+                {new Date(item.pedido.data_compra).toLocaleDateString('pt-BR')}
+              </Text>
+              <Text style={stylesDetails.customer}>Comprado por: {usuarioNome ?? '...'}</Text>
+              <Text style={stylesDetails.customer}>Quantidade: {item.quantidade}</Text>
+            </View>
           </View>
+        </View>
 
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={stylesDetails.price}>
-              Total: R$ {totalPedido.toFixed(2).replace('.', ',')}
-            </Text>
-            <Text style={{ fontSize: 12, color: '#666' }}>
-              Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}
-            </Text>
-          </View>
+        <View style={stylesDetails.separator} />
+
+        <View style={stylesDetails.priceInfoContainer}>
+          <Text style={stylesDetails.originalPrice}>R$ {precoOriginal.toFixed(2).replace('.', ',')}</Text>
+          <Text style={stylesDetails.discountedPrice}>R$ {totalPedido.toFixed(2).replace('.', ',')}</Text>
+          {mostrarFreteGratis ? (
+            <Text style={stylesDetails.freteGratis}>Frete grátis</Text>
+          ) : (
+            <Text style={stylesDetails.freteValor}>Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}</Text>
+          )}
         </View>
       </View>
 

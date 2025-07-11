@@ -119,7 +119,7 @@ export default function Cart() {
         livro.id === id ? { ...livro, checked: !livro.checked } : livro
       )
     );
-  };
+  };      
   
   const groupByIdLivro = (items: LivroCarrinho[]) => {
     const grouped: Record<string, LivroCarrinho[]> = {};

@@ -19,8 +19,8 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import IconeLocal from './assets/IconeLocal.svg';
 import ArrowLocal from './assets/ArrowLocal.svg';
-import IconMoney from '../../../assets/subscription/money.svg';
-import IconPix from '../../../assets/subscription/pix.svg';
+import IconMoney from '../../assets/subscription/money.svg';
+import IconPix from '../../assets/subscription/pix.svg';
 
 import { Button } from '../../components/Button/button';
 

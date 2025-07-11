@@ -18,7 +18,6 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 import TrashIcon from './assets/Trash.svg';
-
 interface LivroCarrinho {
   id: string;
   idLivro: string;
@@ -233,7 +232,7 @@ export default function Cart() {
           </View>
           <Text style={styles.author}>por {item.autor}</Text>
           <Text style={styles.type}>
-            {item.formato === 'digital' ? 'Formato: Digital' : `Capa: ${item.tipo}`}
+            {item.formato === 'digital' ? 'Formato: Digital' : `Formato: Físico`}
           </Text>
           {item.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
   

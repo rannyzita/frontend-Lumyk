@@ -6,7 +6,7 @@ export const styles =  StyleSheet.create({
         backgroundColor: '#fff',
         paddingVertical: 25,
         width: '100%',
-        marginBottom: 10,
+        marginBottom: 10,   
         alignItems: 'center',
         boxShadow: themes.colors.shadow,
     },

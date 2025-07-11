@@ -29,7 +29,7 @@ import PaymentSubscription from '../pages/subscription/payment/paymentSubscripti
 import QrCode from '../pages/qrCode/qrcode';
 import PaymentConcluded from '../pages/qrCode/paymentConcluded';
 import DetailsHistory from '../pages/orderHistory/detailsHistory';
-import PaymentBook from '../pages/cart/paymentBook/payment';
+import PaymentBook from '../pages/paymentBook/payment';
 import Address from '../pages/address/address';
 
 const Stack = createStackNavigator();

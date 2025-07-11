@@ -84,7 +84,8 @@ export default function Cart() {
             });
 
             const bookImage = { uri: api.defaults.baseURL + livro.foto };
-            const uniqueKey = `${livro.id}_${item.formato}_${item.tipo}`;
+            const tipoSeguro = item.tipo ?? 'digital';
+            const uniqueKey = `${livro.id}_${item.formato}_${tipoSeguro}`;
 
             let precoFinal = item.preco_unitario;
             if (assinaturaData[0]?.tipo_assinatura === 'Premium') {
@@ -231,7 +232,9 @@ export default function Cart() {
             </TouchableOpacity>
           </View>
           <Text style={styles.author}>por {item.autor}</Text>
-          <Text style={styles.type}>{item.tipo}</Text>
+          <Text style={styles.type}>
+            {item.formato === 'digital' ? 'Formato: Digital' : `Capa: ${item.tipo}`}
+          </Text>
           {item.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
   
           {possuiDesconto ? (

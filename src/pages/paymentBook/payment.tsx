@@ -11,10 +11,10 @@ import {
   ScrollView,
 } from 'react-native';
 import styles from './styles';
-import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
+import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../routes/types/navigation';
+import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import IconeLocal from './assets/IconeLocal.svg';
@@ -22,10 +22,10 @@ import ArrowLocal from './assets/ArrowLocal.svg';
 import IconMoney from '../../../assets/subscription/money.svg';
 import IconPix from '../../../assets/subscription/pix.svg';
 
-import { Button } from '../../../components/Button/button';
+import { Button } from '../../components/Button/button';
 
-import { useBiometria } from '../../../hooks/useBiometria';
-import api from "../../../../API";
+import { useBiometria } from '../../hooks/useBiometria';
+import api from "../../../API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;

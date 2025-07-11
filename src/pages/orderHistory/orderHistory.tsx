@@ -13,6 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
+import { themes } from '../../global/themes';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -72,7 +73,6 @@ export default function OrderHistory() {
         const headers = { Authorization: `Bearer ${token}` };
         const { data: itens } = await api.get<ItemPedido[]>('/item-pedido/all', { headers });
 
-        // Para cada item, buscar o livro e adicionar no objeto
         const itensComLivro = await Promise.all(
           itens.map(async (item) => {
             const livro = await fetchLivro(item.id_livro);
@@ -80,13 +80,11 @@ export default function OrderHistory() {
           })
         );
 
-        // Função para formatar mês e ano para exibição, ex: "Fevereiro de 2025"
         const formatarMesAno = (dataStr: string) => {
           const date = new Date(dataStr);
           return date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
         };
 
-        // Agrupar os itens pelo mês e ano do pedido
         const agrupados: Record<string, ItemPedido[]> = {};
         itensComLivro.forEach((item) => {
           const mesAno = formatarMesAno(item.pedido.data_compra);
@@ -94,13 +92,11 @@ export default function OrderHistory() {
           agrupados[mesAno].push(item);
         });
 
-        // Transformar em array com chave mesAno e array de itens
         const agrupadosArray = Object.entries(agrupados).map(([mesAno, itens]) => ({
           mesAno,
           itens,
         }));
 
-        // Ordenar decrescente por data (mes/ano)
         agrupadosArray.sort((a, b) => {
           const [mesA, anoA] = a.mesAno.split(' de ');
           const [mesB, anoB] = b.mesAno.split(' de ');
@@ -123,7 +119,7 @@ export default function OrderHistory() {
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#8000FF" />
+        <ActivityIndicator size="large" color={themes.colors.purpleDark} />
       </View>
     );
   }
@@ -147,7 +143,7 @@ export default function OrderHistory() {
               return (
                 <TouchableOpacity
                   key={item.id}
-                  // onPress={() => navigation.navigate('DetailsHistory', { orderId: item.id })}
+                  onPress={() => navigation.navigate('DetailsHistory', { orderId: item.id })}
                 >
                   <View style={styles.card}>
                     <View style={styles.row}>

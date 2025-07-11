@@ -19,7 +19,10 @@ type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteParams = { orderId: string };
 
 interface Pedido {
+  id: string;
   data_compra: string;
+  total: number;
+  taxa_frete: number;
 }
 
 interface Usuario {
@@ -29,9 +32,11 @@ interface Usuario {
 interface ItemPedido {
   id: string;
   id_livro: string;
-  id_usuario: string;  // campo para id do usuário (ajuste conforme seu backend)
+  id_usuario: string;
   quantidade: number;
   preco_unitario: number;
+  formato: string;
+  tipo: string;
   pedido: Pedido;
 }
 
@@ -46,7 +51,6 @@ export default function DetailsHistory() {
 
   const { getTokenAndUserId } = useAuthStorage();
 
-  // Pega o livro via hook, passando o id do livro (quando disponível)
   const bookId = item?.id_livro ?? '';
   const { bookData } = useBookData(bookId);
 
@@ -59,18 +63,22 @@ export default function DetailsHistory() {
 
         const headers = { Authorization: `Bearer ${token}` };
 
-        // 1. Buscar item-pedido pelo orderId
-        const { data: itemData } = await api.get<ItemPedido>(`/item-pedido/${orderId}`, { headers });
+        // Primeiro, busca um item qualquer para obter o id_pedido
+        const { data: singleItem } = await api.get<ItemPedido>(`/item-pedido/${orderId}`, { headers });
+
+        const pedidoId = singleItem.pedido.id;
+        const { data: itensPedido } = await api.get<ItemPedido[]>(`/item-pedido/pedido/${pedidoId}`, { headers });
+
+        const itemData = itensPedido.find(i => i.id === orderId) || itensPedido[0];
         setItem(itemData);
 
-        // 2. Buscar nome do usuário pelo id_usuario do item
         if (itemData.id_usuario) {
           const { data: usuarioData } = await api.get<Usuario>(`/usuarios/${itemData.id_usuario}`, { headers });
           setUsuarioNome(usuarioData.nome);
         }
 
       } catch (error) {
-        console.error("Erro ao buscar item do pedido ou usuário:", error);
+        console.error("Erro ao buscar item do pedido:", error);
       } finally {
         setLoading(false);
       }
@@ -88,27 +96,20 @@ export default function DetailsHistory() {
   }
 
   const precoTotal = item.quantidade * item.preco_unitario;
-
-  // Monta URL completa e aplica encode na string da URL
-  const baseUrl = 'https://api.seusite.com'; // ajuste aqui sua base real
-  const imageUrl = baseUrl + encodeURI(bookData.foto);
+  const imageUrl = bookData.foto?.uri ?? '';
 
   return (
     <View style={stylesDetails.container}>
       <NavigationHeader title='INFORMAÇÕES DA COMPRA' iconArrow={true} />
 
-      {/* Imagem do Livro usando bookData.foto via hook */}
-      <Image
-        source={{ uri: imageUrl }}
-        style={stylesDetails.banner}
-        resizeMode="contain"
-      />
+      <Image source={{ uri: imageUrl }} style={stylesDetails.banner} resizeMode="contain" />
 
-      {/* Detalhes da Compra */}
       <View style={stylesDetails.card}>
         <Text style={stylesDetails.cardTitle}>Detalhes da Compra:</Text>
+        <Text style={stylesDetails.orderNumber}>Item ID: #{item.id}</Text>
 
-        <View style={stylesDetails.row}>
+        {/* Linha com ícone + nome + preço */}
+        <View style={[stylesDetails.row, { marginTop: 8 }]}>
           <LivroIcon width={24} height={24} />
           <View style={stylesDetails.textContainer}>
             <Text style={stylesDetails.bookTitle}>{bookData.titulo}</Text>
@@ -119,29 +120,35 @@ export default function DetailsHistory() {
           </Text>
         </View>
 
+        {/* Linha com data + comprador + quantidade */}
         <View style={[stylesDetails.row, { marginTop: 10 }]}>
           <LogoPacote width={24} height={24} />
           <View style={stylesDetails.textContainer}>
             <Text style={stylesDetails.date}>
               {new Date(item.pedido.data_compra).toLocaleDateString('pt-BR')}
             </Text>
-            <Text style={stylesDetails.customer}>
-              Comprado por: {usuarioNome ?? 'Carregando...'}
+            <Text style={stylesDetails.customer}>Comprado por: {usuarioNome ?? '...'}</Text>
+            <Text style={stylesDetails.customer}>Quantidade: {item.quantidade}</Text>
+          </View>
+
+          <View style={{ alignItems: 'flex-end' }}>
+            <Text style={stylesDetails.price}>
+              Total: R$ {item.pedido.total.toFixed(2).replace('.', ',')}
+            </Text>
+            <Text style={{ fontSize: 12, color: '#666' }}>
+              Frete: R$ {item.pedido.taxa_frete.toFixed(2).replace('.', ',')}
             </Text>
           </View>
-          <Text style={stylesDetails.orderNumber}>Item ID {"\n"}#{item.id}</Text>
         </View>
       </View>
 
-      {/* Informações da Compra */}
       <View style={stylesDetails.card}>
         <Text style={stylesDetails.cardTitle}>Informações da Compra:</Text>
-
         <View style={stylesDetails.infoRow}>
           <View style={stylesDetails.infoBox}>
             <Text style={stylesDetails.infoLabel}>Total Pago</Text>
             <Text style={stylesDetails.infoValue}>
-              R$ {precoTotal.toFixed(2).replace('.', ',')}
+              R$ {(item.pedido.total).toFixed(2).replace('.', ',')}
             </Text>
           </View>
           <View style={stylesDetails.infoBox}>

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ActivityIndicator } from 'react-native';
 import stylesDetails from './stylesDetails';
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../API';
 
 import LogoPacote from './assets/Pacote.svg';
 import LivroIcon from './assets/Livro.svg';
 import PacoteEntregue from './assets/PacoteEntregue.svg';
-import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
+import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 
 import { useBookData } from '../book/hooks/useBookData';
 import { useAuthStorage } from '../../hooks/useAuthStorage';
@@ -21,8 +21,8 @@ type RouteParams = { orderId: string };
 interface Pedido {
   id: string;
   data_compra: string;
-  total: number;
-  taxa_frete: number;
+  total: number | null;
+  taxa_frete: number | null;
 }
 
 interface Usuario {
@@ -58,7 +58,7 @@ export default function DetailsHistory() {
     const fetchItemPedido = async () => {
       try {
         setLoading(true);
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         if (!token) return;
 
         const headers = { Authorization: `Bearer ${token}` };
@@ -66,9 +66,13 @@ export default function DetailsHistory() {
         // Primeiro, busca um item qualquer para obter o id_pedido
         const { data: singleItem } = await api.get<ItemPedido>(`/item-pedido/${orderId}`, { headers });
 
+        console.log('singleItem recebido:', singleItem);
+        console.dir(singleItem.pedido, { depth: null }); // mostra tudo do pedido, para checar taxa_frete e total
+
         const pedidoId = singleItem.pedido.id;
         const { data: itensPedido } = await api.get<ItemPedido[]>(`/item-pedido/pedido/${pedidoId}`, { headers });
 
+        // Procurar o item com id igual a orderId, se não encontrar pega o primeiro
         const itemData = itensPedido.find(i => i.id === orderId) || itensPedido[0];
         setItem(itemData);
 
@@ -78,7 +82,7 @@ export default function DetailsHistory() {
         }
 
       } catch (error) {
-        console.error("Erro ao buscar item do pedido:", error);
+        console.error('Erro ao buscar item do pedido:', error);
       } finally {
         setLoading(false);
       }
@@ -90,7 +94,7 @@ export default function DetailsHistory() {
   if (loading || !item || !bookData) {
     return (
       <View style={[stylesDetails.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#8000FF" />
+        <ActivityIndicator size='large' color='#8000FF' />
       </View>
     );
   }
@@ -98,17 +102,20 @@ export default function DetailsHistory() {
   const precoTotal = item.quantidade * item.preco_unitario;
   const imageUrl = bookData.foto?.uri ?? '';
 
+  // Tratamento seguro para total e frete, evitando erro de toFixed em null ou undefined
+  const totalPedido = item.pedido.total != null ? item.pedido.total : 0;
+  const taxaFrete = item.pedido.taxa_frete != null ? item.pedido.taxa_frete : 0;
+
   return (
     <View style={stylesDetails.container}>
       <NavigationHeader title='INFORMAÇÕES DA COMPRA' iconArrow={true} />
 
-      <Image source={{ uri: imageUrl }} style={stylesDetails.banner} resizeMode="contain" />
+      <Image source={{ uri: imageUrl }} style={stylesDetails.banner} resizeMode='contain' />
 
       <View style={stylesDetails.card}>
         <Text style={stylesDetails.cardTitle}>Detalhes da Compra:</Text>
         <Text style={stylesDetails.orderNumber}>Item ID: #{item.id}</Text>
 
-        {/* Linha com ícone + nome + preço */}
         <View style={[stylesDetails.row, { marginTop: 8 }]}>
           <LivroIcon width={24} height={24} />
           <View style={stylesDetails.textContainer}>
@@ -120,7 +127,6 @@ export default function DetailsHistory() {
           </Text>
         </View>
 
-        {/* Linha com data + comprador + quantidade */}
         <View style={[stylesDetails.row, { marginTop: 10 }]}>
           <LogoPacote width={24} height={24} />
           <View style={stylesDetails.textContainer}>
@@ -133,10 +139,10 @@ export default function DetailsHistory() {
 
           <View style={{ alignItems: 'flex-end' }}>
             <Text style={stylesDetails.price}>
-              Total: R$ {item.pedido.total.toFixed(2).replace('.', ',')}
+              Total: R$ {totalPedido.toFixed(2).replace('.', ',')}
             </Text>
             <Text style={{ fontSize: 12, color: '#666' }}>
-              Frete: R$ {item.pedido.taxa_frete.toFixed(2).replace('.', ',')}
+              Frete: R$ {taxaFrete.toFixed(2).replace('.', ',')}
             </Text>
           </View>
         </View>
@@ -148,7 +154,7 @@ export default function DetailsHistory() {
           <View style={stylesDetails.infoBox}>
             <Text style={stylesDetails.infoLabel}>Total Pago</Text>
             <Text style={stylesDetails.infoValue}>
-              R$ {(item.pedido.total).toFixed(2).replace('.', ',')}
+              R$ {totalPedido.toFixed(2).replace('.', ',')}
             </Text>
           </View>
           <View style={stylesDetails.infoBox}>

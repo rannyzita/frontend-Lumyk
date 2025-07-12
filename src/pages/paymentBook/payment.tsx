@@ -17,8 +17,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
-import IconeLocal from './assets/IconeLocal.svg';
-import ArrowLocal from './assets/ArrowLocal.svg';
+import IconeLocal from './assets/Local.svg';
+import ArrowLocal from './assets/Arrow.svg';
 import IconMoney from '../../assets/subscription/money.svg';
 import IconPix from '../../assets/subscription/pix.svg';
 
@@ -34,10 +34,10 @@ type RouteProps = RouteProp<RootStackParamList, 'PaymentBook'>;
 interface LivroSelecionado {
   id: string;
   titulo: string;
-  foto: string; // url
+  foto: string; 
   quantidade: number;
-  preco: number; // preço com desconto se premium
-  precoOriginal?: number; // preço original para cálculo
+  preco: number; 
+  precoOriginal?: number; 
 }
 
 interface Endereco {

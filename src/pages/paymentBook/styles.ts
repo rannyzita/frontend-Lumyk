@@ -4,12 +4,12 @@ import { themes } from '../../global/themes';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: themes.colors.backgroundLumyk, 
+        backgroundColor: 'white', 
         paddingTop: 8
     },
     divider:{
         height: 1,
-        backgroundColor: '#C3A9E2', 
+        backgroundColor: themes.colors.purpleDark, 
         marginVertical: 5, 
     },
     enderecoContainer: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     },
     enderecoTexto: {
         flex: 1,
-        color: '#333',
+        color: themes.colors.purpleDark,
         fontSize: 14,
     },
     listaCarrinho: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333',
+        color: themes.colors.purpleDark,
     },
     metodoContainer: {
         borderRadius: 12,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     textoMetodo: {
         fontSize: 14,
-        color: '#333',
+        color: themes.colors.primary,
     },
     detalhesContainer: {
         paddingHorizontal:30,
@@ -67,11 +67,12 @@ const styles = StyleSheet.create({
     },
     textMainDetalhes:{
         fontSize:16,
-        marginBottom:5
+        marginBottom:5,
+        color: themes.colors.purpleDark
     },
     textoDetalhe: {
         fontSize: 14,
-        color: '#333',
+        color: themes.colors.purpleDark,
         marginVertical: 2,
     },
     bold: {
@@ -81,12 +82,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginTop: 5,
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     totalValor: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     botaoContainer: {
         alignItems: 'center',
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     },
     paymentText: {
         fontSize: 16,
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     radioCircle: {
         height: 20,

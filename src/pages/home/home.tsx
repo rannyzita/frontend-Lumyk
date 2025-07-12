@@ -1,4 +1,3 @@
-// ignore esse moi de codigo, eu vou modularizar dps ainda :3
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, StatusBar } from 'react-native';
 
@@ -102,7 +101,6 @@ export default function Home() {
         </TouchableOpacity>
     );
     
-    // padrao sem nada selecionado
     useFocusEffect(
         useCallback(() => {
             async function fetchData() {
@@ -164,7 +162,6 @@ export default function Home() {
         }, [selectedStates])
     );      
     
-    // usado qnd o genre ou state for modificado
     useEffect(() => {
         async function fetchAndFilterBooks() {  
             setIsLoadingBooks(true);
@@ -242,7 +239,7 @@ export default function Home() {
                 return null; 
             }
     
-            return data[0].tipo_assinatura; // 'Básica' ou 'Premium'
+            return data[0].tipo_assinatura; 
         } catch (error) {
             console.error('Erro ao verificar assinatura:', error);
             return null;
@@ -270,9 +267,8 @@ export default function Home() {
     return (
         <SafeAreaView  style={{ flex: 1, backgroundColor: themes.colors.primary }}>
             <StatusBar barStyle="light-content" backgroundColor={themes.colors.primary} />
-            {/* <View style={{ height: themes.colors.LayoutTopBar, backgroundColor: themes.colors.primary }} /> */}
             <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
-                <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
+                <View style={{ backgroundColor: 'white', flex: 1 }}>
                     <TopBar 
                         navigation={navigation} 
                         title='Digite o titulo do livro aqui...'

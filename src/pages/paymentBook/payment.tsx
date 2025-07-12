@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import styles from './styles';
 import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
@@ -19,8 +17,8 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import IconeLocal from './assets/Local.svg';
 import ArrowLocal from './assets/Arrow.svg';
-import IconMoney from '../../assets/subscription/money.svg';
-import IconPix from '../../assets/subscription/pix.svg';
+import IconMoney from './assets/Dinheiro.svg';
+import IconPix from './assets/Pix.svg';
 
 import { Button } from '../../components/Button/button';
 
@@ -238,7 +236,6 @@ export default function PaymentBook() {
 
   return (
     <View style={styles.container}>
-      {/* Mantive seu código UI intacto abaixo */}
 
       <NavigationHeader title="PAGAMENTO" iconArrow={true} />
 
@@ -329,39 +326,39 @@ export default function PaymentBook() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { marginTop: 15 }]} />
 
       {/* Detalhes do Pagamento */}
       <View style={styles.detalhesContainer}>
         <Text style={styles.textMainDetalhes}>Detalhes do Pagamento:</Text>
 
         <View style={{ marginBottom: 20 }}>
-          <Text style={styles.textoDetalhe}>
-            Quantidade de Itens: <Text style={styles.bold}>{totalItens}</Text>
-          </Text>
-          <Text style={styles.textoDetalhe}>
-            Total do Frete:{' '}
+          <View style={styles.rowBetween}>
+            <Text style={styles.textoDetalhe}>Quantidade de Itens:</Text>
+            <Text style={[styles.textoDetalhe, styles.bold]}>{totalItens}</Text>
+          </View>
+
+          <View style={styles.rowBetween}> 0
+            <Text style={styles.textoDetalhe}>Total do Frete:{' '}</Text>
             <Text style={styles.bold}>{frete === 0 ? 'Frete grátis' : `R$ ${frete.toFixed(2)}`}</Text>
-          </Text>
+          </View>
+
+          <View style={styles.rowBetween}>
+            <Text style={styles.textoDetalhe}>Subtotal:{' '}</Text>
+            <Text style={styles.bold}>
+              {assinatura === 'Premium'
+                ? 'R$ ' + subtotalComDesconto.toFixed(2)
+                : 'R$ ' + subtotalOriginal.toFixed(2)}
+            </Text>
+          </View>
         </View>
 
-        <Text style={styles.textoDetalhe}>
-          Subtotal:{' '}
-          <Text style={styles.bold}>
-            {assinatura === 'Premium'
-              ? subtotalComDesconto.toFixed(2)
-              : subtotalOriginal.toFixed(2)}
-          </Text>
-        </Text>
-
         <View style={styles.divider} />
-
-        <Text style={styles.totalTexto}>
-          Pagamento Total:{' '}
-          <Text style={styles.totalValor}>
-            R$ {(subtotalComDesconto + frete).toFixed(2)}
-          </Text>
-        </Text>
+        
+        <View style={styles.rowBetween}>
+          <Text style={styles.totalTexto}>Pagamento Total:{' '}</Text>
+          <Text style={styles.totalValor}>R$ {(subtotalComDesconto + frete).toFixed(2)}</Text>
+        </View>
 
         {paymentError && (
           <Text style={[styles.errorText, { marginTop: 10 }]}>

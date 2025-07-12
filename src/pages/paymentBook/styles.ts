@@ -8,9 +8,8 @@ const styles = StyleSheet.create({
         paddingTop: 8
     },
     divider:{
-        height: 1,
-        backgroundColor: themes.colors.purpleDark, 
-        marginVertical: 5, 
+        height: 2,
+        backgroundColor: themes.colors.purpleDark,  
     },
     enderecoContainer: {
         flexDirection: 'row',
@@ -75,8 +74,14 @@ const styles = StyleSheet.create({
         color: themes.colors.purpleDark,
         marginVertical: 2,
     },
+    rowBetween: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 2,
+    },
     bold: {
-        fontWeight: 'bold',
+        color: themes.colors.purpleDark,
     },
     totalTexto: {
         fontSize: 16,

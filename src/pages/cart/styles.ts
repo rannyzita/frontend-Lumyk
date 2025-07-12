@@ -77,22 +77,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
+    backgroundColor: themes.colors.purpleDark,
+    borderRadius: 15,
+    overflow: 'hidden',
+    height: 35,
   },
   qtdButton: {
-    width: 28,
+    width: 35,
     height: 28,
-    borderRadius: 14,
-    backgroundColor: '#eee',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 6,
   },
   qtdText: {
-    fontSize: 14,
+    color: 'white',
     fontWeight: 'bold',
-    width: 28,
-    textAlign: 'center',
+    fontSize: 18,
+  },
+  qtdTextMiddle: {
+    color: themes.colors.purpleDark,
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  qtdMiddle: {
+    backgroundColor: 'white',
+    width: 40,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: themes.colors.purpleDark,
   },
   infoContainer: {
     flex: 1,
@@ -195,7 +209,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 15,
   },
-  
   trashButtonItem: {
     position: 'absolute',
     top: 0,
@@ -203,7 +216,6 @@ const styles = StyleSheet.create({
     padding: 6,
     zIndex: 10,
   },
-  
   checkboxContainerItem: {
     marginLeft: 10,
     marginRight: 10,

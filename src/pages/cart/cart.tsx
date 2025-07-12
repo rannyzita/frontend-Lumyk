@@ -235,7 +235,11 @@ export default function Cart() {
                   <TouchableOpacity style={styles.qtdButton} onPress={() => diminuirQuantidade(livro.id)}>
                     <Text style={styles.qtdText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.qtdText}>{livro.quantidade}</Text>
+                  <View style={styles.qtdMiddle}>
+                    <Text style={[styles.qtdText, { color: themes.colors.purpleDark }]}>
+                      {livro.quantidade}
+                    </Text>
+                  </View>
                   <TouchableOpacity style={styles.qtdButton} onPress={() => aumentarQuantidade(livro.id)}>
                     <Text style={styles.qtdText}>+</Text>
                   </TouchableOpacity>
@@ -280,7 +284,7 @@ export default function Cart() {
         ))}
 
         <View style={{ borderTopWidth: 2, borderTopColor: themes.colors.purpleDark, marginTop: 12, paddingTop: 6, alignItems: 'flex-end' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 14 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14, color: themes.colors.purpleDark }}>
             Total deste livro: R$ {totalLivro.toFixed(2)}
           </Text>
         </View>

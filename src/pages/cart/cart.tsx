@@ -13,7 +13,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import TrashIcon from './assets/Trash.svg';
+import TrashIcon from './assets/TrashCart.svg';
+import HeaderSection from '../../components/HeaderSection/headerSection';
+import { themes } from '../../global/themes';
 
 interface LivroCarrinho {
   id: string;
@@ -179,112 +181,109 @@ export default function Cart() {
   const existeGrupoComMaisDeUm = groupedData.some((grupo) => grupo.length > 1);
 
   return (
-    <View style={styles.card}>
-      {/* Topo do grupo: checkbox geral e trash geral */}
-
-      {item.length > 1 && (
-        <View style={[styles.topInfo, { justifyContent: 'space-between', alignItems: 'center' }]}>
-          {/* Lado esquerdo: Trash geral + texto "Deletar tudo" */}
-
-          {/* Lado direito: Checkbox geral + texto "Selecionar tudo" */}
-          <TouchableOpacity
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={() => toggleCheckGroup(item[0].idLivro, !todosSelecionados)}
-          >
-            <View style={[styles.checkbox, todosSelecionados && styles.checkboxChecked]}>
-              {todosSelecionados && <View style={styles.checkboxTick} />}
-            </View>
-            <Text style={{ marginLeft: 6, color: '#9D4EDD', fontWeight: 'bold' }}>
-              Selecionar tudo
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={() => item.forEach(i => deletarItemDoCarrinho(i.id))}
-          >
-            <Text style={{ marginLeft: 6, color: '#9D4EDD', fontWeight: 'bold' }}>
-              Deletar tudo
-            </Text>
-            <TrashIcon width={24} height={24} />
-          </TouchableOpacity>
-
-          <View style={styles.separator} />
-        </View>
-      )}
-
-
-      {/* Itens individuais */}
-      {item.map((livro, index) => (
-        <View key={livro.id} style={{ marginTop: index !== 0 ? 16 : 0, position: 'relative' }}>
-
-          {index !== 0 && (
-            <View style={{ height: 1, backgroundColor: '#ccc', marginVertical: -5 }} />
-          )}
-          {/* Trash individual no topo direito do item */}
-          <TouchableOpacity
-            style={styles.trashButtonItem}
-            onPress={() => deletarItemDoCarrinho(livro.id)}
-          >
-            <TrashIcon width={20} height={20} />
-          </TouchableOpacity>
-
-          {/* Conteúdo do item */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24 }}>
-            <View style={styles.leftColumn}>
-              <Image source={livro.foto} style={styles.image} />
-              <View style={styles.qtdContainer}>
-                <TouchableOpacity style={styles.qtdButton} onPress={() => diminuirQuantidade(livro.id)}>
-                  <Text style={styles.qtdText}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.qtdText}>{livro.quantidade}</Text>
-                <TouchableOpacity style={styles.qtdButton} onPress={() => aumentarQuantidade(livro.id)}>
-                  <Text style={styles.qtdText}>+</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.infoContainer}>
-              <Text style={styles.title}>{livro.titulo}</Text>
-              <Text style={styles.author}>por {livro.autor}</Text>
-              <Text style={styles.type}>
-                {livro.formato === 'digital'
-                  ? 'Formato: Digital'
-                  : `Formato: Físico - ${livro.tipo}`}
-              </Text>
-              {livro.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
-              {assinatura === 'Premium' ? (
-                <>
-                  <Text style={{ fontSize: 12, color: 'red', textDecorationLine: 'line-through' }}>
-                    R$ {precoOriginal.toFixed(2)}
-                  </Text>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
-                    R$ {livro.preco.toFixed(2)}
-                  </Text>
-                </>
-              ) : (
-                <Text style={styles.price}>R$ {livro.preco.toFixed(2)}</Text>
-              )}
-            </View>
-
-            {/* Checkbox individual */}
+    <View style={{marginTop:20}}>
+      <View style={styles.card}>
+        {item.length > 1 && (
+          <View style={[styles.topInfo, { justifyContent: 'space-between', alignItems: 'center' }]}>
             <TouchableOpacity
-              style={styles.checkboxContainerItem}
-              onPress={() => toggleCheckIndividual(livro.id)}
-              activeOpacity={0.7}
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => toggleCheckGroup(item[0].idLivro, !todosSelecionados)}
             >
-              <View style={[styles.checkbox, livro.checked && styles.checkboxChecked]}>
-                {livro.checked && <View style={styles.checkboxTick} />}
+              <View style={[styles.checkbox, todosSelecionados && styles.checkboxChecked]}>
+                {todosSelecionados && <View style={styles.checkboxTick} />}
               </View>
+              <Text style={{ marginLeft: 6, color: themes.colors.purpleDark, fontWeight: 'bold' }}>
+                Selecionar tudo
+              </Text>
             </TouchableOpacity>
-          </View>
-        </View>
-      ))}
 
-      <View style={{ borderTopWidth: 1, borderTopColor: '#ccc', marginTop: 12, paddingTop: 6, alignItems: 'flex-end' }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 14 }}>
-          Total deste livro: R$ {totalLivro.toFixed(2)}
-        </Text>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => item.forEach(i => deletarItemDoCarrinho(i.id))}
+            >
+              <Text style={{ marginRight: 5, color: themes.colors.purpleDark, fontWeight: 'bold' }}>
+                Deletar tudo
+              </Text>
+              <TrashIcon width={24} height={24} />
+            </TouchableOpacity>
+
+          </View>
+        )}
+
+        { item.length > 1 && (
+          <View style={styles.separator} />
+        )}
+
+        {item.map((livro, index) => (
+          <View key={livro.id} style={{ marginTop: index !== 0 ? 16 : 0, position: 'relative' }}>
+
+            {index !== 0 && (
+              <View style={{ height: 2, backgroundColor: themes.colors.purpleDark, marginVertical: -5 }} />
+            )}
+    
+            <TouchableOpacity
+              style={styles.trashButtonItem}
+              onPress={() => deletarItemDoCarrinho(livro.id)}
+            >
+              <TrashIcon width={20} height={20} />
+            </TouchableOpacity>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 24 }}>
+              <View style={styles.leftColumn}>
+                <Image source={livro.foto} style={styles.image} />
+                <View style={styles.qtdContainer}>
+                  <TouchableOpacity style={styles.qtdButton} onPress={() => diminuirQuantidade(livro.id)}>
+                    <Text style={styles.qtdText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qtdText}>{livro.quantidade}</Text>
+                  <TouchableOpacity style={styles.qtdButton} onPress={() => aumentarQuantidade(livro.id)}>
+                    <Text style={styles.qtdText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.infoContainer}>
+                <Text style={styles.title}>{livro.titulo}</Text>
+                <Text style={styles.author}>por {livro.autor}</Text>
+                <Text style={styles.type}>
+                  {livro.formato === 'digital'
+                    ? 'Formato: Digital'
+                    : `Formato: Físico - ${livro.tipo}`}
+                </Text>
+                {livro.estoque > 0 && <Text style={styles.inStock}>Em estoque</Text>}
+                {assinatura === 'Premium' ? (
+                  <>
+                    <Text style={{ fontSize: 12, color: 'red', textDecorationLine: 'line-through' }}>
+                      R$ {precoOriginal.toFixed(2)}
+                    </Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+                      R$ {livro.preco.toFixed(2)}
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={styles.price}>R$ {livro.preco.toFixed(2)}</Text>
+                )}
+              </View>
+
+              {/* Checkbox individual */}
+              <TouchableOpacity
+                style={styles.checkboxContainerItem}
+                onPress={() => toggleCheckIndividual(livro.id)}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.checkbox, livro.checked && styles.checkboxChecked]}>
+                  {livro.checked && <View style={styles.checkboxTick} />}
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+
+        <View style={{ borderTopWidth: 2, borderTopColor: themes.colors.purpleDark, marginTop: 12, paddingTop: 6, alignItems: 'flex-end' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14 }}>
+            Total deste livro: R$ {totalLivro.toFixed(2)}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -292,13 +291,12 @@ export default function Cart() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>CARRINHO DE COMPRAS</Text>
-      <View style={styles.separatorPurple} />
+      <HeaderSection title="CARRINHO DE COMPRAS"></HeaderSection>
 
       <View style={{ flex: 1, position: 'relative' }}>
         {loading ? (
           <View style={styles.loading}>
-            <ActivityIndicator size="large" color="#8000FF" />
+            <ActivityIndicator size="large" color={themes.colors.purpleDark} />
           </View>
         ) : groupedData.length === 0 ? (
           <View style={styles.emptyContainer}>

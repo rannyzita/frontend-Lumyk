@@ -4,8 +4,8 @@ import { themes } from '../../global/themes';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: themes.colors.backgroundLumyk,
-    paddingTop: 60,
+    backgroundColor: 'white',
+    paddingTop: 40,
   },
   header: {
     fontSize: 22,
@@ -18,14 +18,23 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 12,
     padding: 12,
-    marginBottom: 16,
+    marginBottom: 10,
     width: '95%',
     maxWidth: 350,
     alignSelf: 'center',
-    boxShadow: themes.colors.shadow,
+    
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0, 
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+
+    elevation: 8,
   },
   topInfo: {
     flexDirection: 'row',
@@ -38,13 +47,13 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#9D4EDD',
+    borderColor: themes.colors.purpleDark,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
   },
   checkboxChecked: {
-    backgroundColor: '#9D4EDD',
+    backgroundColor: themes.colors.purpleDark,
   },
   checkboxTick: {
     width: 10,
@@ -150,7 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   checkoutButton: {
-    backgroundColor: '#9D4EDD',
+    backgroundColor: themes.colors.primary,
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -181,10 +190,10 @@ const styles = StyleSheet.create({
     marginTop: -60,
   },
   separator: {
-    height: 1,
-    backgroundColor: '#ccc',
+    height: 2,
+    backgroundColor: themes.colors.purpleDark,
     width: '100%',
-    marginVertical: 12,
+    marginVertical: 15,
   },
   
   trashButtonItem: {

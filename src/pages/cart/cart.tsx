@@ -236,7 +236,7 @@ export default function Cart() {
                     <Text style={styles.qtdText}>-</Text>
                   </TouchableOpacity>
                   <View style={styles.qtdMiddle}>
-                    <Text style={[styles.qtdText, { color: themes.colors.purpleDark }]}>
+                    <Text style={[styles.qtdTextMiddle]}>
                       {livro.quantidade}
                     </Text>
                   </View>

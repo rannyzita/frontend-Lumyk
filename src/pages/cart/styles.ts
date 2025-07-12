@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
   },
   qtdText: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
+    marginBottom: 5,
   },
   qtdTextMiddle: {
     color: themes.colors.purpleDark,
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 16,
   },
   qtdMiddle: {
     backgroundColor: 'white',

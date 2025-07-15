@@ -55,7 +55,6 @@ export default function PaymentBook() {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   const { selectedBookIds } = route.params ?? { selectedBookIds: [] };
-
   const [livrosSelecionados, setLivrosSelecionados] = useState<LivroSelecionado[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMethod, setSelectedMethod] = useState<'pix' | 'dinheiro' | null>(null);
@@ -338,7 +337,7 @@ export default function PaymentBook() {
             <Text style={[styles.textoDetalhe, styles.bold]}>{totalItens}</Text>
           </View>
 
-          <View style={styles.rowBetween}> 0
+          <View style={styles.rowBetween}> 
             <Text style={styles.textoDetalhe}>Total do Frete:{' '}</Text>
             <Text style={styles.bold}>{frete === 0 ? 'Frete grátis' : `R$ ${frete.toFixed(2)}`}</Text>
           </View>

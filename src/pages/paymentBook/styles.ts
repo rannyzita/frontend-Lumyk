@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         flex: 1,
         color: themes.colors.purpleDark,
         fontSize: 14,
+        fontWeight: 'bold',
     },
     listaCarrinho: {
         marginVertical: 10,
@@ -104,9 +105,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', 
         backgroundColor: '#fff',
         padding: 15,
-        borderRadius: 12,
+        borderRadius: 15,
         gap: 10,
-        boxShadow: themes.colors.shadow
+        boxShadow: themes.colors.shadow,
+        borderWidth: 2,
+        borderColor: themes.colors.purpleDark
     },
     paymentText: {
         fontSize: 16,
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
         width: 20,
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: themes.colors.primary,
+        borderColor: themes.colors.purpleDark,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
         height: 10,
         width: 10,
         borderRadius: 5,
-        backgroundColor: themes.colors.primary,
+        backgroundColor: themes.colors.purpleDark,
     },
     errorText: {
         color: 'red',

@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingHorizontal: 25,
         borderRadius: 8,
-        marginVertical: 10,
         gap: 6,
     },
     enderecoTexto: {

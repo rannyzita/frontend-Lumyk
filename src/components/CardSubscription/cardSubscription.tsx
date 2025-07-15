@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Logo from '../../assets/logo.svg';
 import styles from './styles';
-import { themes } from '../../global/themes';
 
 interface PlanCardProps {
     id: string;
@@ -20,14 +19,14 @@ const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected, faixaWi
         title = 'PLANO 1';
         price = 'R$ 15,90/mês';
         benefits = [
-        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
+            'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
         ];
     } else if (id === '2') {
         title = 'PLANO 2';
         price = 'R$ 29,99/mês';
         benefits = [
-        'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
-        'Desconto no valor de 20% aplicado automaticamente em todos os livros.',
+            'Isenção do Frete, garantindo que seja cobrado apenas o valor da compra em itens.',
+            'Desconto no valor de 20% aplicado automaticamente em todos os livros.',
         ];
     }
 

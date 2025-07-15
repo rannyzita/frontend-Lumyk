@@ -8,7 +8,18 @@ export default StyleSheet.create({
         padding: 20,
         marginBottom: 20,
         width: '70%',
-        boxShadow: themes.colors.shadow
+        
+         // Sombras suaves estilo iOS/Web
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+
+        // Android
+        elevation: 15,
     },
     cardPlanos: {
         backgroundColor: themes.colors.primary,

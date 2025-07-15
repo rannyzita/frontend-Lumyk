@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text} from 'react-native';
 import styles from './styles';
 
 import Logo from '../../assets/logo.svg';
@@ -10,7 +10,7 @@ import HeaderSection from '../../components/HeaderSection/headerSection';
 
 export default function About() {
     return (
-        <ScrollView contentContainerStyle={{ ...styles.container, flexGrow: 1 }}>
+        <View style={{ ...styles.container, flexGrow: 1 }}>
             <HeaderSection title="SOBRE NÓS" />
 
             <Logo width={150} height={150} style={styles.logo} />
@@ -32,6 +32,6 @@ export default function About() {
                     CEP 63400-000
                 </Text>
             </View>
-        </ScrollView>
+        </View>
     );
 }

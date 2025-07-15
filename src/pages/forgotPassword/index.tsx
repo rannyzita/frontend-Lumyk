@@ -15,15 +15,17 @@ import { useNavigation } from "@react-navigation/native";
 
 import ModalFeedback from '../../components/feedbackButton/feedbackButton';
 
-import api from '../../../API/index'; // Ajuste conforme seu projeto
+import api from '../../../API/index';
+
+import { useRedefinirSenha } from '../../context/RedefinirSenhaContext';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 const RedefinirSenha = () => {
     const navigation = useNavigation<NavigationProps>();
-    const [email, setEmail] = useState('');
+    const { email, setEmail, codigoEnviado, setCodigoEnviado } = useRedefinirSenha();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [emailError, setEmailError] = useState(''); // texto de erro
+    const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleEnviarCodigo = async () => {
@@ -40,9 +42,10 @@ const RedefinirSenha = () => {
             setShowSuccessModal(true);
             setTimeout(() => setShowSuccessModal(false), 10000);
 
-            // Limpa erro se houver
+            setCodigoEnviado(true);
             setEmailError('');
         } catch (error: any) {
+            setCodigoEnviado(false);
             if (error.response && error.response.status === 404) {
                 setEmailError('E-mail não encontrado.');
             } else {
@@ -58,13 +61,19 @@ const RedefinirSenha = () => {
             setEmailError('O campo de e-mail é obrigatório.');
             return;
         }
+
+        if (!codigoEnviado) {
+            setEmailError('Você precisa enviar o código antes de confirmar.');
+            return;
+        }
+
         setEmailError('');
         navigation.navigate('VerifyCode');
     };
 
     const handleEmailChange = (text: string) => {
         setEmail(text);
-        if (emailError) setEmailError(''); // limpa o erro quando o usuário digitar algo novo
+        setEmailError('');
     };
 
     return (
@@ -96,7 +105,6 @@ const RedefinirSenha = () => {
                     onChangeText={handleEmailChange}
                 />
 
-                {/* Texto de erro em vermelho embaixo do input */}
                 {!!emailError && (
                     <Text style={{ color: 'red', marginTop: 3, marginBottom: 8 }}>
                         {emailError}

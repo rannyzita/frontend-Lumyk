@@ -13,7 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
 
-import api from '../../../API/index'; // <-- import sua instância axios aqui
+import api from '../../../API/index'; 
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 
@@ -22,7 +22,7 @@ const VerifyCode = () => {
 
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [apiMessage, setApiMessage] = useState(''); // mensagem sucesso/erro
+    const [apiMessage, setApiMessage] = useState(''); 
     const [isError, setIsError] = useState(false);
 
     const confirmarCodigo = async () => {

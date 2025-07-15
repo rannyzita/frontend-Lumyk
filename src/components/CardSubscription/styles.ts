@@ -19,7 +19,7 @@ export default StyleSheet.create({
         shadowRadius: 10,
 
         // Android
-        elevation: 15,
+        elevation: 1,
     },
     cardPlanos: {
         backgroundColor: themes.colors.primary,

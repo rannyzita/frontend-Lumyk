@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         height: 2,
         backgroundColor: themes.colors.purpleDark,  
     },
-    enderecoContainer: {
+    enderecoContainer: {    
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,

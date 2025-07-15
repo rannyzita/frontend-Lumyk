@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Logo from '../../assets/logo.svg';
 import styles from './styles';
+import { themes } from '../../global/themes';
 
 interface PlanCardProps {
     id: string;
@@ -47,7 +48,12 @@ const PlanCard: React.FC<PlanCardProps> = ({ id, onSelect, planSelected, faixaWi
 
             <View style={styles.benefitsContainer}>
                 {benefits.map((item, index) => (
-                    <Text key={index} style={styles.benefitText}>○ {item}</Text>
+                    <View key={index} style={styles.benefitItem}>
+                        <View style={styles.bullet} />
+                        <Text style={styles.benefitText}>
+                            {item}
+                        </Text>
+                    </View>
                 ))}
             </View>
 

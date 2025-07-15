@@ -30,6 +30,7 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
     benefitsContainer: {
+        marginTop: 5,
         marginBottom: 15,
     },
     benefitsTitle: {
@@ -44,7 +45,6 @@ export default StyleSheet.create({
     benefitsRow: {
         flexDirection: 'row',
         width: 120, 
-        height: 30,
         borderRadius: 10,
     },
     button: {
@@ -57,8 +57,22 @@ export default StyleSheet.create({
         color: 'white',
         fontSize: 14,
     },
+    benefitItem: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 8,
+        gap: 8,
+    },
+    bullet: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: themes.colors.purpleDark,
+        marginTop: 20,
+    },
     benefitText: {
         fontSize: 14,
-        marginBottom: 5,
+        color: '#333',
+        flexShrink: 1,
     },
 });

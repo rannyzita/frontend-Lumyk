@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text, ScrollView, ImageBackground } from 'react-native';
 import styles from './styles';
 
-const AnuncioSubscription = require('../../assets/subscription/Resumo plano.png');
-
+import TextComercial from './assets/Texto.svg'
+import Books from './assets/livros.svg';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
@@ -24,11 +24,8 @@ export default function Subscription() {
 
                 {/* Imagem ampliada */}
                 <View style={styles.svgContainer}>
-                    <ImageBackground
-                        source={AnuncioSubscription}
-                        resizeMode="contain"
-                        style={styles.subscriptionImage}
-                    />
+                    <TextComercial width={205} height={200} />
+                    <Books width={125} height={125 } />
                 </View>
 
                 <PlanCard id="1" onSelect={() => navigation.navigate('PaymentSubscription', { id: '1' })} />

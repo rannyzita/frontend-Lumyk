@@ -206,13 +206,10 @@ export default function Cart() {
               </Text>
               <TrashIcon width={24} height={24} />
             </TouchableOpacity>
-
           </View>
         )}
 
-        { item.length > 1 && (
-          <View style={styles.separator} />
-        )}
+        <View style={styles.separator} />
 
         {item.map((livro, index) => (
           <View key={livro.id} style={{ marginTop: index !== 0 ? 16 : 0, position: 'relative' }}>

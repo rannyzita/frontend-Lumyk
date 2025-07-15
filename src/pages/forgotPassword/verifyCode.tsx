@@ -38,10 +38,10 @@ const VerifyCode = () => {
         setIsError(false);
 
         try {
-            await api.put('/usuarios/atualizar_senha', { codigo }); // envia apenas o código
+            await api.put('/usuarios/atualizar_senha', { codigo }); 
             setApiMessage('Código confirmado com sucesso.');
             setIsError(false);
-            navigation.navigate('ResetPassword', { codigo }); // envia o código para a próxima tela
+            navigation.navigate('ResetPassword', { codigo }); 
         } catch (error: any) {
             setIsError(true);
             if (error.response && error.response.status === 404) {
@@ -66,7 +66,7 @@ const VerifyCode = () => {
 
                 <Text style={styles.title}>Inserindo o Código</Text>
                 <Text style={styles.subtitle}>
-                    Para redefinir sua senha, informe o código que enviamos ao e-mail {email}.
+                    Para redefinir sua senha, informe o código que enviamos ao e-mail.
                     Caso não tenha enviado, volte para a página anterior e aperte em enviar novamente.
                 </Text>
 

@@ -4,10 +4,10 @@ import { RedefinirSenhaProvider } from './src/context/RedefinirSenhaContext';
 export default function App() {
 
   return (
-    <RedefinirSenhaProvider>
       <NavigationContainer>
-        <Routes></Routes>
+        <RedefinirSenhaProvider>
+            <Routes></Routes>
+        </RedefinirSenhaProvider>
       </NavigationContainer>
-    </RedefinirSenhaProvider>
   );
 };

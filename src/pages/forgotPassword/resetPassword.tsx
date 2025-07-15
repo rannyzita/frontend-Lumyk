@@ -14,7 +14,7 @@ import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import ModalFeedback from '../../components/feedbackButton/feedbackButton';
-import api from '../../../API/index'; // Certifique-se de que isso está configurado
+import api from '../../../API/index'; 
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'ResetPassword'>;

@@ -19,6 +19,10 @@ import IconeLocal from './assets/Local.svg';
 import ArrowLocal from './assets/Arrow.svg';
 import IconMoney from './assets/Dinheiro.svg';
 import IconPix from './assets/Pix.svg';
+import IconMoneySelected from './assets/MoneySelected.svg';
+import IconPixSelected from './assets/PixSelected.svg'
+
+import { themes } from "../../global/themes";
 
 import { Button } from '../../components/Button/button';
 
@@ -290,24 +294,52 @@ export default function PaymentBook() {
         <Text style={styles.tituloSecao}>Método de Pagamento:</Text>
 
         <TouchableOpacity
-          style={styles.paymentOption}
+          style={[
+            styles.paymentOption,
+            selectedMethod === 'pix' && {
+              backgroundColor: themes.colors.purpleDark,
+              borderColor: themes.colors.purpleDark,
+            }
+          ]}
           onPress={() => {
             setSelectedMethod('pix');
             setPaymentError(false);
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <IconPix width={24} height={24} />
-            <Text style={styles.paymentText}>Pix</Text>
+            {selectedMethod === 'pix' ? (
+              <IconPixSelected width={24} height={24} />
+            ) : (
+              <IconPix width={24} height={24} />
+            )}
+            <Text
+              style={[
+                styles.paymentText,
+                selectedMethod === 'pix' && { color: 'white' }
+              ]}
+            >
+              Pix
+            </Text>
           </View>
 
-          <View style={styles.radioCircle}>
-            {selectedMethod === 'pix' && <View style={styles.radioInner} />}
+          <View
+            style={[
+              styles.radioCircle,
+              selectedMethod === 'pix' && { backgroundColor: 'white', borderColor: 'white' }
+            ]}
+          >
+            {selectedMethod === 'pix' && <View style={[styles.radioInner, {backgroundColor: 'white'}]} />}
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.paymentOption}
+          style={[
+            styles.paymentOption,
+            selectedMethod === 'dinheiro' && {
+              backgroundColor: themes.colors.purpleDark,
+              borderColor: themes.colors.purpleDark,
+            }
+          ]}
           onPress={() => {
             setSelectedMethod('dinheiro');
             setPaymentError(false);
@@ -315,12 +347,28 @@ export default function PaymentBook() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <IconMoney width={24} height={24} />
-            <Text style={styles.paymentText}>Dinheiro</Text>
+            {selectedMethod === 'dinheiro' ? (
+              <IconMoneySelected width={24} height={24} />
+            ) : (
+              <IconMoney width={24} height={24} />
+            )}
+            <Text
+              style={[
+                styles.paymentText,
+                selectedMethod === 'dinheiro' && { color: 'white' }
+              ]}
+            >
+              Dinheiro
+            </Text>
           </View>
 
-          <View style={styles.radioCircle}>
-            {selectedMethod === 'dinheiro' && <View style={styles.radioInner} />}
+          <View
+            style={[
+              styles.radioCircle,
+              selectedMethod === 'dinheiro' && { backgroundColor: 'white', borderColor: 'white' }
+            ]}
+          >
+            {selectedMethod === 'dinheiro' && <View style={[styles.radioInner, {backgroundColor: 'white'}]} />}
           </View>
         </TouchableOpacity>
       </View>

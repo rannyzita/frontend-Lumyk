@@ -25,7 +25,7 @@ export type RootStackParamList = {
         selectedBookIds?: string[];
         formaPagamento?: 'pix' | 'dinheiro';
         enderecoSelecionado?: Endereco;
-        valorTotal: number;
+        valorTotal: number | string;
     };
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };

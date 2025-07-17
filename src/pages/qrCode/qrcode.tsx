@@ -45,9 +45,12 @@ export default function QrCode() {
     const route = useRoute();
     const navigation = useNavigation<NavigationProps>();
 
-    const { idAssinatura, valorTotal } = route.params as { idAssinatura: string; valorTotal: number };
+    const routeParams = route.params as Partial<RouteParamsAssinatura & RouteParamsLivro> & { valorTotal: number };
 
-    const isAssinatura = ['1', '2', '3'].includes(idAssinatura ?? '');
+    const isAssinatura = 'id' in routeParams && !('selectedBookIds' in routeParams);
+
+    const idAssinatura = isAssinatura ? routeParams.id : undefined;
+    const valorTotal = routeParams.valorTotal;
 
     const tipoAssinatura = idAssinatura === '1' ? 'Básica' : 'Premium';
     const precoAssinatura = idAssinatura === '1' ? 15.90 : 29.99;

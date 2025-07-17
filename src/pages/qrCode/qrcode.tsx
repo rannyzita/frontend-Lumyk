@@ -4,7 +4,7 @@ import QRCode from 'react-native-qrcode-svg';
 import * as Clipboard from 'expo-clipboard';
 
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
-import CopyIcon from './assets/iconCopy.svg';
+import CopyIcon from './assets/IconCopy.svg';
 import styles from './styles';
 
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,9 +16,11 @@ import { useAuthStorage } from '../../hooks/useAuthStorage';
 import ModalFeedback from '../../components/feedbackButton/feedbackButton';
 import api from '../../../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { themes } from '../../global/themes';
 
 type RouteParamsAssinatura = {
     id: string;
+    formaPagamento: 'pix' | 'dinheiro'
 };
 
 type RouteParamsLivro = {
@@ -39,11 +41,11 @@ type NavigationProps = StackNavigationProp<RootStackParamList>;
 export default function QrCode() {
     const pixCode = 'b6f8e2c1-1234-4f9a-b234-9a9c1df...';
     const [showModal, setShowModal] = useState(false);
-        const { getTokenAndUserId } = useAuthStorage();
+    const { getTokenAndUserId } = useAuthStorage();
     const route = useRoute();
     const navigation = useNavigation<NavigationProps>();
 
-    const idAssinatura = (route.params as RouteParamsAssinatura)?.id;
+    const { idAssinatura, valorTotal } = route.params as { idAssinatura: string; valorTotal: number };
 
     const isAssinatura = ['1', '2', '3'].includes(idAssinatura ?? '');
 
@@ -179,8 +181,13 @@ export default function QrCode() {
 
       <View style={styles.qrContainer}>
         <View style={styles.qrBox}>
+
+        <Text style={styles.totalText}>
+          VALOR TOTAL: R$ {valorTotal.toFixed(2).replace('.', ',')}
+        </Text>
+
           <View style={styles.qrCode}>
-            <QRCode value={pixCode} size={180} />
+            <QRCode value={pixCode} size={180} color={themes.colors.purpleDark}/>
           </View>
 
           <Text style={styles.qrText}>

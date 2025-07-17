@@ -22,7 +22,10 @@ export type RootStackParamList = {
     PaymentSubscription: { id: string};
     QrCode: {
         id?: string;
-        valorTotal: string | number;
+        selectedBookIds?: string[];
+        formaPagamento?: 'pix' | 'dinheiro';
+        enderecoSelecionado?: Endereco;
+        valorTotal: number;
     };
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };

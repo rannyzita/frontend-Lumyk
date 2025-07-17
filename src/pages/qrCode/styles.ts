@@ -58,6 +58,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
+    totalText: {
+        color: themes.colors.purpleDark,
+        fontWeight: 'bold',
+        fontSize: 18,
+        textTransform: 'uppercase',
+        marginBottom: 16,
+        textAlign: 'center',
+    },
 });
 
 export default styles;

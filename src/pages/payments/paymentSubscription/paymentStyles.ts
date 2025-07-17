@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     paymentSection: {
+        marginTop: 35,
         gap: 10,
     },
     paymentLabel: {

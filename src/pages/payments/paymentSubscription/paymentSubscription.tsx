@@ -144,7 +144,6 @@ export default function PaymentSubscription() {
 
                 {/* Método de Pagamento */}
                 <View style={styles.paymentSection}>
-                    <View style={styles.divider} />
 
                     <Text style={styles.paymentLabel}>Método de Pagamento:</Text>
 
@@ -159,8 +158,9 @@ export default function PaymentSubscription() {
                         icon={<IconPix width={24} height={24} />}
                         iconSelected={<IconPixSelected width={24} height={24} />}
                     />
+                    
 
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, {marginTop: 50}]} />
                     
                     {/* Aviso de assinatura ativa */}
                     {assinaturaAtiva && (

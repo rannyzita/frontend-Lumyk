@@ -2,11 +2,11 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import HomeIcon from '../assets/iconsNavigation/Home.svg';
-import OrderHistoryIcon from '../assets/iconsNavigation/Order.svg';
-import SubscriptionIcon from '../assets/iconsNavigation/Subscription.svg';
-import CartIcon from '../assets/iconsNavigation/Cart.svg';
-import AboutIcon from '../assets/iconsNavigation/About.svg';
+import HomeIcon from '../assets/iconsNavigation/BottomBar/Home.svg';
+import OrderHistoryIcon from '../assets/iconsNavigation/BottomBar/Order.svg';
+import SubscriptionIcon from '../assets/iconsNavigation/BottomBar/Subscription.svg';
+import CartIcon from '../assets/iconsNavigation/BottomBar/Cart.svg';
+import AboutIcon from '../assets/iconsNavigation/BottomBar/About.svg';
 
 import Loading from '../pages/loading/loading';
 import Login from '../pages/login/login';

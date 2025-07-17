@@ -4,12 +4,12 @@ import { themes } from '../../global/themes';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: themes.colors.backgroundLumyk, 
+    backgroundColor: 'white', 
     justifyContent: 'center',
     alignItems: 'center',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
   icon: {
     width: 32,
     height: 32,
-    tintColor: '#fff',
+    tintColor: 'white',
   },
   title: {
+    color: themes.colors.purpleDark,
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginBottom: 20,
-    color: '#444',
+    color: themes.colors.purpleDark,
   },
   button: {
     backgroundColor: themes.colors.primary,
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   buttonText: {
-    color: '#fff',
+    color: 'white',
   },
 });
 

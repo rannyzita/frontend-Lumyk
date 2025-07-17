@@ -21,8 +21,8 @@ export type RootStackParamList = {
     AccountDeleted: undefined;
     PaymentSubscription: { id: string};
     QrCode: {
-        id: string;
-        valorTotal: number;
+        id?: string;
+        valorTotal: string | number;
     };
     PaymentConcluded: undefined;
     DetailsHistory: { orderId: string };

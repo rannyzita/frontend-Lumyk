@@ -4,7 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeed
 import { useNavigation } from "@react-navigation/native";
 import { themes } from '../../global/themes';
 import styles from './styles';
-import { stylesDropDown } from '../../components/Dropdown/styles';
+import { stylesDropDown } from './components/Dropdown/styles';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
@@ -15,11 +15,11 @@ import ArrowDownIcon from '../../assets/iconFilter.svg';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-import CustomCheckbox from "../../components/CustomCheckBox/checkBox";
-import ButtonFilter from '../../components/ButtonFilter/buttonFilter';
-import DropdownFilter from "../../components/Dropdown/dropdown";
-import TopBar from '../../components/TopBar/topBar';
-import BookCard from "../../components/BookCard/bookCard";
+import CustomCheckbox from "./components/CustomCheckBox/checkBox";
+import ButtonFilter from './components/ButtonFilter/buttonFilter';
+import DropdownFilter from "./components/Dropdown/dropdown";
+import TopBar from './components/TopBar/topBar';
+import BookCard from "./components/BookCard/bookCard";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from '../../../API/index';

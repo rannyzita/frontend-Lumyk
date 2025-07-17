@@ -227,9 +227,6 @@ export default function PaymentBook() {
     console.log(selectedBookIds)
     try {
       navigation.navigate('QrCode', {
-        selectedBookIds,
-        formaPagamento: selectedMethod,
-        enderecoSelecionado,
         valorTotal: subtotalComDesconto + frete,
       });
     } catch (error) {

@@ -1,10 +1,9 @@
-// components/TopBar.tsx
 import React from 'react';
 import { View, TouchableOpacity, TextInput } from 'react-native';
-import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
-import ProfileIcon from '../../assets/iconsNavigation/Profile.svg';
+import SearchIcon from '../../assets/TopBar/Icone pesquisa.svg';
+import ProfileIcon from '../../assets/TopBar/Profile.svg';
 import LumykWhiteIcon from '../../assets/logoWhite.svg'; 
-import { themes } from '../../global/themes'; 
+import { themes } from '../../../../global/themes'; 
 import { styles } from './styles'; 
 
 interface TopBarProps {

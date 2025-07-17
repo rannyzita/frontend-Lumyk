@@ -94,7 +94,7 @@ export default function PaymentSubscription() {
         if (assinaturaAtiva) {
             await cancelarAssinatura();
         } else {
-            navigation.navigate('QrCode', {id: id});
+            navigation.navigate('QrCode', {id: id, valorTotal: price});
         }
     };
 

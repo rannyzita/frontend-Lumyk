@@ -16,7 +16,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as WebBrowser from 'expo-web-browser';
 
 import api from '../../../API/index';
@@ -78,7 +77,14 @@ export default function Register() {
             }
         } catch (error:any) {
             console.log('Erro no registro:', error?.response?.data || error.message || error);
-            Alert.alert('Erro', 'Erro ao conectar com o servidor');
+
+            const mensagem =
+                error?.response?.data?.mensagem ||  
+                error?.response?.data?.message ||  
+                error?.response?.data?.erro ||      
+                'Erro ao conectar com o servidor';
+
+            Alert.alert('Erro', mensagem);
         }
     };
 

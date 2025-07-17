@@ -187,8 +187,8 @@ export default function QrCode() {
                       VALOR TOTAL: R$ {valorFormatado}
                     </Text>
 
-                    <View style={styles.qrCode}>
-                        <QRCode value={pixCode} size={180} color={themes.colors.purpleDark} />
+                    <View style={{ alignItems: 'center', marginVertical: 25 }}>
+                      <QRCode value={pixCode} size={180} color={themes.colors.purpleDark} />
                     </View>
 
                     <Text style={styles.qrText}>

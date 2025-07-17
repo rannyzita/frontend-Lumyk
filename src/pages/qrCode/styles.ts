@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 12,
-        alignItems: 'center',
         elevation: 6,
         width: '100%',
-        height: 400
+        height: 420
     },
     qrText: {
+        color: themes.colors.purpleDark,
         textAlign: 'center',
         marginVertical: 12,
         fontSize: 14,
@@ -34,13 +34,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#672BB6',
+        borderRadius: 15,
         paddingHorizontal: 12,
         paddingVertical: 8,
-        width: '100%',
+        alignSelf: 'stretch', 
     },
     codeText: {
+        color: themes.colors.purpleDark,
         flex: 1,
         fontSize: 13,
         marginRight: 8,

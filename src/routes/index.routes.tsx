@@ -25,11 +25,11 @@ import VerifyCode from '../pages/forgotPassword/verifyCode';
 import ResetPassword from '../pages/forgotPassword/resetPassword';
 import AccountDeleting from '../pages/accountDeleting/accountDeleting';
 import AccountDeleted from '../pages/accountDeleting/feedbackDeleted';
-import PaymentSubscription from '../pages/subscription/payment/paymentSubscription';
+import PaymentSubscription from '../pages/payments/paymentSubscription/paymentSubscription';
 import QrCode from '../pages/qrCode/qrcode';
 import PaymentConcluded from '../pages/qrCode/paymentConcluded';
 import DetailsHistory from '../pages/orderHistory/detailsHistory';
-import PaymentBook from '../pages/paymentBook/payment';
+import PaymentBook from '../pages/payments/paymentBook/payment';
 import Address from '../pages/address/address';
 
 const Stack = createStackNavigator();

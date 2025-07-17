@@ -9,10 +9,10 @@ import {
   TextInput,
 } from 'react-native';
 import styles from './styles';
-import NavigationHeader from "../../components/NavigationHeader/navigationHeader";
+import NavigationHeader from "../../../components/NavigationHeader/navigationHeader";
 import { useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../routes/types/navigation';
+import { RootStackParamList } from '../../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import IconeLocal from './assets/Local.svg';
@@ -22,12 +22,12 @@ import IconPix from './assets/Pix.svg';
 import IconMoneySelected from './assets/MoneySelected.svg';
 import IconPixSelected from './assets/PixSelected.svg'
 
-import { themes } from "../../global/themes";
+import { themes } from "../../../global/themes";
 
-import { Button } from '../../components/Button/button';
+import { Button } from '../../../components/Button/button';
 
-import { useBiometria } from '../../hooks/useBiometria';
-import api from "../../../API";
+import { useBiometria } from '../../../hooks/useBiometria';
+import api from "../../../../API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;

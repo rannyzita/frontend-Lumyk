@@ -9,8 +9,8 @@ import { stylesDropDown } from './components/Dropdown/styles';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 
-import SearchIcon from '../../assets/iconsNavigation/Icone pesquisa.svg';
-import ArrowDownIcon from '../../assets/iconFilter.svg';
+import SearchIcon from './assets/TopBar/Icone pesquisa.svg';
+import ArrowDownIcon from './assets/Dropdown/iconFilter.svg';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';

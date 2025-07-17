@@ -24,7 +24,8 @@ type NavigationProps = StackNavigationProp<RootStackParamList>;
 export default function PaymentSubscription() {
     const route = useRoute();
     const { id } = route.params as RouteParams;
-    const price = id === '1' ? 'R$ 15,90/mês' : 'R$ 29,99/mês';
+    const priceLabel = id === '1' ? 'R$ 15,90/mês' : 'R$ 29,99/mês';
+    const priceValue = id === '1' ? 15.90 : 29.99;
 
     const [selectedMethod, setSelectedMethod] = useState<'pix' | 'dinheiro' | null>(null);
     const [paymentError, setPaymentError] = useState(false);
@@ -97,7 +98,7 @@ export default function PaymentSubscription() {
         if (assinaturaAtiva) {
             await cancelarAssinatura();
         } else {
-            navigation.navigate('QrCode', {id: id, valorTotal: price});
+            navigation.navigate('QrCode', {id: id, valorTotal: priceValue});
         }
     };
 
@@ -176,7 +177,7 @@ export default function PaymentSubscription() {
 
                     <View style={styles.paymentTotal}>
                         <Text style={styles.totalText}>Pagamento Total:</Text> 
-                        <Text style={styles.price}>{price}</Text>
+                        <Text style={styles.price}>{priceLabel}</Text>
                     </View>
 
                     {paymentError && (

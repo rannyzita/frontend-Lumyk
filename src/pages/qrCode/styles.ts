@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         textTransform: 'uppercase',
-        marginBottom: 16,
         textAlign: 'center',
     },
 });

@@ -33,7 +33,7 @@ type RouteParamsLivro = {
         numero: string;
         id_estado: string;
     };
-    valorTotal: number;
+    valorTotal: number | string;
 };
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
@@ -45,13 +45,24 @@ export default function QrCode() {
     const route = useRoute();
     const navigation = useNavigation<NavigationProps>();
 
-    const routeParams = route.params as Partial<RouteParamsAssinatura & RouteParamsLivro> & { valorTotal: number };
+    const routeParams = route.params as Partial<RouteParamsAssinatura & RouteParamsLivro> & { valorTotal: number | string };
 
     const isAssinatura = 'id' in routeParams && !('selectedBookIds' in routeParams);
 
     const idAssinatura = isAssinatura ? routeParams.id : undefined;
-    const valorTotal = routeParams.valorTotal;
 
+    const rawValor = routeParams?.valorTotal;
+
+    // Converte para número com segurança
+    const parsedValor = typeof rawValor === 'number'
+      ? rawValor
+      : parseFloat((rawValor || '').toString().replace(',', '.'));
+
+    // Evita erro de NaN
+    const valorFormatado = !isNaN(parsedValor)
+      ? parsedValor.toFixed(2)
+      : '0.00';
+      
     const tipoAssinatura = idAssinatura === '1' ? 'Básica' : 'Premium';
     const precoAssinatura = idAssinatura === '1' ? 15.90 : 29.99;
 
@@ -173,7 +184,7 @@ export default function QrCode() {
             <View style={styles.qrContainer}>
                 <View style={styles.qrBox}>
                     <Text style={styles.totalText}>
-                        VALOR TOTAL: R$ {valorTotal.toFixed(2).replace('.', ',')}
+                      VALOR TOTAL: R$ {valorFormatado}
                     </Text>
 
                     <View style={styles.qrCode}>

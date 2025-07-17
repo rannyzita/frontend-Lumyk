@@ -33,8 +33,7 @@ export default function Book() {
   const { bookId } = route.params as RouteParams;
 
   const { bookData } = useBookData(bookId);
-  const adicionarAoCarrinho = useAdicionarCarrinho(); // ✅ Hook correto
-
+  const adicionarAoCarrinho = useAdicionarCarrinho(); 
   const [selectedFormat, setSelectedFormat] = useState<'digital' | 'fisico'>('digital');
   const [selectedCover, setSelectedCover] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);

@@ -21,9 +21,7 @@ export type RootStackParamList = {
     AccountDeleted: undefined;
     PaymentSubscription: { id: string};
     QrCode: {
-        selectedBookIds: string[];
-        formaPagamento: 'pix' | 'dinheiro';
-        enderecoSelecionado: Endereco;
+        id: string;
         valorTotal: number;
     };
     PaymentConcluded: undefined;

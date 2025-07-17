@@ -15,6 +15,7 @@ import NavigationHeader from '../../components/NavigationHeader/navigationHeader
 import { useBookData } from '../book/hooks/useBookData';
 import { useAuthStorage } from '../../hooks/useAuthStorage';
 import { useAssinatura } from '../../hooks/useAssinatura';
+import { themes } from '../../global/themes';
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
 type RouteParams = { orderId: string };
@@ -95,7 +96,7 @@ export default function DetailsHistory() {
   if (loading || !item || !bookData) {
     return (
       <View style={[stylesDetails.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size='large' color='#8000FF' />
+        <ActivityIndicator size='large' color={themes.colors.purpleDark} />
       </View>
     );
   }

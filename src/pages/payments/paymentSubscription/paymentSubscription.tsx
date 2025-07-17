@@ -173,9 +173,11 @@ export default function PaymentSubscription() {
                             {getTextoAssinaturaAtiva()}
                         </Text>
                     )}
-                    <Text style={styles.totalText}>
-                        Pagamento Total: <Text style={styles.price}>{price}</Text>
-                    </Text> 
+
+                    <View style={styles.paymentTotal}>
+                        <Text style={styles.totalText}>Pagamento Total:</Text> 
+                        <Text style={styles.price}>{price}</Text>
+                    </View>
 
                     {paymentError && (
                         <Text style={[styles.errorText, { marginTop: 10 }]}>

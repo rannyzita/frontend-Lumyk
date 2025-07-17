@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     },
     paymentLabel: {
         fontSize: 16,
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     paymentOption: {
         flexDirection: 'row',
@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
         height: 24,
         resizeMode: 'contain',
     },
+    paymentTotal:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     paymentText: {
         fontSize: 16,
         color: '#000',
@@ -43,10 +47,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop:0,
         textAlign: 'right',
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     price: {
-        color: '#000',
+        color: themes.colors.purpleDark,
     },
     submitButton: {
         marginTop: 20,
@@ -63,7 +67,7 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: '#000', 
+        backgroundColor: themes.colors.purpleDark, 
         marginVertical: 16,         
     },
 

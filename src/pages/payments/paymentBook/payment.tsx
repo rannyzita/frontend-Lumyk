@@ -15,12 +15,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/types/navigation';
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
-import IconeLocal from './assets/Local.svg';
-import ArrowLocal from './assets/Arrow.svg';
-import IconMoney from './assets/Dinheiro.svg';
-import IconPix from './assets/Pix.svg';
-import IconMoneySelected from './assets/MoneySelected.svg';
-import IconPixSelected from './assets/PixSelected.svg'
+import IconeLocal from '../assets/book/Local.svg';
+import ArrowLocal from '../assets/book/Arrow.svg';
+import IconMoney from '../assets/Dinheiro.svg';
+import IconPix from '../assets/Pix.svg';
+import IconMoneySelected from '../assets/MoneySelected.svg';
+import IconPixSelected from '../assets/PixSelected.svg';
 
 import { themes } from "../../../global/themes";
 

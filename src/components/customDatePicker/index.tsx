@@ -12,22 +12,21 @@ interface Props {
 
 export default function CustomDateTimePicker({ show, setShow, onDateChange, type, date }: Props) {
     const today = new Date();
-    const fourteenYearsAgo = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
+    const defaultDate = date || today;
 
     return (
         <>
         {show && (
             <DateTimePicker
-                value={date || fourteenYearsAgo}
+                value={defaultDate}
                 mode={type}
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={(event, selectedDate) => {
                     setShow(false);
                     if (selectedDate) {
-                    onDateChange(selectedDate);
+                        onDateChange(selectedDate);
                     }
                 }}
-                maximumDate={fourteenYearsAgo} // impede selecionar < 14 anos; oq tava la na regra de negocio
             />
         )}
         </>

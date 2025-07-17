@@ -22,9 +22,9 @@ import IconPix from '../assets/Pix.svg';
 import IconMoneySelected from '../assets/MoneySelected.svg';
 import IconPixSelected from '../assets/PixSelected.svg';
 
-import { themes } from "../../../global/themes";
 
 import { Button } from '../../../components/Button/button';
+import { PaymentButton } from '../components/PaymentButton';
 
 import { useBiometria } from '../../../hooks/useBiometria';
 import api from "../../../../API";
@@ -290,84 +290,30 @@ export default function PaymentBook() {
       <View style={{ paddingHorizontal: 30, gap: 10 }}>
         <Text style={styles.tituloSecao}>Método de Pagamento:</Text>
 
-        <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            selectedMethod === 'pix' && {
-              backgroundColor: themes.colors.purpleDark,
-              borderColor: themes.colors.purpleDark,
-            }
-          ]}
+        <PaymentButton
+          title="Pix"
+          value="pix"
+          selectedValue={selectedMethod}
           onPress={() => {
             setSelectedMethod('pix');
             setPaymentError(false);
           }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            {selectedMethod === 'pix' ? (
-              <IconPixSelected width={24} height={24} />
-            ) : (
-              <IconPix width={24} height={24} />
-            )}
-            <Text
-              style={[
-                styles.paymentText,
-                selectedMethod === 'pix' && { color: 'white' }
-              ]}
-            >
-              Pix
-            </Text>
-          </View>
+          icon={<IconPix width={24} height={24} />}
+          iconSelected={<IconPixSelected width={24} height={24} />}
+        />
 
-          <View
-            style={[
-              styles.radioCircle,
-              selectedMethod === 'pix' && { backgroundColor: 'white', borderColor: 'white' }
-            ]}
-          >
-            {selectedMethod === 'pix' && <View style={[styles.radioInner, {backgroundColor: 'white'}]} />}
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            selectedMethod === 'dinheiro' && {
-              backgroundColor: themes.colors.purpleDark,
-              borderColor: themes.colors.purpleDark,
-            }
-          ]}
+        <PaymentButton
+          title="Dinheiro"
+          value="dinheiro"
+          selectedValue={selectedMethod}
           onPress={() => {
             setSelectedMethod('dinheiro');
             setPaymentError(false);
             setIsModalVisible(true);
           }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            {selectedMethod === 'dinheiro' ? (
-              <IconMoneySelected width={24} height={24} />
-            ) : (
-              <IconMoney width={24} height={24} />
-            )}
-            <Text
-              style={[
-                styles.paymentText,
-                selectedMethod === 'dinheiro' && { color: 'white' }
-              ]}
-            >
-              Dinheiro
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.radioCircle,
-              selectedMethod === 'dinheiro' && { backgroundColor: 'white', borderColor: 'white' }
-            ]}
-          >
-            {selectedMethod === 'dinheiro' && <View style={[styles.radioInner, {backgroundColor: 'white'}]} />}
-          </View>
-        </TouchableOpacity>
+          icon={<IconMoney width={24} height={24} />}
+          iconSelected={<IconMoneySelected width={24} height={24} />}
+        />
       </View>
 
       <View style={[styles.divider, { marginTop: 15 }]} />

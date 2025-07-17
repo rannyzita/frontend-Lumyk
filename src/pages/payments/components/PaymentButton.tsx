@@ -12,7 +12,7 @@ interface Props {
     iconSelected: React.ReactNode;
 }
 
-export function PaymentOptionButton({
+export function PaymentButton({
     title,
     value,
     selectedValue,
@@ -24,35 +24,35 @@ export function PaymentOptionButton({
 
     return (
         <TouchableOpacity
-        style={[
-            styles.paymentOption,
-            isSelected && {
-            backgroundColor: themes.colors.purpleDark,
-            borderColor: themes.colors.purpleDark,
-            }
-        ]}
-        onPress={onPress}
-        >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            {isSelected ? iconSelected : icon}
-            <Text
             style={[
-                styles.paymentText,
-                isSelected && { color: 'white' }
+                styles.paymentOption,
+                isSelected && {
+                backgroundColor: themes.colors.purpleDark,
+                borderColor: themes.colors.purpleDark,
+                }
             ]}
+            onPress={onPress}
             >
-            {title}
-            </Text>
-        </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                {isSelected ? iconSelected : icon}
+                <Text
+                style={[
+                    styles.paymentText,
+                    isSelected && { color: 'white' }
+                ]}
+                >
+                {title}
+                </Text>
+            </View>
 
-        <View
-            style={[
-            styles.radioCircle,
-            isSelected && { backgroundColor: 'white', borderColor: 'white' }
-            ]}
-        >
-            {isSelected && <View style={[styles.radioInner, { backgroundColor: 'white' }]} />}
-        </View>
+            <View
+                style={[
+                styles.radioCircle,
+                isSelected && { backgroundColor: 'white', borderColor: 'white' }
+                ]}
+            >
+                {isSelected && <View style={[styles.radioInner, { backgroundColor: 'white' }]} />}
+            </View>
         </TouchableOpacity>
     );
 }

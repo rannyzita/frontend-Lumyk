@@ -10,7 +10,10 @@ import { useBiometria } from '../../../hooks/useBiometria';
 import api from "../../../../API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import IconPix from '../../../assets/subscription/pix.svg';
+import IconPix from '../assets/Pix.svg';
+import IconPixSelected from '../assets/PixSelected.svg';
+
+import { PaymentButton } from '../components/PaymentButton';
 
 type RouteParams = {
     id: string;
@@ -144,21 +147,17 @@ export default function PaymentSubscription() {
 
                     <Text style={styles.paymentLabel}>Método de Pagamento:</Text>
 
-                    <TouchableOpacity style={styles.paymentOption} 
+                    <PaymentButton
+                        title="Pix"
+                        value="pix"
+                        selectedValue={selectedMethod}
                         onPress={() => {
                             setSelectedMethod('pix');
                             setPaymentError(false);
                         }}
-                    >   
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                            <IconPix width={24} height={24}/>
-                            <Text style={styles.paymentText}>Pix</Text>
-                        </View>
-
-                        <View style={styles.radioCircle}>
-                            {selectedMethod === 'pix' && <View style={styles.radioInner} />}
-                        </View>
-                    </TouchableOpacity>
+                        icon={<IconPix width={24} height={24} />}
+                        iconSelected={<IconPixSelected width={24} height={24} />}
+                    />
 
                     <View style={styles.divider} />
                     

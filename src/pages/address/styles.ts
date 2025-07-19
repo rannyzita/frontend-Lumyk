@@ -6,10 +6,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 20,
     alignItems: 'center',
-    backgroundColor: themes.colors.backgroundLumyk,
+    backgroundColor: 'white',
   },
   adicionarTexto: {
-    color: '#A45EFF',
+    color: themes.colors.purpleDark,
     fontWeight: '600',
     textAlign: 'center',
     marginTop: -15,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   enderecoText: {
     fontSize: 14,
-    color: '#333',
+    color: themes.colors.purpleDark,
     flexWrap: 'wrap',
     flex: 1,
     marginTop: 5,
@@ -59,13 +59,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     textAlign: 'center',
+    color: themes.colors.purpleDark
   },
   input: {
-    backgroundColor: '#eee',
     padding: 10,
     borderRadius: 10,
     marginBottom: 12,
-    color: '#333',
+    color: themes.colors.purpleDark,
   },
   row: {
     flexDirection: 'row',
@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
     height: 14,
     borderRadius: 999, 
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: themes.colors.purpleDark,
     marginLeft: 12,
   },
   checkboxSelected: {
-    borderColor: themes.colors.primary,
-    backgroundColor: themes.colors.primary
+    borderColor: themes.colors.purpleDark,
+    backgroundColor: themes.colors.purpleDark
   },
   checkboxSelectedInner: {
     width: 8,
@@ -152,9 +152,7 @@ const styles = StyleSheet.create({
   separatorContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginVertical:5,
-      marginTop: 10,
-      marginBottom: 20,
+      marginTop: 8,
   },
 });
 

@@ -109,6 +109,10 @@ export default function LoginScreen() {
                                         value={password}
                                         onChangeText={setPassword}
                                         secureTextEntry
+                                        autoCorrect={false}
+                                        autoComplete="off"
+                                        autoCapitalize="none"
+                                        keyboardType="default"
                                     />
                                 </View>
                             </View>

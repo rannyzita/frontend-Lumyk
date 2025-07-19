@@ -168,6 +168,10 @@ export default function Register() {
                                     secureTextEntry
                                     value={password}
                                     onChangeText={setPassword}
+                                    autoCorrect={false}
+                                    autoComplete="off"
+                                    autoCapitalize="none"
+                                    keyboardType="default"
                                 />
                             </View>
                         </View>

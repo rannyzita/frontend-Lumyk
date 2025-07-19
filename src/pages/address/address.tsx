@@ -177,12 +177,12 @@ export default function Address() {
             <ActivityIndicator color={themes.colors.primary} />
           ) : (
             <>
-            <Text style={{color: themes.colors.purpleDark}}>Selecione um endereço padrão:</Text>
+            <Text style={{color: themes.colors.purpleDark, fontWeight: 'bold'}}>Selecione um endereço padrão:</Text>
             <View style={styles.separatorContainer}>
                 <View style={styles.line} />
             </View>
               {enderecos.length === 0 ? (
-                <Text style={{ color: '#999', fontStyle: 'italic' }}>Nenhum endereço cadastrado.</Text>
+                <Text style={{ color: themes.colors.purpleDark, fontStyle: 'italic' }}>Nenhum endereço cadastrado.</Text>
               ) : (
                 enderecos.map((end, index) => (
                   <EnderecoItem
@@ -195,9 +195,10 @@ export default function Address() {
                   />
                 ))
               )}
-              <View style={styles.separatorContainer}>
+              <View style={{marginTop: -10, marginBottom: 15}}>
                 <View style={styles.line} />
               </View>
+
               <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginTop: 15 }}>
                 <Text style={styles.adicionarTexto}>Adicionar Endereço</Text>
               </TouchableOpacity>

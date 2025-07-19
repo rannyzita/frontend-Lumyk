@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Trash from '../assets/Trash.svg';
+import Trash from '../assets/TrashCart.svg';
 import styles from '../styles';
 
 interface Props {
@@ -18,7 +18,7 @@ export default function EnderecoItem({ id, texto, selecionado, onSelecionar, onR
                 onPress={onSelecionar}
                 style={[
                     styles.checkbox,
-                    { width: 28, height: 28, marginRight: 10 },
+                    { width: 25, height: 25, marginRight: 20 },
                     selecionado && styles.checkboxSelected,
                 ]}
             />

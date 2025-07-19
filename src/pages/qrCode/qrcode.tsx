@@ -55,14 +55,14 @@ export default function QrCode() {
 
     // Converte para número com segurança
     const parsedValor = typeof rawValor === 'number'
-      ? rawValor
-      : parseFloat((rawValor || '').toString().replace(',', '.'));
+        ? rawValor
+        : parseFloat((rawValor || '').toString().replace(',', '.'));
 
     // Evita erro de NaN
     const valorFormatado = !isNaN(parsedValor)
-      ? parsedValor.toFixed(2)
-      : '0.00';
-      
+        ? parsedValor.toFixed(2)
+        : '0.00';
+
     const tipoAssinatura = idAssinatura === '1' ? 'Básica' : 'Premium';
     const precoAssinatura = idAssinatura === '1' ? 15.90 : 29.99;
 
@@ -184,11 +184,11 @@ export default function QrCode() {
             <View style={styles.qrContainer}>
                 <View style={styles.qrBox}>
                     <Text style={styles.totalText}>
-                      VALOR TOTAL: R$ {valorFormatado}
+                        VALOR TOTAL: R$ {valorFormatado}
                     </Text>
 
                     <View style={{ alignItems: 'center', marginVertical: 25 }}>
-                      <QRCode value={pixCode} size={180} color={themes.colors.purpleDark} />
+                        <QRCode value={pixCode} size={180} color={themes.colors.purpleDark} />
                     </View>
 
                     <Text style={styles.qrText}>

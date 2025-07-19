@@ -1,6 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../API';
 
+interface Endereco {
+    rua: string;
+    numero: number;
+    bairro: string;
+    id_estado: string;
+}
 export async function fetchEstados() {
     const token = await AsyncStorage.getItem('userToken');
     const headers = { Authorization: `Bearer ${token}` };
@@ -39,4 +45,11 @@ export async function salvarEnderecoPrioritario(id: string) {
 
 export async function carregarEnderecoPrioritario() {
     return await AsyncStorage.getItem('enderecoSelecionadoId');
+}
+
+async function atualizarEndereco (id: string, enderecoAtualizado: Partial<Endereco>) {
+    const token = await AsyncStorage.getItem('userToken');
+    const headers = { Authorization: `Bearer ${token}` };
+    const { data } = await api.put(`/enderecos/${id}`, enderecoAtualizado, { headers });
+    return data;
 }

@@ -13,7 +13,7 @@ export const themes = {
         purpleDark: '#672BB6',
         facebook: '#1877F2',
         textInput: '#969696',
-        backgroundLumyk: '#D4BFFF',
+        backgroundLumyk: '#FAFAFA',
         shadow: "0 5px 10px  rgba(0, 0, 0, 0.14)",
         LayoutTopBar: Platform.OS === 'android' ? StatusBar.currentHeight : 10
     }

@@ -26,14 +26,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
   },
-  enderecoText: {
-    fontSize: 14,
-    color: themes.colors.purpleDark,
-    flexWrap: 'wrap',
-    flex: 1,
-    marginTop: 5,
-    marginRight: 12,
-  },
+  // enderecoText: {
+  //   fontSize: 14,
+  //   color: themes.colors.purpleDark,
+  //   flexWrap: 'wrap',
+  //   flex: 1,
+  //   marginTop: 5,
+  //   marginRight: 12,
+  // },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -62,28 +62,32 @@ const styles = StyleSheet.create({
     color: themes.colors.purpleDark
   },
   input: {
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 12,
-    color: themes.colors.purpleDark,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginTop: 4,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    marginTop: 12
   },
-  dropdownButton: {
-    backgroundColor: '#eee',
-    padding: 12,
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  dropdownText: {
-    color: '#333',
-  },
+  // dropdownButton: {
+  //   backgroundColor: '#eee',
+  //   padding: 12,
+  //   borderRadius: 10,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center',
+  //   marginTop: 10,
+  // },
+  // dropdownText: {
+  //   color: '#333',
+  // },
   dropdownModalOverlay: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -153,6 +157,38 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       marginTop: 8,
+  },
+  enderecoText: {
+    fontSize: 14,
+    color: themes.colors.purpleDark,
+    flexWrap: 'wrap',
+    flex: 1,
+    marginTop: 5,
+    marginRight: 12,
+    textDecorationLine: 'underline', // para parecer clicável
+  },
+  
+  dropdownButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: themes.colors.purpleDark,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  
+  dropdownText: {
+    color: themes.colors.purpleDark,
+    fontWeight: '500',
   },
 });
 

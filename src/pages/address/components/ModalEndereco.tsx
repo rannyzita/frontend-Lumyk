@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import Close from '../assets/Close.svg'; 
 import styles from '../styles';
+import ArrowDown from '../assets/ArrowDown.svg';
 
-interface Props {
+interface Props {   
     visible: boolean;
     onClose: () => void;
     bairro: string;
@@ -25,9 +26,10 @@ interface Props {
     onOpenDropdown: () => void;
     onSalvar: () => void;
     dropdownButtonRef: RefObject<View | null>;
+    modoEdicao: boolean;
 }
 
-export default function ModalNovoEndereco({
+export default function ModalEndereco({
     visible,
     onClose,
     bairro,
@@ -40,7 +42,10 @@ export default function ModalNovoEndereco({
     onOpenDropdown,
     onSalvar,
     dropdownButtonRef,
+    modoEdicao
 }: Props) {
+
+    
     return (
         <Modal visible={visible} transparent animationType='fade'>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -50,7 +55,9 @@ export default function ModalNovoEndereco({
                             <Close width={20} height={20} />
                         </TouchableOpacity>
 
-                        <Text style={styles.modalTitle}>Criando Novo Endereço</Text>
+                        <Text style={styles.modalTitle}>
+                            {modoEdicao ? 'Editando Endereço' : 'Criando Novo Endereço'}
+                        </Text>
                         
                         <Text>Bairro:</Text>
                         <TextInput
@@ -60,24 +67,29 @@ export default function ModalNovoEndereco({
                             onChangeText={onChangeBairro}
                         />
                         
-                        <Text>Nome da Rua:</Text>
                         <View style={styles.row}>
-                            <TextInput
-                                placeholder='Sua rua'
-                                style={[styles.input, { flex: 2 }]}
-                                value={rua}
-                                onChangeText={onChangeRua}
-                            />
+                            <View style={{ flex: 2, marginRight: 8 }}>
+                                <Text>Nome da Rua:</Text>
+                                <TextInput
+                                    placeholder='Sua rua'
+                                    style={styles.input}
+                                    value={rua}
+                                    onChangeText={onChangeRua}
+                                />
+                            </View>
 
-                            <Text>Número:</Text>
-                            <TextInput
-                                placeholder='XXX'
-                                style={[styles.input, { flex: 1, marginLeft: 10 }]}
-                                value={numero}
-                                onChangeText={onChangeNumero}
-                                keyboardType='numeric'
-                            />
+                            <View style={{ flex: 1 }}>
+                                <Text>Número:</Text>
+                                <TextInput
+                                    placeholder='XXX'
+                                    style={styles.input}
+                                    value={numero}
+                                    onChangeText={onChangeNumero}
+                                    keyboardType='numeric'
+                                />
+                            </View>
                         </View>
+
 
                         <TouchableOpacity
                             ref={dropdownButtonRef}

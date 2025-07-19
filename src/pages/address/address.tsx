@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+
 import {
   View,
   Text,
@@ -12,7 +13,7 @@ import styles from './styles';
 import NavigationHeader from '../../components/NavigationHeader/navigationHeader';
 import { themes } from '../../global/themes';
 
-import ModalNovoEndereco from './components/ModalNovoEndereco';
+import ModalNovoEndereco from './components/ModalEndereco';
 import EnderecoItem from './components/EnderecoItem';
 import DropdownEstados from './components/DropdownEstados';
 
@@ -23,6 +24,7 @@ import {
   fetchEnderecos,
   adicionarEndereco,
   removerEnderecoPorId,
+  atualizarEndereco
 } from '../../services/EnderecoService'; 
 
 import { carregarEnderecoPrioritario } from '../../services/EnderecoService';
@@ -59,10 +61,15 @@ export default function Address() {
 
   const [enderecoPrioritarioId, setEnderecoPrioritarioId] = useState<string | null>(null);
 
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [enderecoSendoEditado, setEnderecoSendoEditado] = useState<Endereco | null>(null);
+
   const dropdownButtonRef = useRef<View>(null);
   const [dropdownTop, setDropdownTop] = useState(0);
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const [dropdownWidth, setDropdownWidth] = useState(0);
+
+  const [dropdownAberto, setDropdownAberto] = useState(false);
 
   useEffect(() => {
     const carregarEstados = async () => {
@@ -106,7 +113,7 @@ export default function Address() {
   }, []);
 
   const abrirDropdown = () => {
-    setDropdownVisible(true);
+    setDropdownAberto(prev => !prev);
     InteractionManager.runAfterInteractions(() => {
       dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
         setDropdownTop(y + height);
@@ -120,24 +127,43 @@ export default function Address() {
     if (!bairro || !rua || !numero || !estadoSelecionado) return;
   
     try {
-      const novoEndereco = await adicionarEndereco({
-        rua,
-        numero: Number(numero),
-        bairro,
-        id_estado: estadoSelecionado.id,
-      });
+      if (modoEdicao && enderecoSendoEditado) {
+        const enderecoAtualizado = {
+          ...enderecoSendoEditado,
+          rua,
+          numero: Number(numero),
+          bairro,
+          id_estado: estadoSelecionado.id,
+        };
   
-      setEnderecos((prev) => [...prev, novoEndereco]);
+        await atualizarEndereco(enderecoSendoEditado.id, enderecoAtualizado);
+  
+        setEnderecos((prev) =>
+          prev.map((e) => (e.id === enderecoSendoEditado.id ? enderecoAtualizado : e))
+        );
+      } else {
+        const novoEndereco = await adicionarEndereco({
+          rua,
+          numero: Number(numero),
+          bairro,
+          id_estado: estadoSelecionado.id,
+        });
+  
+        setEnderecos((prev) => [...prev, novoEndereco]);
+      }
+  
       setModalVisible(false);
+      setModoEdicao(false);
+      setEnderecoSendoEditado(null);
       setBairro('');
       setRua('');
       setNumero('');
       setEstadoSearch('');
       setEstadoSelecionado(null);
     } catch (error) {
-      console.error('Erro ao adicionar endereço:', error);
+      console.error('Erro ao salvar endereço:', error);
     }
-  };
+  };  
 
   const removerEndereco = async (index: number) => {
     const enderecoParaRemover = enderecos[index];
@@ -167,6 +193,20 @@ export default function Address() {
     }
   };
 
+  const editarEndereco = (endereco: Endereco) => {
+    setModoEdicao(true);
+    setEnderecoSendoEditado(endereco);
+    setBairro(endereco.bairro);
+    setRua(endereco.rua);
+    setNumero(endereco.numero.toString());
+    const estado = estados.find(e => e.id === endereco.id_estado);
+    if (estado) {
+      setEstadoSelecionado(estado);
+      setEstadoSearch(estado.nome);
+    }
+    setModalVisible(true);
+  };  
+
   return (
     <>
       <ScrollView contentContainerStyle={{ ...styles.container, flexGrow: 1 }}>
@@ -192,6 +232,7 @@ export default function Address() {
                     selecionado={enderecoPrioritarioId === end.id}
                     onSelecionar={() => selecionarEnderecoPrioritario(end.id)}
                     onRemover={() => removerEndereco(index)}
+                    onEditar={() => editarEndereco(end)}
                   />
                 ))
               )}
@@ -209,7 +250,11 @@ export default function Address() {
 
       <ModalNovoEndereco
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={() => {
+          setModalVisible(false);
+          setModoEdicao(false);
+          setEnderecoSendoEditado(null);
+        }}
         bairro={bairro}
         rua={rua}
         numero={numero}
@@ -220,6 +265,7 @@ export default function Address() {
         onOpenDropdown={abrirDropdown}
         onSalvar={adicionarEnderecoHandler}
         dropdownButtonRef={dropdownButtonRef}
+        modoEdicao={modoEdicao}
       />
 
       <DropdownEstados

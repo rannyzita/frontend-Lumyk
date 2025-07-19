@@ -4,14 +4,14 @@ import { themes } from "../../global/themes";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: themes.colors.backgroundLumyk
     },
     scroll: {
         alignItems: 'center',
         paddingVertical: 30,
     },
     AssinaturaCard: {
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
         width:'100%',
         alignItems: 'center',
         paddingVertical: 30,
@@ -22,7 +22,7 @@ export default StyleSheet.create({
         color: themes.colors.purpleDark,
     },
     svgContainer: {
-        backgroundColor: '#FFF',
+        backgroundColor: 'white',
         padding: 10,
         width: '100%',
         flexDirection: 'row',
@@ -30,11 +30,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 5,
+        boxShadow: themes.colors.shadow,
     },
     subscriptionImage: {
         width: '95%',

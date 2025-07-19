@@ -268,7 +268,7 @@ export default function Home() {
         <SafeAreaView  style={{ flex: 1, backgroundColor: themes.colors.primary }}>
             <StatusBar barStyle="light-content" backgroundColor={themes.colors.primary} />
             <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
-                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                <View style={{ backgroundColor: themes.colors.backgroundLumyk, flex: 1 }}>
                     <TopBar 
                         navigation={navigation} 
                         title='Digite o titulo do livro aqui...'

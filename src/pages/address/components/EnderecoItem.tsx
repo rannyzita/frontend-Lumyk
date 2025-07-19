@@ -9,9 +9,10 @@ interface Props {
     selecionado: boolean;
     onSelecionar: () => void;
     onRemover: () => void;
+    onEditar: () => void;
 }
 
-export default function EnderecoItem({ id, texto, selecionado, onSelecionar, onRemover }: Props) {
+export default function EnderecoItem({ id, texto, selecionado, onSelecionar, onRemover, onEditar }: Props) {
     return (
         <View style={styles.enderecoItem}>
             <TouchableOpacity
@@ -22,9 +23,11 @@ export default function EnderecoItem({ id, texto, selecionado, onSelecionar, onR
                     selecionado && styles.checkboxSelected,
                 ]}
             />
-            <View style={{ flex: 1 }}>
-                <Text style={styles.enderecoText}>{texto}</Text>
-            </View>
+            <TouchableOpacity onPress={onEditar}>
+                <Text style={[styles.enderecoText, { textDecorationLine: 'underline' }]}>
+                    {texto}
+                </Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={onRemover}>
                 <Trash width={20} height={20} />
             </TouchableOpacity>

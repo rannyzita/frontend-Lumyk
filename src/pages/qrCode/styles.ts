@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         borderWidth: 2,
-        borderColor: '#672BB6',
+        borderColor: themes.colors.purpleDark,
         borderRadius: 15,
         paddingHorizontal: 12,
         paddingVertical: 8,

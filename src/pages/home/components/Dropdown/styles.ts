@@ -24,9 +24,9 @@ export const stylesDropDown = StyleSheet.create({
         marginRight: 8,
     },
     dropdownContent: {
-        position:'absolute', // faz com q n fique quebrado sobre os livros
-        top: 35, // ajusta a altura 
-        zIndex: 10, // garante que fique sobreposto
+        position:'absolute', 
+        top: 35, 
+        zIndex: 10, 
         marginTop:3,
         backgroundColor: themes.colors.primary,
         borderRadius: 10,
@@ -45,9 +45,9 @@ export const stylesDropDown = StyleSheet.create({
     dropdownItemText: {
         color: '#fff',
         fontSize: 10,
-        flex: 1, // Permite que o texto ocupe o espaço restante
-        flexWrap: 'wrap', // Permite quebra de linha
-        marginRight: 10, // Espaço entre texto e checkbox
+        flex: 1, 
+        flexWrap: 'wrap',
+        marginRight: 10, 
     },
     scrollableList: {
         maxHeight: 200, 

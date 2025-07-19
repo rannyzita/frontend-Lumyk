@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: themes.colors.backgroundLumyk,
   },
   adicionarTexto: {
     color: themes.colors.purpleDark,

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingBottom: 20,
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: themes.colors.backgroundLumyk,
     },
     title: {
         fontSize: 25,

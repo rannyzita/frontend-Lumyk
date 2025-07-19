@@ -29,7 +29,6 @@ export default StyleSheet.create({
         marginBottom: 20,
         alignItems: 'center',
         justifyContent: 'center',
-
         boxShadow: themes.colors.shadow,
     },
     subscriptionImage: {

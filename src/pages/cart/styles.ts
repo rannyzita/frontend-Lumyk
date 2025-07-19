@@ -4,7 +4,7 @@ import { themes } from '../../global/themes';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: themes.colors.backgroundLumyk,
     paddingTop: 40,
   },
   header: {

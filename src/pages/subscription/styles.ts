@@ -4,7 +4,8 @@ import { themes } from "../../global/themes";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: themes.colors.backgroundLumyk
+        backgroundColor: themes.colors.backgroundLumyk,
+        paddingTop: 40,
     },
     scroll: {
         alignItems: 'center',

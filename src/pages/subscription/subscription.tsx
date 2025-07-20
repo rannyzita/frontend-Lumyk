@@ -7,7 +7,7 @@ import Books from './assets/livros.svg';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation } from "@react-navigation/native";
-
+import HeaderSection from "../../components/HeaderSection/headerSection";
 import PlanCard from "../../components/CardSubscription/cardSubscription";
 
 type NavigationProps = StackNavigationProp<RootStackParamList>;
@@ -18,9 +18,7 @@ export default function Subscription() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scroll}>
-                <View style={styles.AssinaturaCard}>
-                    <Text style={styles.title}>ASSINATURAS</Text>
-                </View>
+                <HeaderSection title="ASSINATURA" />
 
                 {/* Imagem ampliada */}
                 <View style={styles.svgContainer}>

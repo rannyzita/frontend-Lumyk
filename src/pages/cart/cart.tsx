@@ -301,7 +301,8 @@ export default function Cart() {
             <ActivityIndicator size="large" color={themes.colors.purpleDark} />
           </View>
         ) : groupedData.length === 0 ? (
-          <View style={styles.emptyContainer}>
+          <View style={[styles.emptyContainer, { marginTop: -80 }]}>
+            <EmptyCart width={150} height={150} style={{ marginBottom: 70, marginRight: 5}} />
             <Text style={styles.emptyText}>Seu carrinho está vazio.</Text>
           </View>
         ) : (

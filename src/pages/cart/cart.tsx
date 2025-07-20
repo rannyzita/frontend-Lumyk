@@ -14,6 +14,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../routes/types/navigation';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import TrashIcon from './assets/TrashCart.svg';
+import EmptyCart from './assets/EmptyCart.svg';
 import HeaderSection from '../../components/HeaderSection/headerSection';
 import { themes } from '../../global/themes';
 

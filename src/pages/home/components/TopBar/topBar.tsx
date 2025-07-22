@@ -27,7 +27,7 @@ const TopBar: React.FC<TopBarProps> = ({ navigation, title, onSearchTextChange }
                     <TextInput
                         style={styles.searchInput}
                         placeholder={title}
-                        placeholderTextColor={themes.colors.textInput}
+                        placeholderTextColor={themes.colors.purpleDark}
                         onChangeText={onSearchTextChange}
                     />
                 </View>

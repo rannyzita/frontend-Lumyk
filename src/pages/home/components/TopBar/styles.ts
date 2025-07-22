@@ -24,9 +24,9 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'white',
+        boxShadow: themes.colors.shadow,
         borderRadius: 15,
         paddingHorizontal: 10,
         height: 40,
-        gap: 0
     },
 });

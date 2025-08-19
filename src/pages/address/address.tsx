@@ -23,12 +23,13 @@ import {
   fetchEstados,
   fetchEnderecos,
   adicionarEndereco,
+  carregarEnderecoPrioritario,
+  salvarEnderecoPrioritario,
   removerEnderecoPorId,
   atualizarEndereco
 } from '../../services/EnderecoService'; 
 
-import { carregarEnderecoPrioritario } from '../../services/EnderecoService';
-import { salvarEnderecoPrioritario } from '../../services/EnderecoService'
+import ArrowDown from './assets/ArrowDown.svg';
 
 interface Estado {
   id: string;
@@ -131,12 +132,12 @@ export default function Address() {
         const enderecoAtualizado = {
           ...enderecoSendoEditado,
           rua,
-          numero: Number(numero),
+          numero: numero,
           bairro,
           id_estado: estadoSelecionado.id,
         };
   
-        await atualizarEndereco(enderecoSendoEditado.id, enderecoAtualizado);
+        await atualizarEndereco(enderecoSendoEditado.id, { ...enderecoAtualizado, numero: Number(numero) });
   
         setEnderecos((prev) =>
           prev.map((e) => (e.id === enderecoSendoEditado.id ? enderecoAtualizado : e))
@@ -144,7 +145,7 @@ export default function Address() {
       } else {
         const novoEndereco = await adicionarEndereco({
           rua,
-          numero: Number(numero),
+          numero: numero,
           bairro,
           id_estado: estadoSelecionado.id,
         });
@@ -217,7 +218,14 @@ export default function Address() {
             <ActivityIndicator color={themes.colors.primary} />
           ) : (
             <>
-            <Text style={{color: themes.colors.purpleDark, fontWeight: 'bold'}}>Selecione um endereço padrão:</Text>
+            <Text style={{
+              color: themes.colors.purpleDark, 
+              fontWeight: 'bold',
+              marginBottom: 4,
+            }}>
+              Selecione um endereço padrão:
+            </Text>
+            
             <View style={styles.separatorContainer}>
                 <View style={styles.line} />
             </View>

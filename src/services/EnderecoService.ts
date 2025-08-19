@@ -23,7 +23,7 @@ export async function fetchEnderecos() {
 
 export async function adicionarEndereco(payload: {
     rua: string;
-    numero: number;
+    numero: string;
     bairro: string;
     id_estado: string;
 }) {
@@ -47,7 +47,7 @@ export async function carregarEnderecoPrioritario() {
     return await AsyncStorage.getItem('enderecoSelecionadoId');
 }
 
-async function atualizarEndereco (id: string, enderecoAtualizado: Partial<Endereco>) {
+export async function atualizarEndereco (id: string, enderecoAtualizado: Partial<Endereco>) {
     const token = await AsyncStorage.getItem('userToken');
     const headers = { Authorization: `Bearer ${token}` };
     const { data } = await api.put(`/enderecos/${id}`, enderecoAtualizado, { headers });

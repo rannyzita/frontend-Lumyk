@@ -26,14 +26,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
   },
-  // enderecoText: {
-  //   fontSize: 14,
-  //   color: themes.colors.purpleDark,
-  //   flexWrap: 'wrap',
-  //   flex: 1,
-  //   marginTop: 5,
-  //   marginRight: 12,
-  // },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

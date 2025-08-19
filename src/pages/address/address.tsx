@@ -171,8 +171,10 @@ export default function Address() {
     if (!enderecoParaRemover) return;
   
     try {
-      await removerEnderecoPorId(enderecoParaRemover.id);
-  
+      const response = await removerEnderecoPorId(enderecoParaRemover.id);
+      
+      alert(response.data.mensagem || 'Endereço removido com sucesso');
+
       const copia = [...enderecos];
       copia.splice(index, 1);
       setEnderecos(copia);

@@ -182,8 +182,12 @@ export default function Address() {
       if (enderecoPrioritarioId === enderecoParaRemover.id) {
         setEnderecoPrioritarioId(null);
       }
-    } catch (error) {
-      console.error('Erro ao remover endereço:', error);
+    } catch (error: any) {
+      if (error.response) {
+        alert(error.response.data.erro || 'Erro ao remover endereço');
+      } else {
+        alert('Erro ao remover endereço');
+      }
     }
   };
 

@@ -59,14 +59,6 @@ export default function ModalEndereco({
                             {modoEdicao ? 'Editando Endereço' : 'Criando Novo Endereço'}
                         </Text>
                         
-                        <Text>Bairro:</Text>
-                        <TextInput
-                            placeholder='Seu bairro'
-                            style={styles.input}
-                            value={bairro}
-                            onChangeText={onChangeBairro}
-                        />
-                        
                         <View style={styles.row}>
                             <View style={{ flex: 2, marginRight: 8 }}>
                                 <Text>Nome da Rua:</Text>
@@ -90,6 +82,13 @@ export default function ModalEndereco({
                             </View>
                         </View>
 
+                        <Text>Bairro:</Text>
+                        <TextInput
+                            placeholder='Seu bairro'
+                            style={styles.input}
+                            value={bairro}
+                            onChangeText={onChangeBairro}
+                        />
 
                         <TouchableOpacity
                             ref={dropdownButtonRef}

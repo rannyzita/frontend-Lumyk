@@ -68,18 +68,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 12
   },
-  // dropdownButton: {
-  //   backgroundColor: '#eee',
-  //   padding: 12,
-  //   borderRadius: 10,
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   marginTop: 10,
-  // },
-  // dropdownText: {
-  //   color: '#333',
-  // },
   dropdownModalOverlay: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -157,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 5,
     marginRight: 12,
-    textDecorationLine: 'underline', // para parecer clicável
+    textDecorationLine: 'underline',
   },
   
   dropdownButton: {

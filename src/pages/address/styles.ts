@@ -54,8 +54,9 @@ const styles = StyleSheet.create({
     color: themes.colors.purpleDark
   },
   input: {
+    color: themes.colors.purpleDark,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: themes.colors.purpleDark,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
     borderWidth: 1,
     borderColor: themes.colors.purpleDark,
     shadowColor: '#000',
@@ -165,11 +166,13 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
   },
-  
   dropdownText: {
     color: themes.colors.purpleDark,
     fontWeight: '500',
   },
+  titleBox: {
+    color: themes.colors.purpleDark
+  }
 });
 
 export default styles;

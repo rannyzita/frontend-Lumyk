@@ -12,6 +12,8 @@ import {
 import Close from '../assets/Close.svg'; 
 import styles from '../styles';
 import ArrowDown from '../assets/ArrowDown.svg';
+import { SecurityLevel } from 'expo-local-authentication';
+import { themes } from '../../../global/themes';
 
 interface Props {   
     visible: boolean;
@@ -61,8 +63,9 @@ export default function ModalEndereco({
                         
                         <View style={styles.row}>
                             <View style={{ flex: 2, marginRight: 8 }}>
-                                <Text>Nome da Rua:</Text>
-                                <TextInput
+                                <Text style={styles.titleBox}>Nome da Rua:</Text>
+                                <TextInput 
+                                    placeholderTextColor={themes.colors.purpleDark}
                                     placeholder='Sua rua'
                                     style={styles.input}
                                     value={rua}
@@ -71,10 +74,11 @@ export default function ModalEndereco({
                             </View>
 
                             <View style={{ flex: 1 }}>
-                                <Text>Número:</Text>
+                                <Text style={styles.titleBox}>Número:</Text>
                                 <TextInput
+                                    placeholderTextColor={themes.colors.purpleDark}
                                     placeholder='XXX'
-                                    style={styles.input}
+                                    style={{...styles.input, width: '75%'}}
                                     value={numero}
                                     onChangeText={onChangeNumero}
                                     keyboardType='numeric'
@@ -82,17 +86,19 @@ export default function ModalEndereco({
                             </View>
                         </View>
 
-                        <Text>Bairro:</Text>
+                        <Text style={styles.titleBox}>Bairro:</Text>
                         <TextInput
+                            placeholderTextColor={themes.colors.purpleDark}
                             placeholder='Seu bairro'
-                            style={styles.input}
+                            style={{...styles.input, width: '50%'}}
                             value={bairro}
                             onChangeText={onChangeBairro}
                         />
 
+                        <Text style={{...styles.titleBox, marginTop: 12}}>Selecione o estado:</Text>
                         <TouchableOpacity
                             ref={dropdownButtonRef}
-                            style={styles.dropdownButton}
+                            style={{...styles.dropdownButton, width: '50%'}}
                             onPress={onOpenDropdown}
                             activeOpacity={0.8}
                         >

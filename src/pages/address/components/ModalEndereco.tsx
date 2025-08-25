@@ -12,7 +12,6 @@ import {
 import Close from '../assets/Close.svg'; 
 import styles from '../styles';
 import ArrowDown from '../assets/ArrowDown.svg';
-import { SecurityLevel } from 'expo-local-authentication';
 import { themes } from '../../../global/themes';
 
 interface Props {   
@@ -29,6 +28,7 @@ interface Props {
     onSalvar: () => void;
     dropdownButtonRef: RefObject<View | null>;
     modoEdicao: boolean;
+    dropdownVisible: boolean;
 }
 
 export default function ModalEndereco({
@@ -44,7 +44,8 @@ export default function ModalEndereco({
     onOpenDropdown,
     onSalvar,
     dropdownButtonRef,
-    modoEdicao
+    modoEdicao,
+    dropdownVisible
 }: Props) {
 
     
@@ -102,9 +103,20 @@ export default function ModalEndereco({
                             onPress={onOpenDropdown}
                             activeOpacity={0.8}
                         >
-                            <Text style={styles.dropdownText}>
-                                {estadoSelecionadoNome || 'Estado'}
-                            </Text>
+                            <View style={stylesDropDown.buttonContent}>
+                                <Text style={stylesDropDown.dropdownButtonText}>
+                                    {estadoSelecionadoNome || 'Estado'}
+                                </Text>
+
+                                {/* Ícone que gira */}
+                                <ArrowDown
+                                    width={16}
+                                    height={16}
+                                    style={{
+                                        transform: [{ rotate: dropdownVisible ? '180deg' : '0deg' }],
+                                    }}
+                                />
+                            </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.salvarButton} onPress={onSalvar}>

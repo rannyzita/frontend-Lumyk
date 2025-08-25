@@ -8,7 +8,7 @@ import {
     TextStyle,
 } from 'react-native';
 import CustomCheckbox from '../CustomCheckBox/checkBox';
-import { stylesDropDown } from './styles'; // importa normalmente agora
+import { stylesDropDown } from './styles'; 
 
 interface DropdownFilterProps {
     isVisible: boolean;

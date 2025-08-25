@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         fontFamily: 'Roboto',
         fontSize: 14,
-        color: themes.colors.textPlaceHolder,
+        color: themes.colors.purpleDark,
         paddingVertical: 0,
     },
     button: {

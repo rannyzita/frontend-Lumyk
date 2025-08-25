@@ -70,8 +70,6 @@ export default function Address() {
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
-  const [dropdownAberto, setDropdownAberto] = useState(false);
-
   useEffect(() => {
     const carregarEstados = async () => {
       try {
@@ -114,7 +112,7 @@ export default function Address() {
   }, []);
 
   const abrirDropdown = () => {
-    setDropdownAberto(prev => !prev);
+    setDropdownVisible(prev => !prev);
     InteractionManager.runAfterInteractions(() => {
       dropdownButtonRef.current?.measureInWindow((x, y, width, height) => {
         setDropdownTop(y + height);
@@ -273,6 +271,7 @@ export default function Address() {
         rua={rua}
         numero={numero}
         estadoSelecionadoNome={estadoSelecionado?.nome}
+        dropdownVisible={dropdownVisible}
         onChangeBairro={setBairro}
         onChangeRua={setRua}
         onChangeNumero={setNumero}
